@@ -3,12 +3,10 @@ import { axiosBaseQuery } from '@/shared/api/baseApi';
 
 export const testApi = createApi({
   reducerPath: 'testApi',
-  baseQuery: axiosBaseQuery({
-    baseUrl: '/',
-  }),
+  baseQuery: axiosBaseQuery(),
   endpoints: builder => ({
     getTestData: builder.query<string, void>({
-      query: () => ({ url: '', method: 'get' }),
+      query: () => ({ url: '/', method: 'get' }),
     }),
   }),
 });
