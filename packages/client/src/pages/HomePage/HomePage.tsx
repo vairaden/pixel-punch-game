@@ -1,8 +1,8 @@
-import { Box, Container, Typography } from '@mui/material'
-import { useGetTestDataQuery } from '@/shared/api/testApi'
+import { Box, Container, Typography } from '@mui/material';
+import { useGetTestDataQuery } from '@/shared/api/testApi';
 
 export function HomePage() {
-  const { data, isLoading } = useGetTestDataQuery()
+  const { data, isLoading } = useGetTestDataQuery();
 
   return (
     <Container maxWidth="sm">
@@ -12,5 +12,5 @@ export function HomePage() {
         </Typography>
       </Box>
     </Container>
-  )
+  );
 }

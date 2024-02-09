@@ -1,5 +1,5 @@
-import { createApi } from '@reduxjs/toolkit/query/react'
-import { axiosBaseQuery } from '@/shared/api/baseApi'
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { axiosBaseQuery } from '@/shared/api/baseApi';
 
 export const testApi = createApi({
   reducerPath: 'testApi',
@@ -11,6 +11,6 @@ export const testApi = createApi({
       query: () => ({ url: '', method: 'get' }),
     }),
   }),
-})
+});
 
-export const { useGetTestDataQuery } = testApi
+export const { useGetTestDataQuery } = testApi;

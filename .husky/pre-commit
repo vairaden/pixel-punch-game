@@ -1,0 +1,2 @@
+yarn lerna run lint
+yarn lerna run test

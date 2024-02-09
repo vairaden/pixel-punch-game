@@ -1,8 +1,12 @@
-import { HomePage } from '@/pages/HomePage'
+import { HomePage } from '@/pages/HomePage';
 
 function App() {
   // TODO: Роутер
-  return <HomePage />
+  return (
+    <div data-testid="app">
+      <HomePage />
+    </div>
+  );
 }
 
-export default App
+export default App;
