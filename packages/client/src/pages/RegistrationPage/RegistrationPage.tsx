@@ -1,12 +1,20 @@
+import { useCreateUserMutation } from '@/shared/api/authApi';
+import { IUser } from '@/shared/types';
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { FieldValues, useForm } from 'react-hook-form';
 
 export const RegistrationPage: React.FC = () => {
   const { register, handleSubmit, reset } = useForm();
+  const [createUser, { isError }] = useCreateUserMutation();
 
   const onSubmit = (data: FieldValues) => {
-    console.log(data);
-    reset();
+    createUser(data as Omit<IUser, 'id'>)
+      .unwrap()
+      .then(() => {
+        reset();
+        console.log('go to the app');
+      })
+      .catch(e => console.log(e));
   };
 
   return (
@@ -50,6 +58,11 @@ export const RegistrationPage: React.FC = () => {
             {...register('password')}
           />
           <TextField label="Phone" variant="outlined" {...register('phone')} />
+          {isError && (
+            <Typography variant="body2" color="error">
+              Something went wrong
+            </Typography>
+          )}
           <Button variant="contained" type="submit">
             Sign up
           </Button>

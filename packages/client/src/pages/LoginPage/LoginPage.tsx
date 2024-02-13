@@ -1,12 +1,30 @@
+import {
+  useLazyGetUserInfoQuery,
+  useLoginByLoginMutation,
+} from '@/shared/api/authApi';
+import { ILoginData } from '@/shared/types';
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
+import { useEffect } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 
 export const LoginPage: React.FC = () => {
   const { register, handleSubmit, reset } = useForm();
+  const [loginByLogin, { isError }] = useLoginByLoginMutation();
+  const [getUserInfo] = useLazyGetUserInfoQuery();
+
+  useEffect(() => {
+    getUserInfo().then(res => console.log(res));
+  }, []);
 
   const onSubmit = (data: FieldValues) => {
-    console.log(data);
-    reset();
+    loginByLogin(data as ILoginData)
+      .unwrap()
+      .then(() => {
+        reset();
+        localStorage.setItem('isLoggedIn', JSON.stringify(true));
+        console.log('go to the app');
+      })
+      .catch(e => console.log(e));
   };
 
   return (
@@ -33,6 +51,11 @@ export const LoginPage: React.FC = () => {
             type="password"
             {...register('password')}
           />
+          {isError && (
+            <Typography variant="body2" color="error">
+              Login or password is incorrect
+            </Typography>
+          )}
           <Button variant="contained" type="submit">
             Sign in
           </Button>

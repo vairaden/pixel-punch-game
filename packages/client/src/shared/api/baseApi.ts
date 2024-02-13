@@ -16,11 +16,12 @@ export const axiosBaseQuery =
       data?: AxiosRequestConfig['data'];
       params?: AxiosRequestConfig['params'];
       headers?: AxiosRequestConfig['headers'];
+      withCredentials?: AxiosRequestConfig['withCredentials'];
     },
     unknown,
     unknown
   > =>
-  async ({ url, method, data, params, headers }) => {
+  async ({ url, method, data, params, headers, withCredentials }) => {
     try {
       console.log(baseUrl + url);
       const result = await axiosInstance({
@@ -29,6 +30,7 @@ export const axiosBaseQuery =
         data,
         params,
         headers,
+        withCredentials,
       });
       return { data: result.data };
     } catch (axiosError) {
