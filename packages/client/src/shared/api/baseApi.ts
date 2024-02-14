@@ -8,7 +8,9 @@ export const axiosInstance = axios.create({
 
 export const axiosBaseQuery =
   (
-    { baseUrl }: { baseUrl: string } = { baseUrl: '' }
+    { baseUrl }: { baseUrl: string } = {
+      baseUrl: 'https://ya-praktikum.tech/api/v2',
+    }
   ): BaseQueryFn<
     {
       url: string;

@@ -4,13 +4,11 @@ import { axiosBaseQuery } from './baseApi';
 
 export const authApi = createApi({
   reducerPath: 'authApi',
-  baseQuery: axiosBaseQuery({
-    baseUrl: 'https://ya-praktikum.tech/api/v2/auth',
-  }),
+  baseQuery: axiosBaseQuery(),
   endpoints: builder => ({
     createUser: builder.mutation<{ id: string }, Omit<IUser, 'id'>>({
       query: data => ({
-        url: '/signup',
+        url: '/auth/signup',
         method: 'POST',
         data,
         prepareHeaders: (headers: Headers) => {
@@ -21,7 +19,7 @@ export const authApi = createApi({
     }),
     loginByLogin: builder.mutation<ILoginData, unknown>({
       query: data => ({
-        url: '/signin',
+        url: '/auth/signin',
         withCredentials: true,
         method: 'POST',
         data,
@@ -33,7 +31,7 @@ export const authApi = createApi({
     }),
     getUserInfo: builder.query<unknown, void>({
       query: () => ({
-        url: '/user',
+        url: '/auth/user',
         withCredentials: true,
         method: 'GET',
       }),
