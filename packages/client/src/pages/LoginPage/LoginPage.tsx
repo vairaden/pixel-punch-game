@@ -6,11 +6,11 @@ import {
 import { ILoginData } from '@/shared/types';
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { useEffect } from 'react';
-import { FieldValues, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 export const LoginPage: React.FC = () => {
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset } = useForm<ILoginData>();
   const navigate = useNavigate();
   const [loginByLogin, { isError }] = useLoginByLoginMutation();
   const [getUserInfo] = useLazyGetUserInfoQuery();
@@ -23,8 +23,8 @@ export const LoginPage: React.FC = () => {
       });
   }, []);
 
-  const onSubmit = (data: FieldValues) => {
-    loginByLogin(data as ILoginData)
+  const onSubmit = (data: ILoginData) => {
+    loginByLogin(data)
       .unwrap()
       .then(() => {
         reset();
