@@ -6,11 +6,11 @@ import { HomePage } from '@/pages/HomePage';
 
 export const routes: RouteObject[] = [
   {
-    path: '/',
+    path: '/sign-in',
     element: <LoginPage />,
   },
   {
-    path: '/registration',
+    path: '/sign-up',
     element: <RegistrationPage />,
   },
   {
@@ -18,7 +18,7 @@ export const routes: RouteObject[] = [
     element: <div>Профиль пользователя</div>,
   },
   {
-    path: '/main',
+    path: '/',
     element: <HomePage />,
   },
   {
