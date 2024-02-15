@@ -1,5 +1,6 @@
 import React from 'react';
+import { Profile } from '@/widgets';
 
 export const ProfilePage: React.FC = () => {
-  return <div>ProfilePage</div>;
+  return <Profile />;
 };

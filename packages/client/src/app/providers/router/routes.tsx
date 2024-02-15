@@ -3,6 +3,7 @@ import type { RouteObject } from 'react-router-dom';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegistrationPage } from '@/pages/RegistrationPage';
 import { HomePage } from '@/pages/HomePage';
+import { ProfilePage } from '@/pages/ProfilePage';
 
 export const routes: RouteObject[] = [
   {
@@ -15,7 +16,7 @@ export const routes: RouteObject[] = [
   },
   {
     path: '/profile',
-    element: <div>Профиль пользователя</div>,
+    element: <ProfilePage />,
   },
   {
     path: '/',
