@@ -3,6 +3,7 @@ import type { RouteObject } from 'react-router-dom';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegistrationPage } from '@/pages/RegistrationPage';
 import { HomePage } from '@/pages/HomePage';
+import { ErrorPage } from '@/pages/ErrorPage';
 
 export const routes: RouteObject[] = [
   {
@@ -43,6 +44,6 @@ export const routes: RouteObject[] = [
   },
   {
     path: '*',
-    element: <div>Ошибка 404</div>,
+    element: <ErrorPage code={404} text="Страницы не существует :(" />,
   },
 ];
