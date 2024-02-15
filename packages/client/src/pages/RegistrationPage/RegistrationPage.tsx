@@ -1,20 +1,27 @@
+import { paths } from '@/app/constants/paths';
 import { useCreateUserMutation } from '@/shared/api/authApi';
 import { IUser } from '@/shared/types';
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
-import { FieldValues, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 export const RegistrationPage: React.FC = () => {
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset } = useForm<Omit<IUser, 'id'>>();
+  const navigate = useNavigate();
   const [createUser, { isError }] = useCreateUserMutation();
 
-  const onSubmit = (data: FieldValues) => {
-    createUser(data as Omit<IUser, 'id'>)
+  const onSubmit = (data: Omit<IUser, 'id'>) => {
+    createUser(data)
       .unwrap()
       .then(() => {
         reset();
-        console.log('go to the app');
+        navigate(paths.homePage);
       })
-      .catch(e => console.log(e));
+      .catch(e => {
+        if (e.status >= 500) {
+          navigate(paths.error);
+        }
+      });
   };
 
   return (
@@ -66,9 +73,7 @@ export const RegistrationPage: React.FC = () => {
           <Button variant="contained" type="submit">
             Sign up
           </Button>
-          <Button
-            variant="outlined"
-            onClick={() => console.log('go to login page')}>
+          <Button variant="outlined" onClick={() => navigate(paths.signIn)}>
             Sign in
           </Button>
         </Paper>

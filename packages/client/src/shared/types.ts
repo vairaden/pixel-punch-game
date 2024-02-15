@@ -1,7 +1,7 @@
 export type IUser = {
   id: string;
   first_name: string;
-  last_name: string;
+  second_name: string;
   email: string;
   login: string;
   password: string;

@@ -9,6 +9,7 @@ export const authApi = createApi({
     createUser: builder.mutation<{ id: string }, Omit<IUser, 'id'>>({
       query: data => ({
         url: '/auth/signup',
+        withCredentials: true,
         method: 'POST',
         data,
         prepareHeaders: (headers: Headers) => {
@@ -29,7 +30,7 @@ export const authApi = createApi({
         },
       }),
     }),
-    getUserInfo: builder.query<unknown, void>({
+    getUserInfo: builder.query<IUser, void>({
       query: () => ({
         url: '/auth/user',
         withCredentials: true,

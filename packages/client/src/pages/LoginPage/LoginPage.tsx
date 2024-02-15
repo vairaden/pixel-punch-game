@@ -1,3 +1,4 @@
+import { paths } from '@/app/constants/paths';
 import {
   useLazyGetUserInfoQuery,
   useLoginByLoginMutation,
@@ -6,14 +7,20 @@ import { ILoginData } from '@/shared/types';
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 export const LoginPage: React.FC = () => {
   const { register, handleSubmit, reset } = useForm();
+  const navigate = useNavigate();
   const [loginByLogin, { isError }] = useLoginByLoginMutation();
   const [getUserInfo] = useLazyGetUserInfoQuery();
 
   useEffect(() => {
-    getUserInfo().then(res => console.log(res));
+    getUserInfo()
+      .unwrap()
+      .then(() => {
+        navigate(paths.homePage);
+      });
   }, []);
 
   const onSubmit = (data: FieldValues) => {
@@ -21,10 +28,13 @@ export const LoginPage: React.FC = () => {
       .unwrap()
       .then(() => {
         reset();
-        localStorage.setItem('isLoggedIn', JSON.stringify(true));
-        console.log('go to the app');
+        navigate(paths.homePage);
       })
-      .catch(e => console.log(e));
+      .catch(e => {
+        if (e.status >= 500) {
+          navigate(paths.error);
+        }
+      });
   };
 
   return (
@@ -59,9 +69,7 @@ export const LoginPage: React.FC = () => {
           <Button variant="contained" type="submit">
             Sign in
           </Button>
-          <Button
-            variant="outlined"
-            onClick={() => console.log('go to registration page')}>
+          <Button variant="outlined" onClick={() => navigate(paths.signUp)}>
             Sign up
           </Button>
         </Paper>
