@@ -39,15 +39,15 @@ export const RegistrationPage: React.FC = () => {
           component="form"
           onSubmit={handleSubmit(onSubmit)}>
           <Typography variant="h4" component="h1">
-            Registration
+            Регистрация
           </Typography>
           <TextField
-            label="First Name"
+            label="Имя"
             variant="outlined"
             {...register('first_name')}
           />
           <TextField
-            label="Second Name"
+            label="Фамилия"
             variant="outlined"
             {...register('second_name')}
           />
@@ -59,22 +59,26 @@ export const RegistrationPage: React.FC = () => {
             type="email"
           />
           <TextField
-            label="Password"
+            label="Пароль"
             variant="outlined"
             type="password"
             {...register('password')}
           />
-          <TextField label="Phone" variant="outlined" {...register('phone')} />
+          <TextField
+            label="Телефон"
+            variant="outlined"
+            {...register('phone')}
+          />
           {isError && (
             <Typography variant="body2" color="error">
-              Something went wrong
+              Что-то пошло не так
             </Typography>
           )}
           <Button variant="contained" type="submit">
-            Sign up
+            Войти
           </Button>
           <Button variant="outlined" onClick={() => navigate(paths.signIn)}>
-            Sign in
+            Зарегистрироваться
           </Button>
         </Paper>
       </Box>

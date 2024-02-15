@@ -52,25 +52,25 @@ export const LoginPage: React.FC = () => {
           component="form"
           onSubmit={handleSubmit(onSubmit)}>
           <Typography variant="h4" component="h1">
-            Authorization
+            Авторизация
           </Typography>
-          <TextField label="Login" variant="outlined" {...register('login')} />
+          <TextField label="Логин" variant="outlined" {...register('login')} />
           <TextField
-            label="Password"
+            label="Пароль"
             variant="outlined"
             type="password"
             {...register('password')}
           />
           {isError && (
             <Typography variant="body2" color="error">
-              Login or password is incorrect
+              Неправильный логин или пароль
             </Typography>
           )}
           <Button variant="contained" type="submit">
-            Sign in
+            Войти
           </Button>
           <Button variant="outlined" onClick={() => navigate(paths.signUp)}>
-            Sign up
+            Зарегистрироваться
           </Button>
         </Paper>
       </Box>
