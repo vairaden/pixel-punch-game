@@ -3,8 +3,9 @@ import type { RouteObject } from 'react-router-dom';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegistrationPage } from '@/pages/RegistrationPage';
 import { HomePage } from '@/pages/HomePage';
-import { paths } from '@/app/constants/paths';
+import { paths } from '../../constants/paths';
 import { AuthGuard } from './AuthGuard';
+import { ErrorPage } from '@/pages/ErrorPage';
 
 export const routes: RouteObject[] = [
   {
@@ -65,10 +66,10 @@ export const routes: RouteObject[] = [
   },
   {
     path: paths.error,
-    element: <div>Ошибка 500</div>,
+    element: <ErrorPage code={500} text="Страницы не существует :(" />,
   },
   {
     path: '*',
-    element: <div>Ошибка 404</div>,
+    element: <ErrorPage code={404} text="Страницы не существует :(" />,
   },
 ];
