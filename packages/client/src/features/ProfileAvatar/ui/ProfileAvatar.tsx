@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { Avatar, IconButton } from '@mui/material';
+import { Avatar, Box, IconButton } from '@mui/material';
 
 export const ProfileAvatar: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -15,7 +15,7 @@ export const ProfileAvatar: React.FC = () => {
   }, [file]);
 
   return (
-    <>
+    <Box sx={{ marginTop: 2 }}>
       <input
         hidden
         type="file"
@@ -28,6 +28,6 @@ export const ProfileAvatar: React.FC = () => {
           <Avatar sx={{ width: 100, height: 100 }} alt="Avatar" />
         </IconButton>
       </label>
-    </>
+    </Box>
   );
 };
