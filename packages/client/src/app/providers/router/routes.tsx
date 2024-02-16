@@ -40,7 +40,7 @@ export const routes: RouteObject[] = [
   },
   {
     path: '/500',
-    element: <div>Ошибка 500</div>,
+    element: <ErrorPage code={500} text="Произошла непредвиденная ошибка" />,
   },
   {
     path: '*',
