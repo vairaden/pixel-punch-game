@@ -66,7 +66,7 @@ export const routes: RouteObject[] = [
   },
   {
     path: paths.error,
-    element: <ErrorPage code={500} text="Страницы не существует :(" />,
+    element: <ErrorPage code={500} text="Произошла непредвиденная ошибка" />,
   },
   {
     path: '*',
