@@ -65,19 +65,10 @@ export const routes: RouteObject[] = [
   },
   {
     path: paths.error,
-    element: (
-      <AuthGuard>
-        {' '}
-        <div>Ошибка 500</div>
-      </AuthGuard>
-    ),
+    element: <div>Ошибка 500</div>,
   },
   {
     path: '*',
-    element: (
-      <AuthGuard>
-        <div>Ошибка 404</div>
-      </AuthGuard>
-    ),
+    element: <div>Ошибка 404</div>,
   },
 ];

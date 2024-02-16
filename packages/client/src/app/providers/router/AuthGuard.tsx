@@ -5,7 +5,7 @@ import { useLazyGetUserInfoQuery } from '@/shared/api/authApi';
 
 export const AuthGuard: React.FC<PropsWithChildren> = props => {
   const navigate = useNavigate();
-  const [getUserInfo] = useLazyGetUserInfoQuery();
+  const [getUserInfo, { isSuccess, isLoading }] = useLazyGetUserInfoQuery();
 
   useEffect(() => {
     getUserInfo()
@@ -21,5 +21,10 @@ export const AuthGuard: React.FC<PropsWithChildren> = props => {
       });
   }, []);
 
-  return <>{props.children}</>;
+  return (
+    <>
+      {isSuccess && <>{props.children}</>}
+      {isLoading && <span>Loading...</span>}
+    </>
+  );
 };
