@@ -4,6 +4,7 @@ import { LoginPage } from '@/pages/LoginPage';
 import { RegistrationPage } from '@/pages/RegistrationPage';
 import { HomePage } from '@/pages/HomePage';
 import { ErrorPage } from '@/pages/ErrorPage';
+import { LeaderBoardPage } from '@/pages/LeaderBoardPage';
 
 export const routes: RouteObject[] = [
   {
@@ -28,7 +29,7 @@ export const routes: RouteObject[] = [
   },
   {
     path: '/leaderboard',
-    element: <div>Страница лидерборда</div>,
+    element: <LeaderBoardPage />,
   },
   {
     path: '/forum',
