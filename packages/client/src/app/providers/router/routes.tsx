@@ -4,6 +4,7 @@ import { LoginPage } from '@/pages/LoginPage';
 import { RegistrationPage } from '@/pages/RegistrationPage';
 import { HomePage } from '@/pages/HomePage';
 import { ErrorPage } from '@/pages/ErrorPage';
+import { GamePage } from '@/pages/GamePage';
 
 export const routes: RouteObject[] = [
   {
@@ -24,7 +25,7 @@ export const routes: RouteObject[] = [
   },
   {
     path: '/game',
-    element: <div>Страница игры</div>,
+    element: <GamePage />,
   },
   {
     path: '/leaderboard',
