@@ -24,12 +24,6 @@ export class GameEngine {
       ctx
     );
 
-    this.hero = new Hero(
-      canvas.width / 2 - 50,
-      canvas.height / 2 - 50,
-      canvas,
-      ctx
-    );
     this.base = new Base(
       (canvas.width - config.base.width) / 2,
       (canvas.height - config.base.height) / 2,
@@ -43,9 +37,6 @@ export class GameEngine {
     this.bullets = [];
     this.enemies = [];
 
-    this.ziel = new Ziel(0, 0, canvas, ctx);
-    this.bullets = [];
-    this.enemies = [];
     this.init();
   }
 
