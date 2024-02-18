@@ -7,6 +7,7 @@ import { paths } from '../../constants/paths';
 import { AuthGuard } from './AuthGuard';
 import { ErrorPage } from '@/pages/ErrorPage';
 import { MainLayout } from '@/shared/layouts/MainLayout';
+import { LeaderBoardPage } from '@/pages/LeaderBoardPage';
 
 export const routes: RouteObject[] = [
   {
@@ -52,7 +53,7 @@ export const routes: RouteObject[] = [
     element: (
       <AuthGuard>
         <MainLayout>
-          <div>Страница лидерборда</div>
+          <LeaderBoardPage />
         </MainLayout>
       </AuthGuard>
     ),

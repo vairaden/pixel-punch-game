@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { ILoginData, IUser } from '../types';
+import { ILoginData, IUser } from '../types/auth.interface';
 import { axiosBaseQuery } from './baseApi';
 
 const baseAuthUrl = '/auth';
