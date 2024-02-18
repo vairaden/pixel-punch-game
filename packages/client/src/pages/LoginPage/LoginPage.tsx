@@ -3,7 +3,7 @@ import {
   useLazyGetUserInfoQuery,
   useLoginByLoginMutation,
 } from '@/shared/api/authApi';
-import { ILoginData } from '@/shared/types';
+import { ILoginData } from '@/shared/types/auth.interface';
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
