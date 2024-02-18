@@ -1,6 +1,6 @@
 import { paths } from '@/app/constants/paths';
 import { useCreateUserMutation } from '@/shared/api/authApi';
-import { IUser } from '@/shared/types';
+import { IUser } from '@/shared/types/auth.interface';
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
