@@ -1,12 +1,27 @@
+import { paths } from '@/app/constants/paths';
+import { useCreateUserMutation } from '@/shared/api/authApi';
+import { IUser } from '@/shared/types';
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
-import { FieldValues, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 export const RegistrationPage: React.FC = () => {
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset } = useForm<Omit<IUser, 'id'>>();
+  const navigate = useNavigate();
+  const [createUser, { isError }] = useCreateUserMutation();
 
-  const onSubmit = (data: FieldValues) => {
-    console.log(data);
-    reset();
+  const onSubmit = (data: Omit<IUser, 'id'>) => {
+    createUser(data)
+      .unwrap()
+      .then(() => {
+        reset();
+        navigate(paths.homePage);
+      })
+      .catch(e => {
+        if (e.status >= 500) {
+          navigate(paths.error);
+        }
+      });
   };
 
   return (
@@ -24,15 +39,15 @@ export const RegistrationPage: React.FC = () => {
           component="form"
           onSubmit={handleSubmit(onSubmit)}>
           <Typography variant="h4" component="h1">
-            Registration
+            Регистрация
           </Typography>
           <TextField
-            label="First Name"
+            label="Имя"
             variant="outlined"
             {...register('first_name')}
           />
           <TextField
-            label="Second Name"
+            label="Фамилия"
             variant="outlined"
             {...register('second_name')}
           />
@@ -44,19 +59,26 @@ export const RegistrationPage: React.FC = () => {
             type="email"
           />
           <TextField
-            label="Password"
+            label="Пароль"
             variant="outlined"
             type="password"
             {...register('password')}
           />
-          <TextField label="Phone" variant="outlined" {...register('phone')} />
-          <Button variant="contained" type="submit">
-            Sign up
-          </Button>
-          <Button
+          <TextField
+            label="Телефон"
             variant="outlined"
-            onClick={() => console.log('go to login page')}>
-            Sign in
+            {...register('phone')}
+          />
+          {isError && (
+            <Typography variant="body2" color="error">
+              Что-то пошло не так
+            </Typography>
+          )}
+          <Button variant="contained" type="submit">
+            Войти
+          </Button>
+          <Button variant="outlined" onClick={() => navigate(paths.signIn)}>
+            Зарегистрироваться
           </Button>
         </Paper>
       </Box>
