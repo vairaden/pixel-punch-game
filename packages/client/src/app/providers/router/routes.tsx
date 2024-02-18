@@ -6,6 +6,7 @@ import { HomePage } from '@/pages/HomePage';
 import { paths } from '../../constants/paths';
 import { AuthGuard } from './AuthGuard';
 import { ErrorPage } from '@/pages/ErrorPage';
+import { MainLayout } from '@/shared/layouts/MainLayout';
 
 export const routes: RouteObject[] = [
   {
@@ -20,7 +21,9 @@ export const routes: RouteObject[] = [
     path: paths.profile,
     element: (
       <AuthGuard>
-        <div>Профиль пользователя</div>
+        <MainLayout>
+          <div>Профиль пользователя</div>
+        </MainLayout>
       </AuthGuard>
     ),
   },
@@ -28,7 +31,9 @@ export const routes: RouteObject[] = [
     path: paths.homePage,
     element: (
       <AuthGuard>
-        <HomePage />
+        <MainLayout>
+          <HomePage />
+        </MainLayout>
       </AuthGuard>
     ),
   },
@@ -36,7 +41,9 @@ export const routes: RouteObject[] = [
     path: paths.game,
     element: (
       <AuthGuard>
-        <div>Страница игры</div>
+        <MainLayout>
+          <div>Страница игры</div>
+        </MainLayout>
       </AuthGuard>
     ),
   },
@@ -44,7 +51,9 @@ export const routes: RouteObject[] = [
     path: paths.leaderboard,
     element: (
       <AuthGuard>
-        <div>Страница лидерборда</div>
+        <MainLayout>
+          <div>Страница лидерборда</div>
+        </MainLayout>
       </AuthGuard>
     ),
   },
@@ -52,7 +61,9 @@ export const routes: RouteObject[] = [
     path: paths.forum,
     element: (
       <AuthGuard>
-        <div>Страница форума</div>
+        <MainLayout>
+          <div>Страница форума</div>
+        </MainLayout>
       </AuthGuard>
     ),
   },
@@ -60,7 +71,9 @@ export const routes: RouteObject[] = [
     path: paths.forumTopic,
     element: (
       <AuthGuard>
-        <div>Страница топика форума</div>
+        <MainLayout>
+          <div>Страница топика форума</div>
+        </MainLayout>
       </AuthGuard>
     ),
   },
