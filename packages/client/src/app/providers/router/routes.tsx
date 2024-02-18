@@ -21,7 +21,7 @@ export const routes: RouteObject[] = [
     path: paths.profile,
     element: (
       <AuthGuard>
-        <div>Профиль пользователя</div>
+        <ProfilePage />
       </AuthGuard>
     ),
   },
