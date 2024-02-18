@@ -20,10 +20,10 @@ export class Enemy extends GameObject {
     this.radius = 20;
     this.dx = 0;
     this.dy = 0;
-    this.speed = config.enemy.speed;
-    this.health = config.enemy.health;
-    this.attackInterval = config.enemy.attackInterval;
-    this.damage = config.enemy.damage;
+    this.speed = config.ENEMY.speed;
+    this.health = config.ENEMY.health;
+    this.attackInterval = config.ENEMY.attackInterval;
+    this.damage = config.ENEMY.damage;
   }
 
   public move() {

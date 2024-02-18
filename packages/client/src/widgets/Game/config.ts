@@ -1,19 +1,19 @@
-const hero = {
-  x: 100,
-  y: 150,
+const HERO = {
+  startX: 60,
+  startY: 60,
   radius: 20,
   speed: 5,
   health: 100,
   damage: 10,
 };
 
-const base = {
+const BASE = {
   width: 80,
   height: 80,
   health: 750,
 };
 
-const enemy = {
+const ENEMY = {
   radius: 20,
   speed: 0.5,
   health: 25,
@@ -21,7 +21,7 @@ const enemy = {
   attackInterval: 500,
 };
 export const config = {
-  hero,
-  base,
-  enemy,
+  HERO,
+  BASE,
+  ENEMY,
 };

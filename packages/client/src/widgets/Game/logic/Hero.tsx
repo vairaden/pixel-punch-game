@@ -19,13 +19,13 @@ export class Hero extends GameObject {
     ctx: CanvasRenderingContext2D
   ) {
     super(x, y, ctx, canvas);
-    this.radius = config.hero.radius;
-    this.speed = config.hero.speed;
+    this.radius = config.HERO.radius;
+    this.speed = config.HERO.speed;
     this.dx = 0;
     this.dy = 0;
-    this.health = config.hero.health;
+    this.health = config.HERO.health;
     this.color = 'green';
-    this.damage = config.hero.damage;
+    this.damage = config.HERO.damage;
     this.invincible = false;
   }
 

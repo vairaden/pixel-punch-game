@@ -17,10 +17,6 @@ export class Ziel extends GameObject {
     this.y = y;
   }
 
-  // public update(): void {
-
-  // }
-
   public draw(): void {
     this.ctx.beginPath();
     this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);

@@ -18,19 +18,19 @@ export class GameEngine {
     this.ctx = ctx;
 
     this.hero = new Hero(
-      canvas.width / 2 - 60,
-      canvas.height / 2 - 60,
+      canvas.width / 2 - config.HERO.startX,
+      canvas.height / 2 - config.HERO.startY,
       canvas,
       ctx
     );
 
     this.base = new Base(
-      (canvas.width - config.base.width) / 2,
-      (canvas.height - config.base.height) / 2,
+      (canvas.width - config.BASE.width) / 2,
+      (canvas.height - config.BASE.height) / 2,
       canvas,
       ctx,
-      config.base.width,
-      config.base.height
+      config.BASE.width,
+      config.BASE.height
     );
 
     this.ziel = new Ziel(0, 0, canvas, ctx);

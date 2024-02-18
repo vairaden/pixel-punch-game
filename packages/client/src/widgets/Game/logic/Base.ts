@@ -18,8 +18,8 @@ export class Base extends GameObject {
     super(x, y, ctx, canvas);
     this.width = width;
     this.height = height;
-    this.initialHealth = config.base.health;
-    this.health = config.base.health;
+    this.initialHealth = config.BASE.health;
+    this.health = config.BASE.health;
   }
 
   public receiveDamage(damage: number) {
