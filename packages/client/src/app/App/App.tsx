@@ -1,10 +1,11 @@
-import { HomePage } from '@/pages/HomePage';
+import { RouterProvider } from 'react-router-dom';
+import { router } from '../providers';
+import '../style/root.scss';
 
 function App() {
-  // TODO: Роутер
   return (
-    <div data-testid="app">
-      <HomePage />
+    <div data-testid="app" id="app">
+      <RouterProvider router={router} />
     </div>
   );
 }
