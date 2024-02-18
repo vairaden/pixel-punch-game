@@ -2,12 +2,22 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Paper, TextField, Button, Grid } from '@mui/material';
+import { IProfilePassword } from '@/shared/types';
+import { useSetProfilePasswordMutation } from '@/shared/api/profileApi';
+import { Message } from '@/shared/ui';
 
 export const ProfilePassword: React.FC = () => {
-  const { register, handleSubmit } = useForm();
+  const [profilePassword, { isSuccess, isError }] =
+    useSetProfilePasswordMutation();
 
-  const onSubmit = handleSubmit(formData => {
-    console.log(formData);
+  const { register, handleSubmit } = useForm<IProfilePassword>();
+
+  const onSubmit = handleSubmit(async formData => {
+    try {
+      await profilePassword(formData);
+    } catch (error) {
+      console.error(error);
+    }
   });
 
   return (
@@ -36,6 +46,8 @@ export const ProfilePassword: React.FC = () => {
       <Button variant="contained" type="submit" sx={{ marginTop: 5 }}>
         Поменять пароль
       </Button>
+      {isSuccess && <Message title="Пароль успешно изменен!" />}
+      {isError && <Message title="Что то пошло не так!" />}
     </Paper>
   );
 };
