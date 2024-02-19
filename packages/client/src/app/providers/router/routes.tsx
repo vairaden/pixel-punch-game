@@ -3,6 +3,7 @@ import type { RouteObject } from 'react-router-dom';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegistrationPage } from '@/pages/RegistrationPage';
 import { HomePage } from '@/pages/HomePage';
+import { ProfilePage } from '@/pages/ProfilePage';
 import { paths } from '../../constants/paths';
 import { AuthGuard } from './AuthGuard';
 import { ErrorPage } from '@/pages/ErrorPage';
@@ -24,7 +25,7 @@ export const routes: RouteObject[] = [
     element: (
       <AuthGuard>
         <MainLayout>
-          <div>Профиль пользователя</div>
+          <ProfilePage />
         </MainLayout>
       </AuthGuard>
     ),
