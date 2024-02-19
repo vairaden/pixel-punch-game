@@ -7,11 +7,12 @@ import { IProfile } from '@/shared/types';
 import { useSetProfileInfoMutation } from '@/shared/api/profileApi';
 import { useActions, useAppSelector } from '@/shared/hooks';
 import { Message } from '@/shared/ui';
+import { selectProfileInfo } from '../model/selectors';
 
 export const ProfileInfo: React.FC = () => {
   const [profileInfo, { isSuccess, isError }] = useSetProfileInfoMutation();
 
-  const profile = useAppSelector(state => state.profile);
+  const profile = useAppSelector(selectProfileInfo);
   const { setProfile } = useActions();
 
   const { register, handleSubmit } = useForm<IProfile>();

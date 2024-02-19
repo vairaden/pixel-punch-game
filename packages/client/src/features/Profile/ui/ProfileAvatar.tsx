@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent } from 'react';
 
 import { Avatar, Box, IconButton } from '@mui/material';
 
@@ -6,39 +6,27 @@ import { useSetProfileAvatarMutation } from '@/shared/api/profileApi';
 import { BASE_URL } from '@/shared/api/baseApi';
 import { useActions, useAppSelector } from '@/shared/hooks';
 import { Message } from '@/shared/ui';
+import { selectProfileAvatar } from '../model/selectors';
 
 export const ProfileAvatar: React.FC = () => {
-  const [file, setFile] = useState<File | null>(null);
-
   const [profileAvatar, { isSuccess, isError }] = useSetProfileAvatarMutation();
 
-  const avatar = useAppSelector(state => state.profile.avatar);
+  const avatar = useAppSelector(selectProfileAvatar);
   const { setProfile } = useActions();
 
   const AVATAR_URL = `${BASE_URL}/resources/${avatar}`;
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target?.files) {
-      setFile(event.target?.files[0]);
-    }
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    if (!event.target?.files) return;
+
+    const formData = new FormData();
+    formData.append('avatar', event.target.files[0]);
+
+    await profileAvatar(formData)
+      .unwrap()
+      .then(setProfile)
+      .catch(console.error);
   };
-
-  const handleProfileAvatarChange = async () => {
-    try {
-      const formData = new FormData();
-      formData.append('avatar', file as File);
-
-      const response = await profileAvatar(formData).unwrap();
-      setProfile(response);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    if (!file?.size) return;
-    handleProfileAvatarChange();
-  }, [file]);
 
   return (
     <>
