@@ -18,12 +18,7 @@ export const ProfileInfo: React.FC = () => {
   const { register, handleSubmit } = useForm<IProfile>();
 
   const onSubmit = handleSubmit(async formData => {
-    try {
-      const response = await profileInfo(formData).unwrap();
-      setProfile(response);
-    } catch (error) {
-      console.error(error);
-    }
+    await profileInfo(formData).unwrap().then(setProfile).catch(console.error);
   });
 
   return (
@@ -75,7 +70,7 @@ export const ProfileInfo: React.FC = () => {
         Изменить
       </Button>
       {isSuccess && <Message title="Данные пользователя успешно обновлены!" />}
-      {isError && <Message title="Что то пошло не так!" />}
+      {isError && <Message severity="error" title="Что то пошло не так!" />}
     </Paper>
   );
 };

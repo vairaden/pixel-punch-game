@@ -13,11 +13,7 @@ export const ProfilePassword: React.FC = () => {
   const { register, handleSubmit } = useForm<IProfilePassword>();
 
   const onSubmit = handleSubmit(async formData => {
-    try {
-      await profilePassword(formData);
-    } catch (error) {
-      console.error(error);
-    }
+    await profilePassword(formData).catch(console.error);
   });
 
   return (
@@ -47,7 +43,7 @@ export const ProfilePassword: React.FC = () => {
         Поменять пароль
       </Button>
       {isSuccess && <Message title="Пароль успешно изменен!" />}
-      {isError && <Message title="Что то пошло не так!" />}
+      {isError && <Message severity="error" title="Что то пошло не так!" />}
     </Paper>
   );
 };

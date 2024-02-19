@@ -49,7 +49,7 @@ export const ProfileAvatar: React.FC = () => {
         </label>
       </Box>
       {isSuccess && <Message title="Успех!" />}
-      {isError && <Message title="Что то пошло не так!" />}
+      {isError && <Message severity="error" title="Что то пошло не так!" />}
     </>
   );
 };
