@@ -49,6 +49,10 @@ export const namelValidator: RegisterOptions = {
     message:
       'первая буква должна быть заглавной, может содержать латиницу или кириллицу!',
   },
+  minLength: {
+    value: 3,
+    message: 'Минимум 3 символа!',
+  },
 };
 export const phoneValidator: RegisterOptions = {
   required: 'Поле обязательно для заполнения!',
