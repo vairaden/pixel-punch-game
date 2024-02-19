@@ -1,12 +1,40 @@
+import { paths } from '@/app/constants/paths';
+import {
+  useLazyGetUserInfoQuery,
+  useLoginByLoginMutation,
+} from '@/shared/api/authApi';
+import { ILoginData } from '@/shared/types/auth.interface';
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
-import { FieldValues, useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 export const LoginPage: React.FC = () => {
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset } = useForm<ILoginData>();
+  const navigate = useNavigate();
+  const [loginByLogin, { isError }] = useLoginByLoginMutation();
+  const [getUserInfo] = useLazyGetUserInfoQuery();
 
-  const onSubmit = (data: FieldValues) => {
-    console.log(data);
-    reset();
+  useEffect(() => {
+    getUserInfo()
+      .unwrap()
+      .then(() => {
+        navigate(paths.homePage);
+      });
+  }, []);
+
+  const onSubmit = (data: ILoginData) => {
+    loginByLogin(data)
+      .unwrap()
+      .then(() => {
+        reset();
+        navigate(paths.homePage);
+      })
+      .catch(e => {
+        if (e.status >= 500) {
+          navigate(paths.error);
+        }
+      });
   };
 
   return (
@@ -24,22 +52,25 @@ export const LoginPage: React.FC = () => {
           component="form"
           onSubmit={handleSubmit(onSubmit)}>
           <Typography variant="h4" component="h1">
-            Authorization
+            Авторизация
           </Typography>
-          <TextField label="Login" variant="outlined" {...register('login')} />
+          <TextField label="Логин" variant="outlined" {...register('login')} />
           <TextField
-            label="Password"
+            label="Пароль"
             variant="outlined"
             type="password"
             {...register('password')}
           />
+          {isError && (
+            <Typography variant="body2" color="error">
+              Неправильный логин или пароль
+            </Typography>
+          )}
           <Button variant="contained" type="submit">
-            Sign in
+            Войти
           </Button>
-          <Button
-            variant="outlined"
-            onClick={() => console.log('go to registration page')}>
-            Sign up
+          <Button variant="outlined" onClick={() => navigate(paths.signUp)}>
+            Зарегистрироваться
           </Button>
         </Paper>
       </Box>

@@ -3,46 +3,89 @@ import type { RouteObject } from 'react-router-dom';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegistrationPage } from '@/pages/RegistrationPage';
 import { HomePage } from '@/pages/HomePage';
+import { ProfilePage } from '@/pages/ProfilePage';
+import { paths } from '../../constants/paths';
+import { AuthGuard } from './AuthGuard';
+import { ErrorPage } from '@/pages/ErrorPage';
+import { MainLayout } from '@/shared/layouts/MainLayout';
+import { GamePage } from '@/pages/GamePage';
+import { LeaderBoardPage } from '@/pages/LeaderBoardPage';
 
 export const routes: RouteObject[] = [
   {
-    path: '/sign-in',
+    path: paths.signIn,
     element: <LoginPage />,
   },
   {
-    path: '/sign-up',
+    path: paths.signUp,
     element: <RegistrationPage />,
   },
   {
-    path: '/profile',
-    element: <div>Профиль пользователя</div>,
+    path: paths.profile,
+    element: (
+      <AuthGuard>
+        <MainLayout>
+          <ProfilePage />
+        </MainLayout>
+      </AuthGuard>
+    ),
   },
   {
-    path: '/',
-    element: <HomePage />,
+    path: paths.homePage,
+    element: (
+      <AuthGuard>
+        <MainLayout>
+          <HomePage />
+        </MainLayout>
+      </AuthGuard>
+    ),
   },
   {
-    path: '/game',
-    element: <div>Страница игры</div>,
+    path: paths.game,
+    element: (
+      <AuthGuard>
+        <MainLayout>
+          <GamePage />
+        </MainLayout>
+      </AuthGuard>
+    ),
   },
   {
-    path: '/leaderboard',
-    element: <div>Страница лидерборда</div>,
+    path: paths.leaderboard,
+    element: (
+      <AuthGuard>
+        <MainLayout>
+          <LeaderBoardPage />
+        </MainLayout>
+      </AuthGuard>
+    ),
   },
   {
-    path: '/forum',
-    element: <div>Страница форума</div>,
+    path: paths.forum,
+    element: (
+      <AuthGuard>
+        <MainLayout>
+          <div>Страница форума</div>
+        </MainLayout>
+      </AuthGuard>
+    ),
   },
   {
-    path: '/forum/:topic-id',
-    element: <div>Страница топика форума</div>,
+    path: paths.forumTopic,
+    element: (
+      <AuthGuard>
+        <MainLayout>
+          <div>Страница топика форума</div>
+        </MainLayout>
+      </AuthGuard>
+    ),
   },
   {
-    path: '/500',
-    element: <div>Ошибка 500</div>,
+    path: paths.error,
+    element: <ErrorPage code={500} text="Произошла непредвиденная ошибка" />,
   },
   {
     path: '*',
-    element: <div>Ошибка 404</div>,
+    element: <ErrorPage code={404} text="Страницы не существует :(" />,
   },
 ];

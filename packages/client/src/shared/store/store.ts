@@ -1,14 +1,23 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { testApi } from '@/shared/api/testApi';
+import { authApi } from '../api/authApi';
+import { profileApi } from '../api/profileApi';
+import { profileReducer } from './slices/profile.slice';
 
 export const store = configureStore({
   reducer: {
+    profile: profileReducer,
     [testApi.reducerPath]: testApi.reducer,
+    [authApi.reducerPath]: authApi.reducer,
+    [profileApi.reducerPath]: profileApi.reducer,
   },
 
   middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(testApi.middleware),
+    getDefaultMiddleware()
+      .concat(testApi.middleware)
+      .concat(authApi.middleware)
+      .concat(profileApi.middleware),
 });
 
 setupListeners(store.dispatch);
