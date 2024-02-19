@@ -1,8 +1,14 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, FC } from 'react';
 import { GameEngine } from './logic/GameEngine';
+import { GameOverCallback } from '@/shared/types';
 
-export const Game: React.FC = () => {
+interface Props {
+  gameOverCallback: GameOverCallback;
+}
+
+export const Game: FC<Props> = ({gameOverCallback}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const gameEndRef = useRef(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -13,15 +19,21 @@ export const Game: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const gameEngine = new GameEngine(canvas, ctx);
+    const gameEngine = new GameEngine(canvas, ctx, () => {
+      gameEndRef.current = true;
+      gameOverCallback()
+    });
+
     const gameLoop = () => {
+      if (!gameEndRef.current) {
       gameEngine.update(); // Обновляем состояние игры
       gameEngine.draw(); // Отрисовываем игру
-      requestAnimationFrame(gameLoop);
+        requestAnimationFrame(gameLoop);
+      }
     };
 
     gameLoop();
-  }, [canvasRef]);
+  }, []);
 
   return (
     <div>

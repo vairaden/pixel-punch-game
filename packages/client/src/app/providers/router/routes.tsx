@@ -7,8 +7,8 @@ import { paths } from '../../constants/paths';
 import { AuthGuard } from './AuthGuard';
 import { ErrorPage } from '@/pages/ErrorPage';
 import { MainLayout } from '@/shared/layouts/MainLayout';
-import { GamePage } from '@/pages/GamePage';
 import { LeaderBoardPage } from '@/pages/LeaderBoardPage';
+import { GameProcess } from '@/processes/GameProcess';
 
 export const routes: RouteObject[] = [
   {
@@ -44,7 +44,7 @@ export const routes: RouteObject[] = [
     element: (
       <AuthGuard>
         <MainLayout>
-          <GamePage />
+          <GameProcess />
         </MainLayout>
       </AuthGuard>
     ),
