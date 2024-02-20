@@ -3,8 +3,9 @@ import { RegisterOptions } from 'react-hook-form';
 export const loginValidator: RegisterOptions = {
   required: 'Поле обязательно для заполнения!',
   pattern: {
-    value: /^(?=[a-zA-Z0-9_-]{3,20}$)(?!\d+$)[a-zA-Z0-9_-]+$/,
-    message: 'от 3 до 20 символов, латиница, может содержать цифры!',
+    value: /^(?!\d+$)[a-zA-Z0-9_-]+$/,
+    message:
+      'от 3 до 20 символов, латиница, может содержать цифры, но не состоит из них!',
   },
   minLength: {
     value: 3,
@@ -19,7 +20,7 @@ export const loginValidator: RegisterOptions = {
 export const passwordValidator: RegisterOptions = {
   required: 'Поле обязательно для заполнения!',
   pattern: {
-    value: /^(?=.*[A-Z])(?=.*\d).{8,40}$/,
+    value: /^(?=.*[A-Z])(?=.*\d).+$/,
     message:
       'от 8 до 40 символов, обязательно хотя бы одна заглавная буква и цифра!',
   },
@@ -57,7 +58,7 @@ export const namelValidator: RegisterOptions = {
 export const phoneValidator: RegisterOptions = {
   required: 'Поле обязательно для заполнения!',
   pattern: {
-    value: /^\+?\d{11,12}$/,
+    value: /^\+?\d+$/,
     message: 'от 10 до 15 символов, состоит из цифр, может начинаться с плюса!',
   },
   minLength: {
