@@ -5,12 +5,17 @@ import { Paper, TextField, Button, Grid } from '@mui/material';
 import { IProfilePassword } from '@/shared/types';
 import { useSetProfilePasswordMutation } from '@/shared/api/profileApi';
 import { Message } from '@/shared/ui';
+import { passwordValidator } from '@/shared/utils';
 
 export const ProfilePassword: React.FC = () => {
   const [profilePassword, { isSuccess, isError }] =
     useSetProfilePasswordMutation();
 
-  const { register, handleSubmit } = useForm<IProfilePassword>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IProfilePassword>({ mode: 'all' });
 
   const onSubmit = handleSubmit(async formData => {
     await profilePassword(formData).catch(console.error);
@@ -27,15 +32,19 @@ export const ProfilePassword: React.FC = () => {
             label="Старый пароль"
             variant="standard"
             type="password"
-            {...register('oldPassword')}
+            error={!!errors?.oldPassword}
+            helperText={errors?.oldPassword?.message}
+            {...register('oldPassword', passwordValidator)}
           />
         </Grid>
         <Grid item>
           <TextField
-            label="Новый пароль"
-            variant="standard"
             type="password"
-            {...register('newPassword')}
+            variant="standard"
+            label="Новый пароль"
+            error={!!errors?.newPassword}
+            helperText={errors?.newPassword?.message}
+            {...register('newPassword', passwordValidator)}
           />
         </Grid>
       </Grid>

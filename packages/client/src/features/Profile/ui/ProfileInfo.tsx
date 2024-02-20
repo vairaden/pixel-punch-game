@@ -8,6 +8,12 @@ import { useSetProfileInfoMutation } from '@/shared/api/profileApi';
 import { useActions, useAppSelector } from '@/shared/hooks';
 import { Message } from '@/shared/ui';
 import { selectProfileInfo } from '../model/selectors';
+import {
+  emailValidator,
+  loginValidator,
+  namelValidator,
+  phoneValidator,
+} from '@/shared/utils';
 
 export const ProfileInfo: React.FC = () => {
   const [profileInfo, { isSuccess, isError }] = useSetProfileInfoMutation();
@@ -15,7 +21,11 @@ export const ProfileInfo: React.FC = () => {
   const profile = useAppSelector(selectProfileInfo);
   const { setProfile } = useActions();
 
-  const { register, handleSubmit } = useForm<IProfile>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IProfile>({ mode: 'all' });
 
   const onSubmit = handleSubmit(async formData => {
     await profileInfo(formData).unwrap().then(setProfile).catch(console.error);
@@ -23,46 +33,56 @@ export const ProfileInfo: React.FC = () => {
 
   return (
     <Paper component="form" sx={{ padding: 2, width: 600 }} onSubmit={onSubmit}>
-      <Grid container spacing={4}>
-        <Grid item>
+      <Grid container spacing={2}>
+        <Grid item md={4}>
           <TextField
             label="Почта"
             variant="standard"
-            {...register('email')}
+            error={!!errors?.email}
             defaultValue={profile.email}
+            helperText={errors?.email?.message}
+            {...register('email', emailValidator)}
           />
         </Grid>
-        <Grid item>
+        <Grid item md={4}>
           <TextField
             label="Логин"
             variant="standard"
-            {...register('login')}
+            error={!!errors?.login}
             defaultValue={profile.login}
+            helperText={errors?.login?.message}
+            {...register('login', loginValidator)}
           />
         </Grid>
-        <Grid item>
+        <Grid item md={4}>
           <TextField
             label="Имя"
             variant="standard"
-            {...register('first_name')}
+            error={!!errors?.first_name}
             defaultValue={profile.first_name}
+            helperText={errors?.first_name?.message}
+            {...register('first_name', namelValidator)}
           />
         </Grid>
-        <Grid item>
+        <Grid item md={4}>
           <TextField
             label="Фамилия"
             variant="standard"
-            {...register('second_name')}
+            error={!!errors?.second_name}
             defaultValue={profile.second_name}
+            helperText={errors?.second_name?.message}
+            {...register('second_name', namelValidator)}
           />
         </Grid>
-        <Grid item>
+        <Grid item md={4}>
           <TextField
+            type="tel"
             label="Телефон"
             variant="standard"
-            type="tel"
-            {...register('phone')}
+            error={!!errors?.phone}
             defaultValue={profile.phone}
+            helperText={errors?.phone?.message}
+            {...register('phone', phoneValidator)}
           />
         </Grid>
       </Grid>

@@ -1,17 +1,32 @@
-import { paths } from '@/app/constants/paths';
-import { useCreateUserMutation } from '@/shared/api/authApi';
-import { IUser } from '@/shared/types/auth.interface';
-import { Box, Button, Paper, TextField, Typography } from '@mui/material';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { paths } from '@/app/constants/paths';
+import { useCreateUserMutation } from '@/shared/api/authApi';
+import { IUser } from '@/shared/types/auth.interface';
+import {
+  emailValidator,
+  loginValidator,
+  namelValidator,
+  passwordValidator,
+  phoneValidator,
+} from '@/shared/utils';
+import { Box, Button, Paper, TextField, Typography } from '@mui/material';
+
 export const RegistrationPage: React.FC = () => {
-  const { register, handleSubmit, reset } = useForm<Omit<IUser, 'id'>>();
+  const {
+    reset,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Omit<IUser, 'id'>>({ mode: 'all' });
+
   const navigate = useNavigate();
   const [createUser, { isError }] = useCreateUserMutation();
 
-  const onSubmit = (data: Omit<IUser, 'id'>) => {
-    createUser(data)
+  const onSubmit = handleSubmit(async data => {
+    await createUser(data)
       .unwrap()
       .then(() => {
         reset();
@@ -22,7 +37,7 @@ export const RegistrationPage: React.FC = () => {
           navigate(paths.error);
         }
       });
-  };
+  });
 
   return (
     <Box
@@ -37,37 +52,53 @@ export const RegistrationPage: React.FC = () => {
           sx={{ padding: 2, display: 'flex', flexDirection: 'column', gap: 2 }}
           elevation={1}
           component="form"
-          onSubmit={handleSubmit(onSubmit)}>
+          onSubmit={onSubmit}>
           <Typography variant="h4" component="h1">
             Регистрация
           </Typography>
           <TextField
             label="Имя"
             variant="outlined"
-            {...register('first_name')}
+            error={!!errors?.first_name}
+            helperText={errors?.first_name?.message}
+            {...register('first_name', namelValidator)}
           />
           <TextField
             label="Фамилия"
             variant="outlined"
-            {...register('second_name')}
+            error={!!errors?.second_name}
+            helperText={errors?.second_name?.message}
+            {...register('second_name', namelValidator)}
           />
-          <TextField label="Login" variant="outlined" {...register('login')} />
           <TextField
+            label="Login"
+            variant="outlined"
+            error={!!errors?.login}
+            helperText={errors?.login?.message}
+            {...register('login', loginValidator)}
+          />
+          <TextField
+            type="email"
             label="Email"
             variant="outlined"
-            {...register('email')}
-            type="email"
+            error={!!errors?.email}
+            helperText={errors?.email?.message}
+            {...register('email', emailValidator)}
           />
           <TextField
             label="Пароль"
-            variant="outlined"
             type="password"
-            {...register('password')}
+            variant="outlined"
+            error={!!errors?.password}
+            helperText={errors?.password?.message}
+            {...register('password', passwordValidator)}
           />
           <TextField
             label="Телефон"
             variant="outlined"
-            {...register('phone')}
+            error={!!errors?.phone}
+            helperText={errors?.phone?.message}
+            {...register('phone', phoneValidator)}
           />
           {isError && (
             <Typography variant="body2" color="error">
@@ -75,10 +106,10 @@ export const RegistrationPage: React.FC = () => {
             </Typography>
           )}
           <Button variant="contained" type="submit">
-            Войти
+            Зарегистрироваться
           </Button>
           <Button variant="outlined" onClick={() => navigate(paths.signIn)}>
-            Зарегистрироваться
+            Войти
           </Button>
         </Paper>
       </Box>
