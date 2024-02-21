@@ -1,9 +1,9 @@
 import { StartPage } from '@/pages/StartPage';
-import { ReactNode, useCallback, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { GamePage } from '@/pages/GamePage';
 import { GameStatus } from '@/shared/constants';
 
-export function GameProcess() {
+export const GameProcess: FC = () => {
   const [gameStatus, setGameStatus] = useState(GameStatus.START);
 
   const countDownCallback = useCallback(() => {
@@ -15,7 +15,7 @@ export function GameProcess() {
     setGameStatus(GameStatus.END);
   }, []);
 
-  const gamePage: Record<GameStatus, ReactNode> = {
+  const gamePage: Record<GameStatus, JSX.Element> = {
     [GameStatus.START]: <StartPage countDownCallback={countDownCallback} countdown={5} />,
     [GameStatus.PLAYING]: <GamePage gameOverCallback={gameOverCallback} />,
     [GameStatus.END]: <div>EndPage</div>,
