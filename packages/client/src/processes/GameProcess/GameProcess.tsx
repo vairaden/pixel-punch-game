@@ -1,5 +1,5 @@
 import { StartPage } from '@/pages/StartPage';
-import { useCallback, useState } from 'react';
+import { ReactNode, useCallback, useState } from 'react';
 import { GamePage } from '@/pages/GamePage';
 import { GameStatus } from '@/shared/constants';
 
@@ -15,12 +15,11 @@ export function GameProcess() {
     setGameStatus(GameStatus.END);
   }, []);
 
-  switch (gameStatus) {
-    case GameStatus.START:
-      return <StartPage countDownCallback={countDownCallback} countdown={5} />;
-    case GameStatus.PLAYING:
-      return <GamePage gameOverCallback={gameOverCallback} />;
-    case GameStatus.END:
-      return <div>EndPage</div>;
-  }
+  const gamePage: Record<GameStatus, ReactNode> = {
+    [GameStatus.START]: <StartPage countDownCallback={countDownCallback} countdown={5} />,
+    [GameStatus.PLAYING]: <GamePage gameOverCallback={gameOverCallback} />,
+    [GameStatus.END]: <div>EndPage</div>,
+  };
+
+  return gamePage[gameStatus];
 }
