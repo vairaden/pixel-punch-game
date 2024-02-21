@@ -1,24 +1,17 @@
 import { StartPage } from '@/pages/StartPage';
-import { useCallback, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { GamePage } from '@/pages/GamePage';
-import { EndPage } from '@/pages/EndPage';
+import { GameStatus } from '@/shared/constants';
 
-const enum GameStatus {
-  Start = 'start',
-  Playing = 'playing',
-  End = 'end',
-}
-
-export function GameProcess() {
-  const [gameStatus, setGameStatus] = useState(GameStatus.Start);
+export const GameProcess: FC = () => {
+  const [gameStatus, setGameStatus] = useState(GameStatus.START);
 
   const countDownCallback = useCallback(() => {
-    setGameStatus(GameStatus.Playing);
+    setGameStatus(GameStatus.PLAYING);
   }, []);
 
-
   const gameOverCallback = useCallback(() => {
-    setGameStatus(GameStatus.End);
+    setGameStatus(GameStatus.END);
   }, []);
 
   const resetCallback = useCallback(() => {
@@ -26,11 +19,11 @@ export function GameProcess() {
   }, []);
 
   switch (gameStatus) {
-    case GameStatus.Start:
+    case GameStatus.START:
       return <StartPage countDownCallback={countDownCallback} countdown={5} />;
-    case GameStatus.Playing:
+    case GameStatus.PLAYING:
       return <GamePage gameOverCallback={gameOverCallback} />;
-    case GameStatus.End:
+    case GameStatus.END:
       return <EndPage resetCallback={resetCallback}/>;
   }
 }

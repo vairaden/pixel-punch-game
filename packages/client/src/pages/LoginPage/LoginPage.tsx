@@ -1,30 +1,26 @@
-import { paths } from '@/app/constants/paths';
-import {
-  useLazyGetUserInfoQuery,
-  useLoginByLoginMutation,
-} from '@/shared/api/authApi';
-import { ILoginData } from '@/shared/types/auth.interface';
-import { Box, Button, Paper, TextField, Typography } from '@mui/material';
-import { useEffect } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { paths } from '@/app/constants/paths';
+import { useLoginByLoginMutation } from '@/shared/api/authApi';
+import { ILoginData } from '@/shared/types';
+import { loginValidator, passwordValidator } from '@/shared/utils';
+import { Box, Button, Paper, TextField, Typography } from '@mui/material';
+
 export const LoginPage: React.FC = () => {
-  const { register, handleSubmit, reset } = useForm<ILoginData>();
+  const {
+    reset,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ILoginData>({ mode: 'all' });
+
   const navigate = useNavigate();
   const [loginByLogin, { isError }] = useLoginByLoginMutation();
-  const [getUserInfo] = useLazyGetUserInfoQuery();
 
-  useEffect(() => {
-    getUserInfo()
-      .unwrap()
-      .then(() => {
-        navigate(paths.homePage);
-      });
-  }, []);
-
-  const onSubmit = (data: ILoginData) => {
-    loginByLogin(data)
+  const onSubmit = handleSubmit(async data => {
+    await loginByLogin(data)
       .unwrap()
       .then(() => {
         reset();
@@ -35,7 +31,7 @@ export const LoginPage: React.FC = () => {
           navigate(paths.error);
         }
       });
-  };
+  });
 
   return (
     <Box
@@ -50,16 +46,24 @@ export const LoginPage: React.FC = () => {
           sx={{ padding: 2, display: 'flex', flexDirection: 'column', gap: 2 }}
           elevation={1}
           component="form"
-          onSubmit={handleSubmit(onSubmit)}>
+          onSubmit={onSubmit}>
           <Typography variant="h4" component="h1">
             Авторизация
           </Typography>
-          <TextField label="Логин" variant="outlined" {...register('login')} />
+          <TextField
+            label="Логин"
+            variant="outlined"
+            error={!!errors?.login}
+            helperText={errors?.login?.message}
+            {...register('login', loginValidator)}
+          />
           <TextField
             label="Пароль"
             variant="outlined"
             type="password"
-            {...register('password')}
+            error={!!errors?.password}
+            helperText={errors?.password?.message}
+            {...register('password', passwordValidator)}
           />
           {isError && (
             <Typography variant="body2" color="error">

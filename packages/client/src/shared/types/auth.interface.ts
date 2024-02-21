@@ -6,6 +6,7 @@ export type IUser = {
   login: string;
   password: string;
   phone: string;
+  avatar?: string;
 };
 
 export type ILoginData = {

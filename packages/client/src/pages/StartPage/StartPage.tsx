@@ -1,5 +1,5 @@
 import { Box, Button, Container, Paper, Typography } from '@mui/material';
-import { FC, useCallback, useRef, useState } from 'react';
+import { FC, useState } from 'react';
 
 interface Props {
   countDownCallback: () => void;
@@ -9,21 +9,21 @@ interface Props {
 export const StartPage: FC<Props> = ({ countDownCallback, countdown }) => {
   const [remainingTime, setRemainingTime] = useState(countdown);
   const [isCountdown, setIsCountdown] = useState(false);
-  const timeRef = useRef(countdown);
 
-  const startTimer = useCallback(() => {
+  function startTimer() {
     setIsCountdown(true);
+    let timeLeft = countdown;
 
     const interval = setInterval(() => {
       setRemainingTime((prev) => prev - 1);
-      timeRef.current -= 1;
+      timeLeft -= 1;
 
-      if (timeRef.current === 0) {
+      if (timeLeft === 0) {
         clearInterval(interval);
         countDownCallback();
       }
     }, 1000);
-  }, []);
+  }
 
   return (
     <Container maxWidth="sm">

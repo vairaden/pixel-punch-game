@@ -8,7 +8,6 @@ interface Props {
 
 export const Game: FC<Props> = ({gameOverCallback}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const gameEndRef = useRef(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -19,15 +18,17 @@ export const Game: FC<Props> = ({gameOverCallback}) => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    let isGameEnd = false;
+
     const gameEngine = new GameEngine(canvas, ctx, () => {
-      gameEndRef.current = true;
+      isGameEnd = true;
       gameOverCallback()
     });
 
     const gameLoop = () => {
-      if (!gameEndRef.current) {
-      gameEngine.update(); // Обновляем состояние игры
-      gameEngine.draw(); // Отрисовываем игру
+      if (!isGameEnd) {
+        gameEngine.update(); // Обновляем состояние игры
+        gameEngine.draw(); // Отрисовываем игру
         requestAnimationFrame(gameLoop);
       }
     };
