@@ -2,6 +2,7 @@ import { StartPage } from '@/pages/StartPage';
 import { FC, useCallback, useState } from 'react';
 import { GamePage } from '@/pages/GamePage';
 import { GameStatus } from '@/shared/constants';
+import { EndPage } from '@/pages/EndPage';
 
 export const GameProcess: FC = () => {
   const [gameStatus, setGameStatus] = useState(GameStatus.START);
@@ -15,7 +16,7 @@ export const GameProcess: FC = () => {
   }, []);
 
   const resetCallback = useCallback(() => {
-    setGameStatus(GameStatus.Start);
+    setGameStatus(GameStatus.START);
   }, []);
 
   switch (gameStatus) {
