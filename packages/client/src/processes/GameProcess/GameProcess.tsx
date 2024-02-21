@@ -15,11 +15,12 @@ export const GameProcess: FC = () => {
     setGameStatus(GameStatus.END);
   }, []);
 
-  const gamePage: Record<GameStatus, JSX.Element> = {
-    [GameStatus.START]: <StartPage countDownCallback={countDownCallback} countdown={5} />,
-    [GameStatus.PLAYING]: <GamePage gameOverCallback={gameOverCallback} />,
-    [GameStatus.END]: <div>EndPage</div>,
-  };
-
-  return gamePage[gameStatus];
+  switch (gameStatus) {
+    case GameStatus.START:
+      return <StartPage countDownCallback={countDownCallback} countdown={5} />;
+    case GameStatus.PLAYING:
+      return <GamePage gameOverCallback={gameOverCallback} />;
+    case GameStatus.END:
+      return <div>EndPage</div>;
+  }
 }
