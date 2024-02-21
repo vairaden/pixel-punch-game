@@ -3,6 +3,7 @@ import { FC, useCallback, useState } from 'react';
 import { GamePage } from '@/pages/GamePage';
 import { GameStatus } from '@/shared/constants';
 import { EndPage } from '@/pages/EndPage';
+import { assertUnreachable } from '@/shared/utils';
 
 export const GameProcess: FC = () => {
   const [gameStatus, setGameStatus] = useState(GameStatus.START);
@@ -26,5 +27,7 @@ export const GameProcess: FC = () => {
       return <GamePage gameOverCallback={gameOverCallback} />;
     case GameStatus.END:
       return <EndPage resetCallback={resetCallback}/>;
+    default:
+      assertUnreachable(gameStatus);
   }
 }
