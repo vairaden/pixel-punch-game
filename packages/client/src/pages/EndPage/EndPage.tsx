@@ -1,11 +1,11 @@
 import { Box, Button, Container, Paper, Typography } from '@mui/material';
 import { FC } from 'react';
 
-interface Props {
+interface IProps {
   resetCallback: () => void;
 }
 
-export const EndPage: FC<Props> = ({ resetCallback }) => {
+export const EndPage: FC<IProps> = ({ resetCallback }) => {
   return (
     <Container maxWidth="sm">
       <Box sx={{ my: 4 }}>
