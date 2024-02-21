@@ -10,74 +10,95 @@ import { ErrorPage } from '@/pages/ErrorPage';
 import { MainLayout } from '@/shared/layouts/MainLayout';
 import { LeaderBoardPage } from '@/pages/LeaderBoardPage';
 import { GameProcess } from '@/processes/GameProcess';
+import { ErrorBoundary } from '../errorBoundary';
 
 export const routes: RouteObject[] = [
   {
     path: paths.signIn,
-    element: <LoginPage />,
+    element: (
+      <ErrorBoundary>
+        <LoginPage />
+      </ErrorBoundary>
+    ),
   },
   {
     path: paths.signUp,
-    element: <RegistrationPage />,
+    element: (
+      <ErrorBoundary>
+        <RegistrationPage />
+      </ErrorBoundary>
+    ),
   },
   {
     path: paths.profile,
     element: (
-      <AuthGuard>
-        <MainLayout>
-          <ProfilePage />
-        </MainLayout>
-      </AuthGuard>
+      <ErrorBoundary>
+        <AuthGuard>
+          <MainLayout>
+            <ProfilePage />
+          </MainLayout>
+        </AuthGuard>
+      </ErrorBoundary>
     ),
   },
   {
     path: paths.homePage,
     element: (
-      <AuthGuard>
-        <MainLayout>
-          <HomePage />
-        </MainLayout>
-      </AuthGuard>
+      <ErrorBoundary>
+        <AuthGuard>
+          <MainLayout>
+            <HomePage />
+          </MainLayout>
+        </AuthGuard>
+      </ErrorBoundary>
     ),
   },
   {
     path: paths.game,
     element: (
-      <AuthGuard>
-        <MainLayout>
-          <GameProcess />
-        </MainLayout>
-      </AuthGuard>
+      <ErrorBoundary>
+        <AuthGuard>
+          <MainLayout>
+            <GameProcess />
+          </MainLayout>
+        </AuthGuard>
+      </ErrorBoundary>
     ),
   },
   {
     path: paths.leaderboard,
     element: (
-      <AuthGuard>
-        <MainLayout>
-          <LeaderBoardPage />
-        </MainLayout>
-      </AuthGuard>
+      <ErrorBoundary>
+        <AuthGuard>
+          <MainLayout>
+            <LeaderBoardPage />
+          </MainLayout>
+        </AuthGuard>
+      </ErrorBoundary>
     ),
   },
   {
     path: paths.forum,
     element: (
-      <AuthGuard>
-        <MainLayout>
-          <div>Страница форума</div>
-        </MainLayout>
-      </AuthGuard>
+      <ErrorBoundary>
+        <AuthGuard>
+          <MainLayout>
+            <div>Страница форума</div>
+          </MainLayout>
+        </AuthGuard>
+      </ErrorBoundary>
     ),
   },
   {
     path: paths.forumTopic,
     element: (
-      <AuthGuard>
-        <MainLayout>
-          <div>Страница топика форума</div>
-        </MainLayout>
-      </AuthGuard>
+      <ErrorBoundary>
+        <AuthGuard>
+          <MainLayout>
+            <div>Страница топика форума</div>
+          </MainLayout>
+        </AuthGuard>
+      </ErrorBoundary>
     ),
   },
   {
