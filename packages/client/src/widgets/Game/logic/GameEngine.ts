@@ -1,6 +1,7 @@
 import { Hero, Base, Ziel, Bullet, Enemy } from './index';
 import { config } from '../config';
 import { isCollision } from '../lib/isCollision';
+import { GameOverCallback } from '@/shared/types';
 
 export class GameEngine {
   private canvas: HTMLCanvasElement;
@@ -13,7 +14,11 @@ export class GameEngine {
   // Коллекция для хранения интервалов атаки для противников
   private activeAttackIntervals: Set<number> = new Set<number>();
 
-  constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
+  private gameOverCallback: GameOverCallback;
+
+  constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, gameOverCallback: GameOverCallback) {
+    this.gameOverCallback = gameOverCallback;
+
     this.canvas = canvas;
     this.ctx = ctx;
 
@@ -141,8 +146,7 @@ export class GameEngine {
   // Обновление состояние объектов
   public update(): void {
     if (this.hero.health <= 0 || this.base.health <= 0) {
-      alert('Game over');
-      window.location.reload();
+      this.gameOverCallback();
     }
     this.hero.update();
 
