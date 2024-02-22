@@ -9,6 +9,9 @@ import { AuthGuard } from './AuthGuard';
 import { ErrorPage } from '@/pages/ErrorPage';
 import { MainLayout } from '@/shared/layouts/MainLayout';
 import { LeaderBoardPage } from '@/pages/LeaderBoardPage';
+import { ForumPage } from '@/pages/ForumPage';
+import { ForumTopicEditorPage } from '@/pages/ForumTopicEditorPage';
+import { ForumTopicPage } from '@/pages/ForumTopicPage';
 import { GameProcess } from '@/processes/GameProcess';
 
 export const routes: RouteObject[] = [
@@ -65,7 +68,7 @@ export const routes: RouteObject[] = [
     element: (
       <AuthGuard>
         <MainLayout>
-          <div>Страница форума</div>
+          <ForumPage />
         </MainLayout>
       </AuthGuard>
     ),
@@ -75,7 +78,27 @@ export const routes: RouteObject[] = [
     element: (
       <AuthGuard>
         <MainLayout>
-          <div>Страница топика форума</div>
+          <ForumTopicPage />
+        </MainLayout>
+      </AuthGuard>
+    ),
+  },
+  {
+    path: paths.forumTopicCreate,
+    element: (
+      <AuthGuard>
+        <MainLayout>
+          <ForumTopicEditorPage />
+        </MainLayout>
+      </AuthGuard>
+    ),
+  },
+  {
+    path: paths.forumTopicEdit,
+    element: (
+      <AuthGuard>
+        <MainLayout>
+          <ForumTopicEditorPage />
         </MainLayout>
       </AuthGuard>
     ),

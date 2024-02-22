@@ -7,5 +7,7 @@ export const paths = {
   leaderboard: '/leaderboard',
   forum: '/forum',
   forumTopic: '/forum/:topic-id',
+  forumTopicCreate: '/forum-topic-editor',
+  forumTopicEdit: '/forum-topic-editor/:topic-id',
   error: '/500',
 };
