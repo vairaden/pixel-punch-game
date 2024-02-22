@@ -1,12 +1,12 @@
 import { Box, Button, Container, Paper, Typography } from '@mui/material';
 import { FC, useState } from 'react';
 
-interface Props {
+interface IProps {
   countDownCallback: () => void;
   countdown: number;
 }
 
-export const StartPage: FC<Props> = ({ countDownCallback, countdown }) => {
+export const StartPage: FC<IProps> = ({ countDownCallback, countdown }) => {
   const [remainingTime, setRemainingTime] = useState(countdown);
   const [isCountdown, setIsCountdown] = useState(false);
 
