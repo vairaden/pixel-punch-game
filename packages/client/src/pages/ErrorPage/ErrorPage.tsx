@@ -2,7 +2,7 @@ import { Box, Typography, Link } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
 type ErrorPageProps = {
-  code: number;
+  code?: number;
   text: string;
 };
 
