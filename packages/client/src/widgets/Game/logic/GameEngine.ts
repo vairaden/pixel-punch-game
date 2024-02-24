@@ -1,6 +1,8 @@
-import { Hero, Base, Ziel, Bullet, Enemy } from './index';
+import { Hero, Base, Ziel, Bullet, Enemy, Sprite } from './index';
 import { config } from '../config';
 import { isCollision } from '../lib/isCollision';
+// import heroSpritesImg from '../../../../public/heroSprites.png';
+// import backgroundGrassImg from '../../../../public/grass.png';
 
 export class GameEngine {
   private canvas: HTMLCanvasElement;
@@ -12,16 +14,44 @@ export class GameEngine {
   private enemies: Enemy[];
   // Коллекция для хранения интервалов атаки для противников
   private activeAttackIntervals: Set<number> = new Set<number>();
+  private backgroundSprite: Sprite;
+  private backgroundImg: HTMLImageElement;
 
   constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
     this.canvas = canvas;
     this.ctx = ctx;
 
+    this.backgroundImg = new Image();
+    const backgroundGrassImg = '../../../../public/grass.png';
+    this.backgroundImg.src = backgroundGrassImg;
+    this.backgroundSprite = new Sprite(this.ctx, this.backgroundImg, 256, 256);
+
+    const heroSpiteImg = new Image();
+    const heroSpritesImg = '../../../../public/heroSprites.png';
+    heroSpiteImg.src = heroSpritesImg;
+    const heroSprite = new Sprite(this.ctx, heroSpiteImg, 253, 216, {
+      isAnimated: true,
+      ticksPerFrame: 5,
+      numberOfFrames: 9,
+      reverseAnimation: true,
+    });
+
+    const heroLegsSpriteImg = new Image();
+    heroLegsSpriteImg.src = heroSpritesImg;
+    const heroLegsSprite = new Sprite(this.ctx, heroLegsSpriteImg, 204, 124, {
+      isAnimated: true,
+      ticksPerFrame: 2,
+      numberOfFrames: 11,
+      reverseAnimation: true,
+    });
+
     this.hero = new Hero(
       canvas.width / 2 - config.HERO.startX,
       canvas.height / 2 - config.HERO.startY,
       canvas,
-      ctx
+      ctx,
+      heroSprite,
+      heroLegsSprite
     );
 
     this.base = new Base(
@@ -43,24 +73,24 @@ export class GameEngine {
   private init(): void {
     // Создание врагов и других игровых объектов
     let i = 0;
-    setInterval(() => {
-      let x = Math.random() * this.canvas.width;
-      let y = Math.random() * this.canvas.height;
-      // Распределение врагов равномерно со всех краев поля
-      if (i % 4 === 0) {
-        y = -30;
-      } else if (i % 3 === 0) {
-        x = -30;
-      } else if (i % 2 === 0) {
-        x = this.canvas.width + 30;
-      } else {
-        y = this.canvas.height + 30;
-      }
-      const enemy = new Enemy(x, y, this.canvas, this.ctx);
-      this.enemies.push(enemy);
-      i++;
-      // TODO изменить хардкод интервал на функцию, которая будет уменьшать время
-    }, 1000);
+    // setInterval(() => {
+    let x = Math.random() * this.canvas.width;
+    let y = Math.random() * this.canvas.height;
+    // Распределение врагов равномерно со всех краев поля
+    if (i % 4 === 0) {
+      y = -30;
+    } else if (i % 3 === 0) {
+      x = -30;
+    } else if (i % 2 === 0) {
+      x = this.canvas.width + 30;
+    } else {
+      y = this.canvas.height + 30;
+    }
+    const enemy = new Enemy(x, y, this.canvas, this.ctx);
+    this.enemies.push(enemy);
+    i++;
+    // TODO изменить хардкод интервал на функцию, которая будет уменьшать время
+    // }, 1000);
 
     // Обработка пользовательского ввода
     document.addEventListener('keydown', (e: KeyboardEvent) => {
@@ -105,13 +135,14 @@ export class GameEngine {
       const relativeX = e.clientX - this.canvas.offsetLeft;
       const relativeY = e.clientY - this.canvas.offsetTop;
       this.ziel.updateCoordinates(relativeX, relativeY);
+      this.hero.updateZiel(relativeX, relativeY);
     });
 
-    document.addEventListener('click', (e: MouseEvent) => {
+    document.addEventListener('mousedown', (e: MouseEvent) => {
       const relativeX = e.clientX - this.canvas.offsetLeft;
       const relativeY = e.clientY - this.canvas.offsetTop;
-      const startX = this.hero.x;
-      const startY = this.hero.y;
+      const startX = this.hero.x + this.hero.width / 2;
+      const startY = this.hero.y + this.hero.height / 2;
 
       const bullet = new Bullet(0, 0, this.canvas, this.ctx);
       bullet.shoot({ x: startX, y: startY }, { x: relativeX, y: relativeY });
@@ -185,6 +216,21 @@ export class GameEngine {
   public draw(): void {
     // Очистка canvas
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    // this.ctx.drawImage(this.backgroundImg, 0, 0, this.canvas.width, this.canvas.height)
+
+    const pattern = this.ctx.createPattern(this.backgroundImg, 'repeat');
+    if (pattern) {
+      this.ctx.fillStyle = pattern;
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    this.backgroundSprite.draw(
+      0,
+      0,
+      256,
+      this.canvas.width,
+      this.canvas.height
+    );
 
     // Отрисовка сущностей
     this.hero.draw();
