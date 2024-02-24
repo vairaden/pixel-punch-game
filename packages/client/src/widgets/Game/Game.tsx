@@ -1,7 +1,12 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, FC } from 'react';
 import { GameEngine } from './logic/GameEngine';
+import { GameOverCallback } from '@/shared/types';
 
-export const Game: React.FC = () => {
+interface IProps {
+  gameOverCallback: GameOverCallback;
+}
+
+export const Game: FC<IProps> = ({ gameOverCallback }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -16,15 +21,23 @@ export const Game: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const gameEngine = new GameEngine(canvas, ctx);
+    let isGameEnd = false;
+
+    const gameEngine = new GameEngine(canvas, ctx, () => {
+      isGameEnd = true;
+      gameOverCallback();
+    });
+
     const gameLoop = () => {
-      gameEngine.update(); // Обновляем состояние игры
-      gameEngine.draw(); // Отрисовываем игру
-      requestAnimationFrame(gameLoop);
+      if (!isGameEnd) {
+        gameEngine.update(); // Обновляем состояние игры
+        gameEngine.draw(); // Отрисовываем игру
+        requestAnimationFrame(gameLoop);
+      }
     };
 
     gameLoop();
-  }, [canvasRef]);
+  }, []);
 
   return (
     <div ref={wrapperRef}>

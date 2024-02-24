@@ -1,8 +1,7 @@
 import { Hero, Base, Ziel, Bullet, Enemy, Sprite } from './index';
 import { config } from '../config';
 import { isCollision } from '../lib/isCollision';
-// import heroSpritesImg from '../../../../public/heroSprites.png';
-// import backgroundGrassImg from '../../../../public/grass.png';
+import { GameOverCallback } from '@/shared/types';
 
 export class GameEngine {
   private canvas: HTMLCanvasElement;
@@ -17,7 +16,15 @@ export class GameEngine {
   private backgroundSprite: Sprite;
   private backgroundImg: HTMLImageElement;
 
-  constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
+  private gameOverCallback: GameOverCallback;
+
+  constructor(
+    canvas: HTMLCanvasElement,
+    ctx: CanvasRenderingContext2D,
+    gameOverCallback: GameOverCallback
+  ) {
+    this.gameOverCallback = gameOverCallback;
+
     this.canvas = canvas;
     this.ctx = ctx;
 
@@ -172,8 +179,7 @@ export class GameEngine {
   // Обновление состояние объектов
   public update(): void {
     if (this.hero.health <= 0 || this.base.health <= 0) {
-      alert('Game over');
-      window.location.reload();
+      this.gameOverCallback();
     }
     this.hero.update();
 

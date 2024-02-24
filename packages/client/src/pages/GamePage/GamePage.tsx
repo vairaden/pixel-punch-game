@@ -1,5 +1,11 @@
 import { Game } from '@/widgets/Game';
+import { GameOverCallback } from '@/shared/types';
+import { FC } from 'react';
 
-export function GamePage() {
-  return <Game />;
+interface IProps {
+  gameOverCallback: GameOverCallback;
 }
+
+export const GamePage: FC<IProps> = ({ gameOverCallback }) => {
+  return <Game gameOverCallback={gameOverCallback} />;
+};
