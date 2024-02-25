@@ -26,8 +26,8 @@ export class Hero extends GameObject {
     super(x, y, ctx, canvas);
     this.sprite = sprite;
 
-    this.width = 50;
-    this.height = 50;
+    this.width = config.HERO.width;
+    this.height = config.HERO.height;
     this.speed = config.HERO.speed;
     this.dx = 0;
     this.dy = 0;

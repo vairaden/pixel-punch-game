@@ -6,7 +6,8 @@ import backgroundImg from '../../../public/grass.png';
 const HERO = {
   startX: 100,
   startY: 100,
-  radius: 20,
+  width: 50,
+  height: 50,
   speed: 5,
   health: 100,
   damage: 10,

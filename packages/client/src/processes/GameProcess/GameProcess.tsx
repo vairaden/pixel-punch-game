@@ -22,7 +22,7 @@ export const GameProcess: FC = () => {
 
   switch (gameStatus) {
     case GameStatus.START:
-      return <StartPage countDownCallback={countDownCallback} countdown={1} />;
+      return <StartPage countDownCallback={countDownCallback} countdown={5} />;
     case GameStatus.PLAYING:
       return <GamePage gameOverCallback={gameOverCallback} />;
     case GameStatus.END:
