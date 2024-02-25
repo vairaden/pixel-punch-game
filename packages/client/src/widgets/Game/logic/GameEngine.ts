@@ -1,5 +1,13 @@
-import { Hero, Base, Ziel, Bullet, Enemy, Sprite } from './index';
-import { config } from '../config';
+import {
+  Hero,
+  Base,
+  Ziel,
+  Bullet,
+  Enemy,
+  Sprite,
+  ResourceManager,
+} from './index';
+import { config, sprites } from '../config';
 import { isCollision } from '../lib/isCollision';
 import { GameOverCallback } from '@/shared/types';
 
@@ -11,10 +19,10 @@ export class GameEngine {
   private ziel: Ziel;
   private bullets: Bullet[];
   private enemies: Enemy[];
+
   // Коллекция для хранения интервалов атаки для противников
   private activeAttackIntervals: Set<number> = new Set<number>();
-  private backgroundSprite: Sprite;
-  private backgroundImg: HTMLImageElement;
+  private resourceManager: ResourceManager;
 
   private gameOverCallback: GameOverCallback;
 
@@ -27,47 +35,29 @@ export class GameEngine {
 
     this.canvas = canvas;
     this.ctx = ctx;
+    this.resourceManager = new ResourceManager();
+    this.loadResources();
 
-    this.backgroundImg = new Image();
-    const backgroundGrassImg = '../../../../public/grass.png';
-    this.backgroundImg.src = backgroundGrassImg;
-    this.backgroundSprite = new Sprite(this.ctx, this.backgroundImg, 256, 256);
-
-    const heroSpiteImg = new Image();
-    const heroSpritesImg = '../../../../public/heroSprites.png';
-    heroSpiteImg.src = heroSpritesImg;
-    const heroSprite = new Sprite(this.ctx, heroSpiteImg, 253, 216, {
-      isAnimated: true,
-      ticksPerFrame: 5,
-      numberOfFrames: 9,
-      reverseAnimation: true,
-    });
-
-    const heroLegsSpriteImg = new Image();
-    heroLegsSpriteImg.src = heroSpritesImg;
-    const heroLegsSprite = new Sprite(this.ctx, heroLegsSpriteImg, 204, 124, {
-      isAnimated: true,
-      ticksPerFrame: 2,
-      numberOfFrames: 11,
-      reverseAnimation: true,
-    });
+    const heroSprite = new Sprite(this.ctx, this.resourceManager.get('hero'));
 
     this.hero = new Hero(
-      canvas.width / 2 - config.HERO.startX,
-      canvas.height / 2 - config.HERO.startY,
-      canvas,
-      ctx,
-      heroSprite,
-      heroLegsSprite
+      this.canvas.width / 2 - config.HERO.startX,
+      this.canvas.height / 2 - config.HERO.startY,
+      this.canvas,
+      this.ctx,
+      heroSprite
     );
 
+    const baseSprite = new Sprite(this.ctx, this.resourceManager.get('base'));
+
     this.base = new Base(
-      (canvas.width - config.BASE.width) / 2,
-      (canvas.height - config.BASE.height) / 2,
-      canvas,
-      ctx,
+      (this.canvas.width - config.BASE.width) / 2,
+      (this.canvas.height - config.BASE.height) / 2,
+      this.canvas,
+      this.ctx,
       config.BASE.width,
-      config.BASE.height
+      config.BASE.height,
+      baseSprite
     );
 
     this.ziel = new Ziel(0, 0, canvas, ctx);
@@ -77,27 +67,40 @@ export class GameEngine {
     this.init();
   }
 
+  private loadResources(): void {
+    this.resourceManager.load([
+      { name: 'hero', url: sprites.HERO_SPRITE.url },
+      { name: 'base', url: sprites.BASE_SPRITE.url },
+      { name: 'enemy', url: sprites.ENEMY_SPRITE.url },
+      { name: 'background', url: sprites.BACKGROUND_SPRITE.url },
+    ]);
+  }
+
   private init(): void {
     // Создание врагов и других игровых объектов
     let i = 0;
-    // setInterval(() => {
-    let x = Math.random() * this.canvas.width;
-    let y = Math.random() * this.canvas.height;
-    // Распределение врагов равномерно со всех краев поля
-    if (i % 4 === 0) {
-      y = -30;
-    } else if (i % 3 === 0) {
-      x = -30;
-    } else if (i % 2 === 0) {
-      x = this.canvas.width + 30;
-    } else {
-      y = this.canvas.height + 30;
-    }
-    const enemy = new Enemy(x, y, this.canvas, this.ctx);
-    this.enemies.push(enemy);
-    i++;
-    // TODO изменить хардкод интервал на функцию, которая будет уменьшать время
-    // }, 1000);
+    setInterval(() => {
+      let x = Math.random() * this.canvas.width;
+      let y = Math.random() * this.canvas.height;
+      // Распределение врагов равномерно со всех краев поля
+      if (i % 4 === 0) {
+        y = -30;
+      } else if (i % 3 === 0) {
+        x = -30;
+      } else if (i % 2 === 0) {
+        x = this.canvas.width + 30;
+      } else {
+        y = this.canvas.height + 30;
+      }
+      const enemySprite = new Sprite(
+        this.ctx,
+        this.resourceManager.get('enemy')
+      );
+      const enemy = new Enemy(x, y, this.canvas, this.ctx, enemySprite);
+      this.enemies.push(enemy);
+      i++;
+      // TODO изменить хардкод интервал на функцию, которая будет уменьшать время
+    }, 1000);
 
     // Обработка пользовательского ввода
     document.addEventListener('keydown', (e: KeyboardEvent) => {
@@ -219,24 +222,22 @@ export class GameEngine {
     }
   }
 
-  public draw(): void {
-    // Очистка canvas
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    // this.ctx.drawImage(this.backgroundImg, 0, 0, this.canvas.width, this.canvas.height)
-
-    const pattern = this.ctx.createPattern(this.backgroundImg, 'repeat');
+  private drawBackground() {
+    const pattern = this.ctx.createPattern(
+      this.resourceManager.get('background'),
+      'repeat'
+    );
     if (pattern) {
       this.ctx.fillStyle = pattern;
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
+  }
 
-    this.backgroundSprite.draw(
-      0,
-      0,
-      256,
-      this.canvas.width,
-      this.canvas.height
-    );
+  public draw(): void {
+    // Очистка canvas
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.drawBackground();
 
     // Отрисовка сущностей
     this.hero.draw();

@@ -10,56 +10,46 @@ type animation =
 export class Sprite {
   private ctx: CanvasRenderingContext2D;
   private image: HTMLImageElement;
-  private width: number;
-  private height: number;
 
   private frameIndex: number;
   private tickCount: number;
-  // private ticksPerFrame: number;
-  // private numberOfFrames: number;
   private animation: animation;
   private frameIndexDirection: string;
 
-  constructor(
-    ctx: CanvasRenderingContext2D,
-    image: HTMLImageElement,
-    // ticksPerFrame: number,
-    // numberOfFrames: number,
-    width: number,
-    height: number,
-    animation?: animation
-  ) {
+  constructor(ctx: CanvasRenderingContext2D, image: HTMLImageElement) {
     this.ctx = ctx;
 
     this.image = image; // Изображение со спрайтами
 
     this.frameIndex = 0;
     this.tickCount = 0;
-    // this.ticksPerFrame = ticksPerFrame || 0;
-    // this.numberOfFrames = numberOfFrames || 1;
 
-    this.width = width;
-    this.height = height;
-    this.animation = animation;
     this.frameIndexDirection = 'forward';
-    // this.start();
+  }
+
+  setAnimationParams(params: animation) {
+    this.animation = params;
   }
 
   update() {
     if (this.animation?.isAnimated) {
       this.tickCount++;
-      // let frameIndexDirection = 'forward'
+
       if (this.tickCount > this.animation.ticksPerFrame) {
         this.tickCount = 0;
 
-        // Определение направления изменения frameIndex
+        // Определение направления изменения кадров
         if (this.frameIndexDirection === 'forward') {
-          // Увеличение frameIndex
           if (this.frameIndex < this.animation.numberOfFrames - 1) {
             this.frameIndex++;
           } else {
-            // Если достигнут конец последовательности, изменяем направление на обратное
-            this.frameIndexDirection = 'backward';
+            // Если достигнут конец последовательности, изменяем направление на обратное, либо начинаем заново
+            if (this.animation.reverseAnimation) {
+              this.frameIndexDirection = 'backward';
+            } else {
+              this.frameIndex = 0;
+              return;
+            }
           }
         } else {
           // Уменьшение frameIndex
@@ -75,27 +65,29 @@ export class Sprite {
   }
 
   draw(
-    x: number,
+    x: number, // координаты для отрисовки на canvas
     y: number,
-    imgY: number,
-    width: number,
-    height: number,
-    rotation?: number
+    imgWidth: number, // ширина изображения для отрисовки
+    imgHeight: number, // его высота
+    imgY: number, // отступ до нужной части спрайта по оси Y
+    drawWidth: number, // ширина отрисовки на canvas
+    drawHeight: number, // его высота
+    rotation?: number // угол поворота изображения
   ) {
     if (rotation) {
       this.ctx.save();
-      this.ctx.translate(x + width / 2, y + height / 2);
+      this.ctx.translate(x + drawWidth / 2, y + drawHeight / 2);
       this.ctx.rotate((rotation * Math.PI) / 180);
       this.ctx.drawImage(
         this.image,
-        this.width * this.frameIndex,
+        imgWidth * this.frameIndex,
         imgY,
-        this.width,
-        this.height,
-        -width / 2,
-        -height / 2,
-        width,
-        height
+        imgWidth,
+        imgHeight,
+        -drawWidth / 2,
+        -drawHeight / 2,
+        drawWidth,
+        drawHeight
       );
       this.ctx.restore();
     } else {
@@ -103,12 +95,12 @@ export class Sprite {
         this.image,
         0,
         imgY,
-        this.width,
-        this.height,
+        imgWidth,
+        imgHeight,
         x,
         y,
-        width,
-        height
+        drawWidth,
+        drawHeight
       );
     }
   }

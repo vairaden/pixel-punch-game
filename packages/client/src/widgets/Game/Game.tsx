@@ -16,6 +16,7 @@ export const Game: FC<IProps> = ({ gameOverCallback }) => {
     if (!canvas || !wrapper) return;
     console.log(wrapperRef.current?.offsetWidth);
     canvas.width = wrapper.offsetWidth;
+    // TODO: задать высоту без хардкода
     canvas.height = window.innerHeight - 64 - 8 - 16;
 
     const ctx = canvas.getContext('2d');

@@ -17,7 +17,7 @@ export class Bullet extends GameObject {
     this.radius = 3;
     this.dx = 0;
     this.dy = 0;
-    this.speed = 8;
+    this.speed = 80;
   }
 
   public update(): void {

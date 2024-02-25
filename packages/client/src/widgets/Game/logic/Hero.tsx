@@ -1,9 +1,8 @@
-import { config } from '../config';
+import { config, sprites } from '../config';
 import { GameObject } from './GameObject';
 import { Sprite } from './Sprite';
 
 export class Hero extends GameObject {
-  // public radius: number;
   public dx: number;
   public dy: number;
   public health: number;
@@ -11,7 +10,6 @@ export class Hero extends GameObject {
   public height: number;
 
   private sprite: Sprite;
-  private legsSprite: Sprite;
   private speed: number;
   private color: string;
   private damage: number;
@@ -23,16 +21,13 @@ export class Hero extends GameObject {
     y: number,
     canvas: HTMLCanvasElement,
     ctx: CanvasRenderingContext2D,
-    sprite: Sprite,
-    legsSprite: Sprite
+    sprite: Sprite
   ) {
     super(x, y, ctx, canvas);
     this.sprite = sprite;
-    this.legsSprite = legsSprite;
 
     this.width = 50;
     this.height = 50;
-    // this.radius = config.HERO.radius;
     this.speed = config.HERO.speed;
     this.dx = 0;
     this.dy = 0;
@@ -142,30 +137,32 @@ export class Hero extends GameObject {
     this.sprite.update();
     // Определяем угол между героем и указателем мыши
     const angle = Math.atan2(this.zielY - this.y, this.zielX - this.x);
-
-    // Преобразуем радианы в градусы и прибавляем 90 градусов, чтобы спрайт смотрел в нужном направлении
     const rotation = angle * (180 / Math.PI);
 
-    // Вызываем отрисовку спрайта, передавая координаты, ширину, высоту и угол поворота
     this.sprite.update();
-    // this.ctx.beginPath();
-    // this.ctx.rect(this.x, this.y, this.width, this.height)
-    // // this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-    // this.ctx.fillStyle = this.color;
-    // this.ctx.fill();
-    // this.ctx.closePath();
+
+    this.sprite.setAnimationParams(sprites.HERO_SPRITE.bodyParams.animation);
     if (this.dx !== 0 || this.dy !== 0) {
-      this.legsSprite.update();
-      this.legsSprite.draw(
+      this.sprite.draw(
         this.x,
         this.y,
-        0,
+        sprites.HERO_SPRITE.legParams.width,
+        sprites.HERO_SPRITE.legParams.height,
+        sprites.HERO_SPRITE.legParams.offsetY,
         this.width,
         this.height,
         rotation
       );
     }
-    this.sprite.draw(this.x, this.y, 124, this.width, this.height, rotation);
-    // this.sprite.draw(this.x, this.y, this.width, this.width)
+    this.sprite.draw(
+      this.x,
+      this.y,
+      sprites.HERO_SPRITE.bodyParams.width,
+      sprites.HERO_SPRITE.bodyParams.height,
+      sprites.HERO_SPRITE.bodyParams.offsetY,
+      this.width,
+      this.height,
+      rotation
+    );
   }
 }
