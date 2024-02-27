@@ -16,7 +16,11 @@ export class GameEngine {
 
   private gameOverCallback: GameOverCallback;
 
-  constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, gameOverCallback: GameOverCallback) {
+  constructor(
+    canvas: HTMLCanvasElement,
+    ctx: CanvasRenderingContext2D,
+    gameOverCallback: GameOverCallback
+  ) {
     this.gameOverCallback = gameOverCallback;
 
     this.canvas = canvas;
@@ -146,7 +150,7 @@ export class GameEngine {
   // Обновление состояние объектов
   public update(): void {
     if (this.hero.health <= 0 || this.base.health <= 0) {
-      this.gameOverCallback();
+      this.gameOverCallback({ score: 100 });
     }
     this.hero.update();
 

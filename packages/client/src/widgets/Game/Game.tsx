@@ -6,7 +6,7 @@ interface IProps {
   gameOverCallback: GameOverCallback;
 }
 
-export const Game: FC<IProps> = ({gameOverCallback}) => {
+export const Game: FC<IProps> = ({ gameOverCallback }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -20,9 +20,9 @@ export const Game: FC<IProps> = ({gameOverCallback}) => {
 
     let isGameEnd = false;
 
-    const gameEngine = new GameEngine(canvas, ctx, () => {
+    const gameEngine = new GameEngine(canvas, ctx, res => {
       isGameEnd = true;
-      gameOverCallback()
+      gameOverCallback(res);
     });
 
     const gameLoop = () => {
