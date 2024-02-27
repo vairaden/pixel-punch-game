@@ -1,6 +1,7 @@
 import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 import { ColumnHeader } from '@/features/ColumnHeader';
 import type { ILeader } from '@/shared/types/leaderboard.interface';
+import { withAuthGuard } from '@/app/providers/router/withAuthGuard';
 
 const mockRows: GridRowsProp<ILeader> = [
   { id: '1', firstName: 'Luke', lastName: 'Skywalker', score: 1350 },
@@ -27,6 +28,6 @@ const columns: GridColDef<ILeader>[] = [
   },
 ];
 
-export const LeaderBoardPage = () => {
+export const LeaderBoardPage = withAuthGuard(() => {
   return <DataGrid rows={mockRows} columns={columns} />;
-};
+});
