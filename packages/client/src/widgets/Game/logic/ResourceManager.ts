@@ -12,14 +12,18 @@ export class ResourceManager {
     this.readyCallbacks = [];
   }
 
-  public load(imgOrArr: imageUrl | imageUrl[]) {
-    if (Array.isArray(imgOrArr)) {
-      imgOrArr.forEach(img => {
-        this.loadResource(img.name, img.url);
-      });
+  public load(img: imageUrl | imageUrl[]) {
+    let resources = [];
+
+    if (!Array.isArray(img)) {
+      resources = [img];
     } else {
-      this.loadResource(imgOrArr.name, imgOrArr.url);
+      resources = [...img];
     }
+
+    resources.forEach(image => {
+      this.loadResource(image.name, image.url);
+    });
   }
 
   private loadResource(name: string, url: string) {
@@ -29,7 +33,7 @@ export class ResourceManager {
       const img = new Image();
       img.src = url;
       this.resourceCache[name] = img;
-      // TODO: добавить асинхронный обработчик загрузки изображений
+      // TODO: добавить асинхронный обработчик загрузки изображений img.onload
     }
   }
 

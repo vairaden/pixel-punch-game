@@ -2,6 +2,9 @@ import { config, sprites } from '../config';
 import { GameObject } from './GameObject';
 import { Sprite } from './Sprite';
 
+const { HERO } = config;
+const { HERO_SPRITE } = sprites;
+
 export class Hero extends GameObject {
   public dx: number;
   public dy: number;
@@ -26,14 +29,14 @@ export class Hero extends GameObject {
     super(x, y, ctx, canvas);
     this.sprite = sprite;
 
-    this.width = config.HERO.width;
-    this.height = config.HERO.height;
-    this.speed = config.HERO.speed;
+    this.width = HERO.width;
+    this.height = HERO.height;
+    this.speed = HERO.speed;
     this.dx = 0;
     this.dy = 0;
-    this.health = config.HERO.health;
+    this.health = HERO.health;
     this.color = 'green';
-    this.damage = config.HERO.damage;
+    this.damage = HERO.damage;
     this.invincible = false;
     this.zielX = 0;
     this.zielY = 0;
@@ -141,28 +144,28 @@ export class Hero extends GameObject {
 
     this.sprite.update();
 
-    this.sprite.setAnimationParams(sprites.HERO_SPRITE.bodyParams.animation);
+    this.sprite.setAnimationParams(HERO_SPRITE.bodyParams.animation);
     if (this.dx !== 0 || this.dy !== 0) {
-      this.sprite.draw(
-        this.x,
-        this.y,
-        sprites.HERO_SPRITE.legParams.width,
-        sprites.HERO_SPRITE.legParams.height,
-        sprites.HERO_SPRITE.legParams.offsetY,
-        this.width,
-        this.height,
-        rotation
-      );
+      this.sprite.draw({
+        x: this.x,
+        y: this.y,
+        imgWidth: HERO_SPRITE.legParams.width,
+        imgHeight: HERO_SPRITE.legParams.height,
+        imgY: HERO_SPRITE.legParams.offsetY,
+        drawWidth: this.width,
+        drawHeight: this.height,
+        rotation,
+      });
     }
-    this.sprite.draw(
-      this.x,
-      this.y,
-      sprites.HERO_SPRITE.bodyParams.width,
-      sprites.HERO_SPRITE.bodyParams.height,
-      sprites.HERO_SPRITE.bodyParams.offsetY,
-      this.width,
-      this.height,
-      rotation
-    );
+    this.sprite.draw({
+      x: this.x,
+      y: this.y,
+      imgWidth: HERO_SPRITE.bodyParams.width,
+      imgHeight: HERO_SPRITE.bodyParams.height,
+      imgY: HERO_SPRITE.bodyParams.offsetY,
+      drawWidth: this.width,
+      drawHeight: this.height,
+      rotation,
+    });
   }
 }

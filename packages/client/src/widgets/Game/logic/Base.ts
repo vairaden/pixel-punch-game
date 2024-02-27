@@ -2,6 +2,9 @@ import { config, sprites } from '../config';
 import { GameObject } from './GameObject';
 import { Sprite } from './Sprite';
 
+const { BASE } = config;
+const { BASE_SPRITE } = sprites;
+
 export class Base extends GameObject {
   public width: number;
   public height: number;
@@ -21,8 +24,8 @@ export class Base extends GameObject {
     super(x, y, ctx, canvas);
     this.width = width;
     this.height = height;
-    this.initialHealth = config.BASE.health;
-    this.health = config.BASE.health;
+    this.initialHealth = BASE.health;
+    this.health = BASE.health;
     this.sprite = sprite;
   }
 
@@ -41,15 +44,15 @@ export class Base extends GameObject {
   }
 
   public draw(): void {
-    this.sprite.draw(
-      this.x,
-      this.y,
-      sprites.BASE_SPRITE.size.width,
-      sprites.BASE_SPRITE.size.height,
-      sprites.BASE_SPRITE.size.offsetY,
-      this.width,
-      this.height
-    );
+    this.sprite.draw({
+      x: this.x,
+      y: this.y,
+      imgWidth: BASE_SPRITE.size.width,
+      imgHeight: BASE_SPRITE.size.height,
+      imgY: BASE_SPRITE.size.offsetY,
+      drawWidth: this.width,
+      drawHeight: this.height,
+    });
     this.drawHealth();
   }
 }
