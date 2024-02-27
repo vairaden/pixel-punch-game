@@ -2,6 +2,7 @@ import { IForumTopicComment } from '@/shared/types';
 import { ForumTopicAddComment } from '@/features';
 import { ForumTopicCommentList } from '@/widgets';
 import { ForumTopicCard } from '@/entities';
+import { withAuthGuard } from '@/app/providers/router/withAuthGuard';
 
 import { Container } from '@mui/material';
 
@@ -30,7 +31,7 @@ const mockForumComments: IForumTopicComment[] = [
   },
 ];
 
-export const ForumTopicPage = (): JSX.Element => {
+export const ForumTopicPage = withAuthGuard((): JSX.Element => {
   return (
     <Container maxWidth="xl" sx={{ my: '20px' }}>
       <ForumTopicCard
@@ -49,4 +50,4 @@ export const ForumTopicPage = (): JSX.Element => {
       <ForumTopicAddComment />
     </Container>
   );
-};
+});

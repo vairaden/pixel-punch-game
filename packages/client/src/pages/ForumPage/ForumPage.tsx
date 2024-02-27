@@ -2,6 +2,7 @@ import { Container, Box } from '@mui/material';
 import { ForumTopicList } from '@/widgets';
 import { ForumTopicFilter, CreateForumTopic } from '@/features';
 import { IForumTopic } from '@/shared/types';
+import { withAuthGuard } from '@/app/providers/router/withAuthGuard';
 
 const mockTopics: IForumTopic[] = [
   {
@@ -30,7 +31,7 @@ const mockTopics: IForumTopic[] = [
   },
 ];
 
-export const ForumPage = () => {
+export const ForumPage = withAuthGuard(() => {
   return (
     <Box>
       <Container maxWidth="xl">
@@ -48,4 +49,4 @@ export const ForumPage = () => {
       </Container>
     </Box>
   );
-};
+});
