@@ -5,102 +5,93 @@ import { RegistrationPage } from '@/pages/RegistrationPage';
 import { HomePage } from '@/pages/HomePage';
 import { ProfilePage } from '@/pages/ProfilePage';
 import { paths } from '../../constants/paths';
-import { AuthGuard } from './AuthGuard';
 import { ErrorPage } from '@/pages/ErrorPage';
-import { MainLayout } from '@/shared/layouts/MainLayout';
 import { LeaderBoardPage } from '@/pages/LeaderBoardPage';
 import { ForumPage } from '@/pages/ForumPage';
 import { ForumTopicEditorPage } from '@/pages/ForumTopicEditorPage';
 import { ForumTopicPage } from '@/pages/ForumTopicPage';
 import { GameProcess } from '@/processes/GameProcess';
+import { ErrorBoundary } from '../errorBoundary';
 
 export const routes: RouteObject[] = [
   {
     path: paths.signIn,
-    element: <LoginPage />,
+    element: (
+      <ErrorBoundary>
+        <LoginPage />
+      </ErrorBoundary>
+    ),
   },
   {
     path: paths.signUp,
-    element: <RegistrationPage />,
+    element: (
+      <ErrorBoundary>
+        <RegistrationPage />
+      </ErrorBoundary>
+    ),
   },
   {
     path: paths.profile,
     element: (
-      <AuthGuard>
-        <MainLayout>
-          <ProfilePage />
-        </MainLayout>
-      </AuthGuard>
+      <ErrorBoundary>
+        <ProfilePage />
+      </ErrorBoundary>
     ),
   },
   {
     path: paths.homePage,
     element: (
-      <AuthGuard>
-        <MainLayout>
-          <HomePage />
-        </MainLayout>
-      </AuthGuard>
+      <ErrorBoundary>
+        <HomePage />
+      </ErrorBoundary>
     ),
   },
   {
     path: paths.game,
     element: (
-      <AuthGuard>
-        <MainLayout>
-          <GameProcess />
-        </MainLayout>
-      </AuthGuard>
+      <ErrorBoundary>
+        <GameProcess />
+      </ErrorBoundary>
     ),
   },
   {
     path: paths.leaderboard,
     element: (
-      <AuthGuard>
-        <MainLayout>
-          <LeaderBoardPage />
-        </MainLayout>
-      </AuthGuard>
+      <ErrorBoundary>
+        <LeaderBoardPage />
+      </ErrorBoundary>
     ),
   },
   {
     path: paths.forum,
     element: (
-      <AuthGuard>
-        <MainLayout>
-          <ForumPage />
-        </MainLayout>
-      </AuthGuard>
+      <ErrorBoundary>
+        <ForumPage />
+      </ErrorBoundary>
     ),
   },
   {
     path: paths.forumTopic,
     element: (
-      <AuthGuard>
-        <MainLayout>
-          <ForumTopicPage />
-        </MainLayout>
-      </AuthGuard>
+      <ErrorBoundary>
+        <ForumTopicPage />
+      </ErrorBoundary>
     ),
   },
   {
     path: paths.forumTopicCreate,
     element: (
-      <AuthGuard>
-        <MainLayout>
-          <ForumTopicEditorPage />
-        </MainLayout>
-      </AuthGuard>
+      <ErrorBoundary>
+        <ForumTopicEditorPage />
+      </ErrorBoundary>
     ),
   },
   {
     path: paths.forumTopicEdit,
     element: (
-      <AuthGuard>
-        <MainLayout>
-          <ForumTopicEditorPage />
-        </MainLayout>
-      </AuthGuard>
+      <ErrorBoundary>
+        <ForumTopicEditorPage />
+      </ErrorBoundary>
     ),
   },
   {

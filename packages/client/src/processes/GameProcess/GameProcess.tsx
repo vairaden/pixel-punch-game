@@ -1,11 +1,12 @@
 import { StartPage } from '@/pages/StartPage';
-import { FC, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { GamePage } from '@/pages/GamePage';
 import { GameStatus } from '@/shared/constants';
 import { EndPage } from '@/pages/EndPage';
 import { assertUnreachable } from '@/shared/utils';
+import { withAuthGuard } from '@/app/providers/router/withAuthGuard';
 
-export const GameProcess: FC = () => {
+export const GameProcess = withAuthGuard(() => {
   const [gameStatus, setGameStatus] = useState(GameStatus.START);
 
   const countDownCallback = useCallback(() => {
@@ -26,8 +27,8 @@ export const GameProcess: FC = () => {
     case GameStatus.PLAYING:
       return <GamePage gameOverCallback={gameOverCallback} />;
     case GameStatus.END:
-      return <EndPage resetCallback={resetCallback}/>;
+      return <EndPage resetCallback={resetCallback} />;
     default:
       assertUnreachable(gameStatus);
   }
-}
+});
