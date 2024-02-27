@@ -1,8 +1,9 @@
 import { paths } from '@/app/constants/paths';
+import { withAuthGuard } from '@/app/providers/router/withAuthGuard';
 import { Box, Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-export const HomePage = () => {
+export const HomePage = withAuthGuard(() => {
   const navigate = useNavigate();
   const handleStartGame = () => navigate(paths.game);
 
@@ -28,4 +29,4 @@ export const HomePage = () => {
       </Box>
     </Box>
   );
-};
+});

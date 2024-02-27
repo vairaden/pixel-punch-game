@@ -5,12 +5,14 @@ import { RegistrationPage } from '@/pages/RegistrationPage';
 import { HomePage } from '@/pages/HomePage';
 import { ProfilePage } from '@/pages/ProfilePage';
 import { paths } from '../../constants/paths';
-import { AuthGuard } from './AuthGuard';
 import { ErrorPage } from '@/pages/ErrorPage';
-import { MainLayout } from '@/shared/layouts/MainLayout';
 import { LeaderBoardPage } from '@/pages/LeaderBoardPage';
 import { GameProcess } from '@/processes/GameProcess';
 import { ErrorBoundary } from '../errorBoundary';
+import { withAuthGuard } from './withAuthGuard';
+
+const ForumPage = withAuthGuard(() => <div>Страница форума</div>);
+const ForumTopicPage = withAuthGuard(() => <div>Страница топика форума</div>);
 
 export const routes: RouteObject[] = [
   {
@@ -33,11 +35,7 @@ export const routes: RouteObject[] = [
     path: paths.profile,
     element: (
       <ErrorBoundary>
-        <AuthGuard>
-          <MainLayout>
-            <ProfilePage />
-          </MainLayout>
-        </AuthGuard>
+        <ProfilePage />
       </ErrorBoundary>
     ),
   },
@@ -45,11 +43,7 @@ export const routes: RouteObject[] = [
     path: paths.homePage,
     element: (
       <ErrorBoundary>
-        <AuthGuard>
-          <MainLayout>
-            <HomePage />
-          </MainLayout>
-        </AuthGuard>
+        <HomePage />
       </ErrorBoundary>
     ),
   },
@@ -57,11 +51,7 @@ export const routes: RouteObject[] = [
     path: paths.game,
     element: (
       <ErrorBoundary>
-        <AuthGuard>
-          <MainLayout>
-            <GameProcess />
-          </MainLayout>
-        </AuthGuard>
+        <GameProcess />
       </ErrorBoundary>
     ),
   },
@@ -69,11 +59,7 @@ export const routes: RouteObject[] = [
     path: paths.leaderboard,
     element: (
       <ErrorBoundary>
-        <AuthGuard>
-          <MainLayout>
-            <LeaderBoardPage />
-          </MainLayout>
-        </AuthGuard>
+        <LeaderBoardPage />
       </ErrorBoundary>
     ),
   },
@@ -81,11 +67,7 @@ export const routes: RouteObject[] = [
     path: paths.forum,
     element: (
       <ErrorBoundary>
-        <AuthGuard>
-          <MainLayout>
-            <div>Страница форума</div>
-          </MainLayout>
-        </AuthGuard>
+        <ForumPage />
       </ErrorBoundary>
     ),
   },
@@ -93,11 +75,7 @@ export const routes: RouteObject[] = [
     path: paths.forumTopic,
     element: (
       <ErrorBoundary>
-        <AuthGuard>
-          <MainLayout>
-            <div>Страница топика форума</div>
-          </MainLayout>
-        </AuthGuard>
+        <ForumTopicPage />
       </ErrorBoundary>
     ),
   },
