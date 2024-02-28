@@ -13,13 +13,7 @@ export class ResourceManager {
   }
 
   public load(img: imageUrl | imageUrl[]) {
-    let resources = [];
-
-    if (!Array.isArray(img)) {
-      resources = [img];
-    } else {
-      resources = [...img];
-    }
+    const resources = Array.isArray(img) ? img : [img];
 
     resources.forEach(image => {
       this.loadResource(image.name, image.url);
