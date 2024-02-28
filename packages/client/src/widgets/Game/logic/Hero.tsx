@@ -1,32 +1,45 @@
-import { config } from '../config';
+import { config, sprites } from '../config';
 import { GameObject } from './GameObject';
+import { Sprite } from './Sprite';
+
+const { HERO } = config;
+const { HERO_SPRITE } = sprites;
 
 export class Hero extends GameObject {
-  public radius: number;
   public dx: number;
   public dy: number;
   public health: number;
+  public width: number;
+  public height: number;
 
+  private sprite: Sprite;
   private speed: number;
   private color: string;
   private damage: number;
   private invincible: boolean; // неуязвимость героя
-
+  private zielX: number;
+  private zielY: number;
   constructor(
     x: number,
     y: number,
     canvas: HTMLCanvasElement,
-    ctx: CanvasRenderingContext2D
+    ctx: CanvasRenderingContext2D,
+    sprite: Sprite
   ) {
     super(x, y, ctx, canvas);
-    this.radius = config.HERO.radius;
-    this.speed = config.HERO.speed;
+    this.sprite = sprite;
+
+    this.width = HERO.width;
+    this.height = HERO.height;
+    this.speed = HERO.speed;
     this.dx = 0;
     this.dy = 0;
-    this.health = config.HERO.health;
+    this.health = HERO.health;
     this.color = 'green';
-    this.damage = config.HERO.damage;
+    this.damage = HERO.damage;
     this.invincible = false;
+    this.zielX = 0;
+    this.zielY = 0;
   }
 
   public moveUp(): void {
@@ -101,28 +114,58 @@ export class Hero extends GameObject {
     }, 500);
   }
 
+  public updateZiel(x: number, y: number): void {
+    this.zielX = x;
+    this.zielY = y;
+  }
+
   public update(): void {
     this.x += this.dx;
     this.y += this.dy;
-    if (this.x - this.radius < 0) {
-      this.x = this.radius;
+    if (this.x < 0) {
+      this.x = 0;
     }
-    if (this.x + this.radius > this.canvas.width) {
-      this.x = this.canvas.width - this.radius;
+    if (this.x + this.width > this.canvas.width) {
+      this.x = this.canvas.width - this.width;
     }
-    if (this.y - this.radius < 0) {
-      this.y = this.radius;
+    if (this.y < 0) {
+      this.y = 0;
     }
-    if (this.y + this.radius > this.canvas.height) {
-      this.y = this.canvas.height - this.radius;
+    if (this.y + this.height > this.canvas.height) {
+      this.y = this.canvas.height - this.height;
     }
   }
 
   public draw(): void {
-    this.ctx.beginPath();
-    this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-    this.ctx.fillStyle = this.color;
-    this.ctx.fill();
-    this.ctx.closePath();
+    this.sprite.update();
+    // Определяем угол между героем и указателем мыши
+    const angle = Math.atan2(this.zielY - this.y, this.zielX - this.x);
+    const rotation = angle * (180 / Math.PI);
+
+    this.sprite.update();
+
+    this.sprite.setAnimationParams(HERO_SPRITE.bodyParams.animation);
+    if (this.dx !== 0 || this.dy !== 0) {
+      this.sprite.draw({
+        x: this.x,
+        y: this.y,
+        imgWidth: HERO_SPRITE.legParams.width,
+        imgHeight: HERO_SPRITE.legParams.height,
+        imgY: HERO_SPRITE.legParams.offsetY,
+        drawWidth: this.width,
+        drawHeight: this.height,
+        rotation,
+      });
+    }
+    this.sprite.draw({
+      x: this.x,
+      y: this.y,
+      imgWidth: HERO_SPRITE.bodyParams.width,
+      imgHeight: HERO_SPRITE.bodyParams.height,
+      imgY: HERO_SPRITE.bodyParams.offsetY,
+      drawWidth: this.width,
+      drawHeight: this.height,
+      rotation,
+    });
   }
 }

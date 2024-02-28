@@ -1,5 +1,13 @@
-import { Hero, Base, Ziel, Bullet, Enemy } from './index';
-import { config } from '../config';
+import {
+  Hero,
+  Base,
+  Ziel,
+  Bullet,
+  Enemy,
+  Sprite,
+  ResourceManager,
+} from './index';
+import { config, sprites } from '../config';
 import { isCollision } from '../lib/isCollision';
 import { GameOverCallback } from '@/shared/types';
 
@@ -11,31 +19,45 @@ export class GameEngine {
   private ziel: Ziel;
   private bullets: Bullet[];
   private enemies: Enemy[];
+
   // Коллекция для хранения интервалов атаки для противников
   private activeAttackIntervals: Set<number> = new Set<number>();
+  private resourceManager: ResourceManager;
 
   private gameOverCallback: GameOverCallback;
 
-  constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, gameOverCallback: GameOverCallback) {
+  constructor(
+    canvas: HTMLCanvasElement,
+    ctx: CanvasRenderingContext2D,
+    gameOverCallback: GameOverCallback
+  ) {
     this.gameOverCallback = gameOverCallback;
 
     this.canvas = canvas;
     this.ctx = ctx;
+    this.resourceManager = new ResourceManager();
+    this.loadResources();
+
+    const heroSprite = new Sprite(this.ctx, this.resourceManager.get('hero'));
 
     this.hero = new Hero(
-      canvas.width / 2 - config.HERO.startX,
-      canvas.height / 2 - config.HERO.startY,
-      canvas,
-      ctx
+      this.canvas.width / 2 - config.HERO.startX,
+      this.canvas.height / 2 - config.HERO.startY,
+      this.canvas,
+      this.ctx,
+      heroSprite
     );
 
+    const baseSprite = new Sprite(this.ctx, this.resourceManager.get('base'));
+
     this.base = new Base(
-      (canvas.width - config.BASE.width) / 2,
-      (canvas.height - config.BASE.height) / 2,
-      canvas,
-      ctx,
+      (this.canvas.width - config.BASE.width) / 2,
+      (this.canvas.height - config.BASE.height) / 2,
+      this.canvas,
+      this.ctx,
       config.BASE.width,
-      config.BASE.height
+      config.BASE.height,
+      baseSprite
     );
 
     this.ziel = new Ziel(0, 0, canvas, ctx);
@@ -43,6 +65,15 @@ export class GameEngine {
     this.enemies = [];
 
     this.init();
+  }
+
+  private loadResources(): void {
+    this.resourceManager.load([
+      { name: 'hero', url: sprites.HERO_SPRITE.url },
+      { name: 'base', url: sprites.BASE_SPRITE.url },
+      { name: 'enemy', url: sprites.ENEMY_SPRITE.url },
+      { name: 'background', url: sprites.BACKGROUND_SPRITE.url },
+    ]);
   }
 
   private init(): void {
@@ -61,7 +92,11 @@ export class GameEngine {
       } else {
         y = this.canvas.height + 30;
       }
-      const enemy = new Enemy(x, y, this.canvas, this.ctx);
+      const enemySprite = new Sprite(
+        this.ctx,
+        this.resourceManager.get('enemy')
+      );
+      const enemy = new Enemy(x, y, this.canvas, this.ctx, enemySprite);
       this.enemies.push(enemy);
       i++;
       // TODO изменить хардкод интервал на функцию, которая будет уменьшать время
@@ -110,13 +145,14 @@ export class GameEngine {
       const relativeX = e.clientX - this.canvas.offsetLeft;
       const relativeY = e.clientY - this.canvas.offsetTop;
       this.ziel.updateCoordinates(relativeX, relativeY);
+      this.hero.updateZiel(relativeX, relativeY);
     });
 
-    document.addEventListener('click', (e: MouseEvent) => {
+    document.addEventListener('mousedown', (e: MouseEvent) => {
       const relativeX = e.clientX - this.canvas.offsetLeft;
       const relativeY = e.clientY - this.canvas.offsetTop;
-      const startX = this.hero.x;
-      const startY = this.hero.y;
+      const startX = this.hero.x + this.hero.width / 2;
+      const startY = this.hero.y + this.hero.height / 2;
 
       const bullet = new Bullet(0, 0, this.canvas, this.ctx);
       bullet.shoot({ x: startX, y: startY }, { x: relativeX, y: relativeY });
@@ -186,9 +222,22 @@ export class GameEngine {
     }
   }
 
+  private drawBackground() {
+    const pattern = this.ctx.createPattern(
+      this.resourceManager.get('background'),
+      'repeat'
+    );
+    if (pattern) {
+      this.ctx.fillStyle = pattern;
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+  }
+
   public draw(): void {
     // Очистка canvas
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.drawBackground();
 
     // Отрисовка сущностей
     this.hero.draw();
