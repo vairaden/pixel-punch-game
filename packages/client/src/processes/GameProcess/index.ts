@@ -1,1 +1,1 @@
-export { GameProcess } from "./GameProcess"
+export { GameProcess } from './GameProcess';

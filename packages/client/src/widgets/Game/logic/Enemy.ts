@@ -1,11 +1,18 @@
-import { config } from '../config';
+import { config, sprites } from '../config';
 import { GameObject } from './GameObject';
+import { Sprite } from './Sprite';
+
+const { ENEMY } = config;
+const { ENEMY_SPRITE } = sprites;
 
 export class Enemy extends GameObject {
   private speed: number;
   private dx: number;
   private dy: number;
-  public radius: number;
+  private sprite: Sprite;
+
+  public height: number;
+  public width: number;
   public health: number;
   public attackInterval: number; // ms
   public damage: number;
@@ -14,16 +21,19 @@ export class Enemy extends GameObject {
     x: number,
     y: number,
     canvas: HTMLCanvasElement,
-    ctx: CanvasRenderingContext2D
+    ctx: CanvasRenderingContext2D,
+    sprite: Sprite
   ) {
     super(x, y, ctx, canvas);
-    this.radius = 20;
+    this.height = ENEMY.height;
+    this.width = ENEMY.width;
     this.dx = 0;
     this.dy = 0;
-    this.speed = config.ENEMY.speed;
-    this.health = config.ENEMY.health;
-    this.attackInterval = config.ENEMY.attackInterval;
-    this.damage = config.ENEMY.damage;
+    this.speed = ENEMY.speed;
+    this.health = ENEMY.health;
+    this.attackInterval = ENEMY.attackInterval;
+    this.damage = ENEMY.damage;
+    this.sprite = sprite;
   }
 
   public move() {
@@ -61,10 +71,43 @@ export class Enemy extends GameObject {
   }
 
   public draw(): void {
-    this.ctx.beginPath();
-    this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-    this.ctx.fillStyle = 'red';
-    this.ctx.fill();
-    this.ctx.closePath();
+    this.sprite.update();
+
+    // Определяем угол между героем и указателем мыши
+    const angle = Math.atan2(
+      this.canvas.height / 2 - this.y,
+      this.canvas.width / 2 - this.x
+    );
+
+    // Преобразуем радианы в градусы, чтобы спрайт смотрел в нужном направлении
+    const rotation = angle * (180 / Math.PI);
+
+    if (this.dx !== 0 || this.dy !== 0) {
+      this.sprite.setAnimationParams(ENEMY_SPRITE.movingParams.animation);
+
+      this.sprite.draw({
+        x: this.x,
+        y: this.y,
+        imgWidth: ENEMY_SPRITE.movingParams.width,
+        imgHeight: ENEMY_SPRITE.movingParams.height,
+        imgY: ENEMY_SPRITE.movingParams.offsetY,
+        drawWidth: this.width,
+        drawHeight: this.height,
+        rotation,
+      });
+    } else {
+      this.sprite.setAnimationParams(ENEMY_SPRITE.attackParams.animation);
+
+      this.sprite.draw({
+        x: this.x,
+        y: this.y,
+        imgWidth: ENEMY_SPRITE.attackParams.width,
+        imgHeight: ENEMY_SPRITE.attackParams.height,
+        imgY: ENEMY_SPRITE.attackParams.offsetY,
+        drawWidth: this.width,
+        drawHeight: this.height,
+        rotation,
+      });
+    }
   }
 }

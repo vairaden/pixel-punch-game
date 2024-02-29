@@ -7,12 +7,11 @@ import { ProfilePage } from '@/pages/ProfilePage';
 import { paths } from '../../constants/paths';
 import { ErrorPage } from '@/pages/ErrorPage';
 import { LeaderBoardPage } from '@/pages/LeaderBoardPage';
+import { ForumPage } from '@/pages/ForumPage';
+import { ForumTopicEditorPage } from '@/pages/ForumTopicEditorPage';
+import { ForumTopicPage } from '@/pages/ForumTopicPage';
 import { GameProcess } from '@/processes/GameProcess';
 import { ErrorBoundary } from '../errorBoundary';
-import { withAuthGuard } from './withAuthGuard';
-
-const ForumPage = withAuthGuard(() => <div>Страница форума</div>);
-const ForumTopicPage = withAuthGuard(() => <div>Страница топика форума</div>);
 
 export const routes: RouteObject[] = [
   {
@@ -76,6 +75,22 @@ export const routes: RouteObject[] = [
     element: (
       <ErrorBoundary>
         <ForumTopicPage />
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: paths.forumTopicCreate,
+    element: (
+      <ErrorBoundary>
+        <ForumTopicEditorPage />
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: paths.forumTopicEdit,
+    element: (
+      <ErrorBoundary>
+        <ForumTopicEditorPage />
       </ErrorBoundary>
     ),
   },

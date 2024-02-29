@@ -8,12 +8,16 @@ interface IProps {
 
 export const Game: FC<IProps> = ({ gameOverCallback }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const wrapper = wrapperRef.current;
+    if (!canvas || !wrapper) return;
+
+    canvas.width = wrapper.offsetWidth;
+    // TODO: задать высоту без хардкода
+    canvas.height = window.innerHeight - 64 - 8 - 16;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;

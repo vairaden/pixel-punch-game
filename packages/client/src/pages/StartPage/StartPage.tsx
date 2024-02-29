@@ -15,7 +15,7 @@ export const StartPage: FC<IProps> = ({ countDownCallback, countdown }) => {
     let timeLeft = countdown;
 
     const interval = setInterval(() => {
-      setRemainingTime((prev) => prev - 1);
+      setRemainingTime(prev => prev - 1);
       timeLeft -= 1;
 
       if (timeLeft === 0) {
@@ -29,10 +29,15 @@ export const StartPage: FC<IProps> = ({ countDownCallback, countdown }) => {
     <Container maxWidth="sm">
       <Box sx={{ my: 4 }}>
         <Paper sx={{ display: 'flex', flexDirection: 'column', padding: 8 }}>
-          <Typography sx={{textAlign: 'center', mb: 4}} variant="h3">
+          <Typography sx={{ textAlign: 'center', mb: 4 }} variant="h3">
             {isCountdown ? remainingTime : 'Нажмите на конпку'}
           </Typography>
-          <Button disabled={isCountdown} variant="contained" onClick={startTimer}>Начать</Button>
+          <Button
+            disabled={isCountdown}
+            variant="contained"
+            onClick={startTimer}>
+            Начать
+          </Button>
         </Paper>
       </Box>
     </Container>

@@ -6,6 +6,6 @@ interface IProps {
   gameOverCallback: GameOverCallback;
 }
 
-export const GamePage: FC<IProps> = ({gameOverCallback}) => {
+export const GamePage: FC<IProps> = ({ gameOverCallback }) => {
   return <Game gameOverCallback={gameOverCallback} />;
-}
+};
