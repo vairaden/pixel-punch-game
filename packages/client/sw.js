@@ -23,7 +23,7 @@ this.addEventListener('activate', event => {
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
-          if (CACHE_PREFIX.indexOf(cacheName) === 0) {
+          if (cacheName.indexOf(CACHE_PREFIX) === 0) {
             return caches.delete(cacheName);
           }
         })
