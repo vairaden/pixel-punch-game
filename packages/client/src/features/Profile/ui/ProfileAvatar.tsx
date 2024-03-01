@@ -4,7 +4,7 @@ import { Avatar, Box, IconButton } from '@mui/material';
 
 import { useSetProfileAvatarMutation } from '@/shared/api/profileApi';
 import { BASE_URL } from '@/shared/api/baseApi';
-import { useActions, useAppSelector } from '@/shared/hooks';
+import { useAppSelector } from '@/shared/hooks';
 import { Message } from '@/shared/ui';
 import { selectProfileAvatar } from '../model/selectors';
 
@@ -12,7 +12,6 @@ export const ProfileAvatar: React.FC = () => {
   const [profileAvatar, { isSuccess, isError }] = useSetProfileAvatarMutation();
 
   const avatar = useAppSelector(selectProfileAvatar);
-  const { setProfile } = useActions();
 
   const AVATAR_URL = `${BASE_URL}/resources/${avatar}`;
 
@@ -22,10 +21,7 @@ export const ProfileAvatar: React.FC = () => {
     const formData = new FormData();
     formData.append('avatar', event.target.files[0]);
 
-    await profileAvatar(formData)
-      .unwrap()
-      .then(setProfile)
-      .catch(console.error);
+    await profileAvatar(formData);
   };
 
   return (

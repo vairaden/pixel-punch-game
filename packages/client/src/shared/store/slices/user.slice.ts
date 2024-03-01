@@ -5,15 +5,15 @@ const initialState: { user: IProfile | null } = {
   user: null,
 };
 
-const profileSlice = createSlice({
-  name: 'profile',
+const userSlice = createSlice({
+  name: 'user',
   initialState,
   reducers: {
-    setProfile(state, action: PayloadAction<IProfile>) {
+    setUser(state, action: PayloadAction<IProfile>) {
       state.user = action.payload;
     },
   },
 });
 
-export const profileActions = profileSlice.actions;
-export const profileReducer = profileSlice.reducer;
+export const userActions = userSlice.actions;
+export const userReducer = userSlice.reducer;
