@@ -11,7 +11,7 @@ export const withAuthGuard = <Props extends object = object>(
 ): React.ComponentType<Props> => {
   return (props: Props) => {
     const [getUserInfo, { isLoading }] = useLazyGetUserInfoQuery();
-    const { setProfile } = useActions();
+    const { setUser } = useActions();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [errorStatus, setErrorStatus] = useState<number | null>(null);
 
@@ -19,7 +19,7 @@ export const withAuthGuard = <Props extends object = object>(
       getUserInfo()
         .unwrap()
         .then(data => {
-          setProfile(data);
+          setUser(data);
           setIsLoggedIn(true);
         })
         .catch(error => {

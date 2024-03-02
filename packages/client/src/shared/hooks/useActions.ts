@@ -3,11 +3,9 @@ import { useDispatch } from 'react-redux';
 
 import { bindActionCreators } from '@reduxjs/toolkit';
 import { AppDispatch } from '../store';
-import { profileActions } from '../store';
+import { userActions } from '../store';
 
-const rootActions = {
-  ...profileActions,
-};
+const rootActions = { ...userActions };
 
 const useAppDispatch: () => AppDispatch = useDispatch;
 
