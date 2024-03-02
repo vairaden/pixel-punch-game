@@ -6,19 +6,39 @@ import {
   Enemy,
   Sprite,
   ResourceManager,
+  GameObject,
 } from './index';
 import { config, sprites } from '../config';
 import { isCollision } from '../lib/isCollision';
-import { GameOverCallback } from '@/shared/types';
+import { GameOverCallback, IGameItem } from '@/shared/types';
+import { Coin } from '@/widgets/Game/logic/Coin';
+
+const enum ResourceNames {
+  HeroImage = 'hero',
+  BaseImage = 'base',
+  EnemyImage = 'enemy',
+  BackgroundImage = 'background',
+  CoinImage = 'coin',
+}
+
+const enum GameStates {
+  Playing = 'playing',
+  Pause = 'pause',
+  ShopOpen = 'shopOpen',
+}
 
 export class GameEngine {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
+  private clickCallbacks: Array<(e: MouseEvent, gameState: GameStates) => void>;
   private hero: Hero;
   private base: Base;
   private ziel: Ziel;
   private bullets: Bullet[];
   private enemies: Enemy[];
+  private items: IGameItem[];
+
+  private gameState: GameStates;
 
   // Коллекция для хранения интервалов атаки для противников
   private activeAttackIntervals: Set<number> = new Set<number>();
@@ -35,10 +55,17 @@ export class GameEngine {
 
     this.canvas = canvas;
     this.ctx = ctx;
+    this.clickCallbacks = [];
+
+    this.gameState = GameStates.Playing;
+
     this.resourceManager = new ResourceManager();
     this.loadResources();
 
-    const heroSprite = new Sprite(this.ctx, this.resourceManager.get('hero'));
+    const heroSprite = new Sprite(
+      this.ctx,
+      this.resourceManager.get(ResourceNames.HeroImage)
+    );
 
     this.hero = new Hero(
       this.canvas.width / 2 - config.HERO.startX,
@@ -48,7 +75,10 @@ export class GameEngine {
       heroSprite
     );
 
-    const baseSprite = new Sprite(this.ctx, this.resourceManager.get('base'));
+    const baseSprite = new Sprite(
+      this.ctx,
+      this.resourceManager.get(ResourceNames.BaseImage)
+    );
 
     this.base = new Base(
       (this.canvas.width - config.BASE.width) / 2,
@@ -63,16 +93,21 @@ export class GameEngine {
     this.ziel = new Ziel(0, 0, canvas, ctx);
     this.bullets = [];
     this.enemies = [];
+    this.items = [];
 
     this.init();
   }
 
   private loadResources(): void {
     this.resourceManager.load([
-      { name: 'hero', url: sprites.HERO_SPRITE.url },
-      { name: 'base', url: sprites.BASE_SPRITE.url },
-      { name: 'enemy', url: sprites.ENEMY_SPRITE.url },
-      { name: 'background', url: sprites.BACKGROUND_SPRITE.url },
+      { name: ResourceNames.HeroImage, url: sprites.HERO_SPRITE.url },
+      { name: ResourceNames.BaseImage, url: sprites.BASE_SPRITE.url },
+      { name: ResourceNames.EnemyImage, url: sprites.ENEMY_SPRITE.url },
+      {
+        name: ResourceNames.BackgroundImage,
+        url: sprites.BACKGROUND_SPRITE.url,
+      },
+      { name: ResourceNames.CoinImage, url: sprites.COIN_SPRITE.url },
     ]);
   }
 
@@ -94,7 +129,7 @@ export class GameEngine {
       }
       const enemySprite = new Sprite(
         this.ctx,
-        this.resourceManager.get('enemy')
+        this.resourceManager.get(ResourceNames.EnemyImage)
       );
       const enemy = new Enemy(x, y, this.canvas, this.ctx, enemySprite);
       this.enemies.push(enemy);
@@ -149,6 +184,14 @@ export class GameEngine {
     });
 
     document.addEventListener('mousedown', (e: MouseEvent) => {
+      this.clickCallbacks.forEach(cb => cb(e, this.gameState));
+    });
+
+    this.clickCallbacks.push((e, gameState) => {
+      if (gameState !== GameStates.Playing) {
+        return;
+      }
+
       const relativeX = e.clientX - this.canvas.offsetLeft;
       const relativeY = e.clientY - this.canvas.offsetTop;
       const startX = this.hero.x + this.hero.width / 2;
@@ -158,6 +201,11 @@ export class GameEngine {
       bullet.shoot({ x: startX, y: startY }, { x: relativeX, y: relativeY });
       this.bullets.push(bullet);
     });
+
+    this.placeCoin(
+      Math.random() * this.canvas.width,
+      Math.random() * this.canvas.height
+    );
   }
 
   private startEnemyAttackInterval(enemy: Enemy, index: number) {
@@ -177,6 +225,22 @@ export class GameEngine {
         this.activeAttackIntervals.delete(index);
       }, enemy.attackInterval);
     }
+  }
+
+  public placeCoin(x: number, y: number) {
+    const sprite = new Sprite(
+      this.ctx,
+      this.resourceManager.get(ResourceNames.CoinImage)
+    );
+
+    const coin = new Coin(x, y, this.canvas, this.ctx, sprite);
+    this.items.push(coin);
+  }
+
+  private drawStats() {
+    this.ctx.font = '16px Arial';
+    this.ctx.fillStyle = 'white';
+    this.ctx.fillText(`Много деняк`, 20, 20);
   }
 
   // Обновление состояние объектов
@@ -224,7 +288,7 @@ export class GameEngine {
 
   private drawBackground() {
     const pattern = this.ctx.createPattern(
-      this.resourceManager.get('background'),
+      this.resourceManager.get(ResourceNames.BackgroundImage),
       'repeat'
     );
     if (pattern) {
@@ -238,6 +302,7 @@ export class GameEngine {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.drawBackground();
+    this.drawStats();
 
     // Отрисовка сущностей
     this.hero.draw();
@@ -265,6 +330,11 @@ export class GameEngine {
         enemy.stop();
       }
     });
+
+    this.items.forEach(item => {
+      item.draw();
+    });
+
     this.base.draw();
   }
 }
