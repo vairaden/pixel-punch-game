@@ -5,7 +5,7 @@ import { Paper, TextField, Button, Grid } from '@mui/material';
 
 import { IProfile } from '@/shared/types';
 import { useSetProfileInfoMutation } from '@/shared/api/profileApi';
-import { useActions, useAppSelector } from '@/shared/hooks';
+import { useAppSelector } from '@/shared/hooks';
 import { Message } from '@/shared/ui';
 import { selectProfileInfo } from '../model/selectors';
 import {
@@ -19,7 +19,6 @@ export const ProfileInfo: React.FC = () => {
   const [profileInfo, { isSuccess, isError }] = useSetProfileInfoMutation();
 
   const profile = useAppSelector(selectProfileInfo);
-  const { setProfile } = useActions();
 
   const {
     register,
@@ -28,7 +27,7 @@ export const ProfileInfo: React.FC = () => {
   } = useForm<IProfile>({ mode: 'all' });
 
   const onSubmit = handleSubmit(async formData => {
-    await profileInfo(formData).unwrap().then(setProfile).catch(console.error);
+    await profileInfo(formData);
   });
 
   return (
