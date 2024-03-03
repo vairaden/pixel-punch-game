@@ -3,11 +3,11 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 import { testApi } from '@/shared/api/testApi';
 import { authApi } from '../api/authApi';
 import { profileApi } from '../api/profileApi';
-import { profileReducer } from './slices/profile.slice';
+import { userReducer } from './slices/user.slice';
 
 export const store = configureStore({
   reducer: {
-    profile: profileReducer,
+    user: userReducer,
     [testApi.reducerPath]: testApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
     [profileApi.reducerPath]: profileApi.reducer,

@@ -1,6 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from './baseApi';
 import { IProfile, IProfilePassword } from '../types';
+import { userActions } from '../store';
 
 export const profileApi = createApi({
   reducerPath: 'profileApi',
@@ -13,6 +14,11 @@ export const profileApi = createApi({
         method: 'PUT',
         data,
       }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        await queryFulfilled
+          .then(({ data }) => dispatch(userActions.setUser(data)))
+          .catch(console.error);
+      },
     }),
     setProfileAvatar: builder.mutation<IProfile, FormData>({
       query: data => ({
@@ -21,6 +27,11 @@ export const profileApi = createApi({
         method: 'PUT',
         data,
       }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        await queryFulfilled
+          .then(({ data }) => dispatch(userActions.setUser(data)))
+          .catch(console.error);
+      },
     }),
     setProfilePassword: builder.mutation<void, IProfilePassword>({
       query: data => ({

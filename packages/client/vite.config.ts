@@ -18,4 +18,20 @@ export default defineConfig({
     },
   },
   plugins: [react()],
+  build: {
+    rollupOptions: {
+      input: {
+        app: './index.html',
+        sw: './sw.js',
+      },
+      output: {
+        entryFileNames: assetInfo => {
+          // ServiceWorker нужно положить в корень
+          return assetInfo.name === 'sw'
+            ? '[name].js'
+            : 'assets/js/[name]-[hash].js';
+        },
+      },
+    },
+  },
 });
