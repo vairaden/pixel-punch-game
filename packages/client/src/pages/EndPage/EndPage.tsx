@@ -13,7 +13,7 @@ export const EndPage: FC<IProps> = ({ resetCallback }) => {
       <Box sx={{ my: 4 }}>
         <Paper sx={{ display: 'flex', flexDirection: 'column', padding: 8 }}>
           <Typography sx={{ textAlign: 'center', mb: 4 }} variant="h3">
-            Отличный результат!
+            Игра окончена
           </Typography>
           <Button variant="contained" onClick={resetCallback}>
             Назад
