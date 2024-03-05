@@ -1,7 +1,7 @@
 import { ResourceManager } from './index';
 import { config, sprites } from '../config';
 import { isCollision } from '../lib/isCollision';
-import { GameOverCallback } from '@/shared/types';
+import { GameOverCallback, IGameResults } from '@/shared/types';
 import { Base, Bullet, Coin, Enemy, Hero, Ziel } from '@/widgets/Game/entities';
 import { Button, ButtonParams, GameItem, Sprite } from '@/widgets/Game/utils';
 
@@ -31,6 +31,7 @@ export class GameEngine {
   private money: number;
 
   private gameState: GameStates;
+  private results: IGameResults;
 
   private buttons: Record<string, Button[]>;
 
@@ -50,6 +51,13 @@ export class GameEngine {
     this.canvas = canvas;
     this.ctx = ctx;
     this.clickCallbacks = [];
+
+    this.results = {
+      score: 0,
+      coinsCollected: 0,
+      enemiesKilled: 0,
+      timeSurvived: 0,
+    };
 
     this.gameState = GameStates.Playing;
 
@@ -99,7 +107,7 @@ export class GameEngine {
     this.init();
   }
 
-  private loadResources(): void {
+  private loadResources() {
     this.resourceManager.load([
       { name: ResourceNames.HeroImage, url: sprites.HERO_SPRITE.url },
       { name: ResourceNames.BaseImage, url: sprites.BASE_SPRITE.url },
@@ -112,7 +120,7 @@ export class GameEngine {
     ]);
   }
 
-  private init(): void {
+  private init() {
     // Создание врагов и других игровых объектов
     let i = 0;
     setInterval(() => {
@@ -136,6 +144,10 @@ export class GameEngine {
       this.enemies.push(enemy);
       i++;
       // TODO изменить хардкод интервал на функцию, которая будет уменьшать время
+    }, 1000);
+
+    setInterval(() => {
+      this.results.timeSurvived += 1;
     }, 1000);
 
     // Обработка пользовательского ввода
@@ -300,6 +312,7 @@ export class GameEngine {
 
     const coin = new Coin(x, y, this.canvas, this.ctx, sprite, () => {
       this.money += 10;
+      this.results.coinsCollected += 1;
     });
     this.items.push(coin);
   }
@@ -320,7 +333,13 @@ export class GameEngine {
     }
 
     if (this.hero.health <= 0 || this.base.health <= 0) {
-      this.gameOverCallback({ score: 100 });
+      this.gameOverCallback({
+        ...this.results,
+        score:
+          this.results.timeSurvived * 15 +
+          this.results.enemiesKilled * 10 +
+          this.results.coinsCollected * 10,
+      });
     }
     this.hero.update();
 
@@ -337,6 +356,7 @@ export class GameEngine {
 
           if (enemy.health <= 0) {
             const { x, y } = this.enemies.splice(enemyIndex, 1)[0]; // Удаляем врага
+            this.results.enemiesKilled += 1;
             this.placeCoin(x, y);
           }
         }
