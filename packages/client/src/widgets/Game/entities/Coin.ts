@@ -1,11 +1,10 @@
 import { config, sprites } from '../config';
-import { Sprite } from './Sprite';
-import GameItem from '@/widgets/Game/logic/GameItem';
+import { GameItem, Sprite } from '@/widgets/Game/utils';
 
 const { COIN } = config;
 const { COIN_SPRITE } = sprites;
 
-export class Coin<CallbackCtx = unknown> extends GameItem<CallbackCtx> {
+export class Coin<CallbackCtx = undefined> extends GameItem<CallbackCtx> {
   private dx: number;
   private dy: number;
   private sprite: Sprite;

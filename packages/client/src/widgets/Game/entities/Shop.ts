@@ -1,5 +1,4 @@
-import { GameObject } from './GameObject';
-import { Coordinate } from '../lib/types';
+import { GameObject } from '@/widgets/Game/utils';
 
 export class Shop extends GameObject {
   public radius: number;

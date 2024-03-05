@@ -1,5 +1,18 @@
 import { GameObject } from './GameObject';
 
+export interface ButtonParams {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  text: string;
+}
+
+interface ConstructorParams extends ButtonParams {
+  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
+}
+
 export class Button extends GameObject {
   public height: number;
   public width: number;
@@ -7,15 +20,7 @@ export class Button extends GameObject {
   public y: number;
   private text: string;
 
-  constructor(
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    text: string,
-    canvas: HTMLCanvasElement,
-    ctx: CanvasRenderingContext2D
-  ) {
+  constructor({ x, y, width, height, text, canvas, ctx }: ConstructorParams) {
     super(x, y, ctx, canvas);
     this.height = height;
     this.width = width;

@@ -1,18 +1,9 @@
-import {
-  Hero,
-  Base,
-  Ziel,
-  Bullet,
-  Enemy,
-  Sprite,
-  ResourceManager,
-} from './index';
+import { ResourceManager } from './index';
 import { config, sprites } from '../config';
 import { isCollision } from '../lib/isCollision';
 import { GameOverCallback } from '@/shared/types';
-import { Coin } from '@/widgets/Game/logic/Coin';
-import GameItem from '@/widgets/Game/logic/GameItem';
-import { Button } from '@/widgets/Game/logic/Button';
+import { Base, Bullet, Coin, Enemy, Hero, Ziel } from '@/widgets/Game/entities';
+import { Button, ButtonParams, GameItem, Sprite } from '@/widgets/Game/utils';
 
 const enum ResourceNames {
   HeroImage = 'hero',
@@ -24,7 +15,6 @@ const enum ResourceNames {
 
 const enum GameStates {
   Playing = 'playing',
-  Pause = 'pause',
   ShopOpen = 'shopOpen',
 }
 
@@ -42,7 +32,7 @@ export class GameEngine {
 
   private gameState: GameStates;
 
-  private shopButtons: Button[];
+  private buttons: Record<string, Button[]>;
 
   // Коллекция для хранения интервалов атаки для противников
   private activeAttackIntervals: Set<number> = new Set<number>();
@@ -100,7 +90,11 @@ export class GameEngine {
     this.items = [];
     this.money = 0;
 
-    this.shopButtons = [];
+    // Лэйауты кнопок
+    this.buttons = {
+      [GameStates.Playing]: [],
+      [GameStates.ShopOpen]: [],
+    };
 
     this.init();
   }
@@ -193,8 +187,9 @@ export class GameEngine {
     });
 
     document.addEventListener('mousemove', (e: MouseEvent) => {
-      const relativeX = e.clientX - this.canvas.offsetLeft;
-      const relativeY = e.clientY - this.canvas.offsetTop;
+      const rect = this.canvas.getBoundingClientRect();
+      const relativeX = e.clientX - rect.left;
+      const relativeY = e.clientY - rect.top;
       this.ziel.updateCoordinates(relativeX, relativeY);
       this.hero.updateZiel(relativeX, relativeY);
     });
@@ -208,8 +203,9 @@ export class GameEngine {
         return;
       }
 
-      const relativeX = e.clientX - this.canvas.offsetLeft;
-      const relativeY = e.clientY - this.canvas.offsetTop;
+      const rect = this.canvas.getBoundingClientRect();
+      const relativeX = e.clientX - rect.left;
+      const relativeY = e.clientY - rect.top;
       const startX = this.hero.x + this.hero.width / 2;
       const startY = this.hero.y + this.hero.height / 2;
 
@@ -218,31 +214,42 @@ export class GameEngine {
       this.bullets.push(bullet);
     });
 
-    const button = new Button(
-      this.canvas.width / 4,
-      this.canvas.height / 4,
-      100,
-      40,
-      'Починить базу',
-      this.canvas,
-      this.ctx
+    this.registerButton(
+      {
+        x: this.canvas.width / 4 + 10,
+        y: this.canvas.height / 4 + 10,
+        width: 200,
+        height: 40,
+        text: 'Починить базу',
+      },
+      this.fixBase,
+      GameStates.ShopOpen
     );
-    this.shopButtons.push(button);
-    this.registerButton(button, this.fixBase, GameStates.ShopOpen);
   }
 
   private fixBase = () => {
+    if (this.money < 10) {
+      return;
+    }
     this.money -= 10;
     this.base.health += 50;
   };
 
   private registerButton = (
-    button: Button,
+    buttonParams: ButtonParams,
     callback: () => void,
-    activeGameState: GameStates
+    gameStateLayout: GameStates
   ) => {
+    const button = new Button({
+      ...buttonParams,
+      canvas: this.canvas,
+      ctx: this.ctx,
+    });
+
+    this.buttons[gameStateLayout].push(button);
+
     this.clickCallbacks.push((e, gameState) => {
-      if (gameState !== activeGameState) {
+      if (gameState !== gameStateLayout) {
         return;
       }
 
@@ -262,19 +269,16 @@ export class GameEngine {
   };
 
   private startEnemyAttackInterval(enemy: Enemy, index: number) {
-    // Проверяем, активен ли уже интервал атаки для данного врага
+    // Проверяем, атаковал ли враг
     if (!this.activeAttackIntervals.has(index)) {
-      const intervalId = setInterval(() => {
-        const damage = enemy.getDamage(); // Получаем урон от врага
-        this.base.receiveDamage(damage); // Передаем урон базе
-      }, enemy.attackInterval);
-
       // Добавляем идентификатор интервала в множество активных интервалов
       this.activeAttackIntervals.add(index);
 
-      // После завершения интервала удаляем его идентификатор из множества активных интервалов
+      const damage = enemy.getDamage(); // Получаем урон от врага
+      this.base.receiveDamage(damage); // Передаем урон базе
+
+      // После того, как атака перезарядится, даем возможноть атаковать снова
       setTimeout(() => {
-        clearInterval(intervalId);
         this.activeAttackIntervals.delete(index);
       }, enemy.attackInterval);
     }
@@ -310,7 +314,7 @@ export class GameEngine {
   }
 
   // Обновление состояние объектов
-  public update(): void {
+  public update() {
     if (this.gameState !== GameStates.Playing) {
       return;
     }
@@ -417,12 +421,12 @@ export class GameEngine {
       this.canvas.height / 2
     );
     this.ctx.fill();
-    this.shopButtons.forEach(button => {
+    this.buttons[GameStates.ShopOpen].forEach(button => {
       button.draw();
     });
   }
 
-  public draw(): void {
+  public draw() {
     // Очистка canvas
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 

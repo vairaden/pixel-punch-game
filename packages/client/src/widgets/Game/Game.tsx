@@ -42,6 +42,10 @@ export const Game: FC<IProps> = ({ gameOverCallback }) => {
     };
 
     gameLoop();
+
+    return () => {
+      isGameEnd = true;
+    };
   }, []);
 
   const toggleFullScreen = () => {

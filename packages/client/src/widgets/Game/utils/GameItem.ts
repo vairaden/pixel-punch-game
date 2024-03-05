@@ -1,8 +1,6 @@
-import { GameObject } from '@/widgets/Game/logic/GameObject';
+import { GameObject } from '@/widgets/Game/utils';
 
-export default abstract class GameItem<
-  CallbackCtx = unknown
-> extends GameObject {
+export abstract class GameItem<CallbackCtx = undefined> extends GameObject {
   abstract height: number;
   abstract width: number;
   protected abstract pickupCallback: (ctx: CallbackCtx) => void;
