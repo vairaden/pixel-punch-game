@@ -80,14 +80,14 @@
 Отрисовывает изображение (анимацию) на элементе `canvas`. Принимает объект с параметрами:
 ``` javascript
 {
-  x: number; // координаты для отрисовки на canvas
-  y: number;
-  imgWidth: number; // ширина изображения для отрисовки
-  imgHeight: number; // его высота
-  imgY: number; // отступ до нужной части спрайта по оси Y
-  drawWidth: number; // ширина отрисовки на canvas
-  drawHeight: number; // его высота
-  rotation?: number; // угол поворота изображения
+  x: number, // координаты для отрисовки на canvas
+  y: number,
+  imgWidth: number, // ширина изображения для отрисовки
+  imgHeight: number, // его высота
+  imgY: number, // отступ до нужной части спрайта по оси Y
+  drawWidth: number, // ширина отрисовки на canvas
+  drawHeight: number, // его высота
+  rotation?: number, // угол поворота изображения
 }
 ```
 
