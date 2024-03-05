@@ -1,15 +1,15 @@
 import { config, sprites } from '../config';
-import { GameObject } from './GameObject';
 import { Sprite } from './Sprite';
-import { IGameItem } from '@/shared/types';
+import GameItem from '@/widgets/Game/logic/GameItem';
 
 const { COIN } = config;
 const { COIN_SPRITE } = sprites;
 
-export class Coin extends GameObject implements IGameItem {
+export class Coin<CallbackCtx = unknown> extends GameItem<CallbackCtx> {
   private dx: number;
   private dy: number;
   private sprite: Sprite;
+  protected pickupCallback: (ctx: CallbackCtx) => void;
 
   public height: number;
   public width: number;
@@ -19,7 +19,8 @@ export class Coin extends GameObject implements IGameItem {
     y: number,
     canvas: HTMLCanvasElement,
     ctx: CanvasRenderingContext2D,
-    sprite: Sprite
+    sprite: Sprite,
+    pickupCallback: (ctx: CallbackCtx) => void
   ) {
     super(x, y, ctx, canvas);
     this.height = COIN.height;
@@ -27,10 +28,11 @@ export class Coin extends GameObject implements IGameItem {
     this.dx = 0;
     this.dy = 0;
     this.sprite = sprite;
+    this.pickupCallback = pickupCallback;
   }
 
-  public pickUp() {
-    console.log('coin picked');
+  public pickUp(ctx: CallbackCtx) {
+    this.pickupCallback(ctx);
   }
 
   public update() {

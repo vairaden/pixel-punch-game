@@ -1,34 +1,33 @@
 import { GameObject } from './GameObject';
 
 export class Button extends GameObject {
-  private dx: number;
-  private dy: number;
-
   public height: number;
   public width: number;
+  public x: number;
+  public y: number;
+  private text: string;
 
   constructor(
     x: number,
     y: number,
+    width: number,
+    height: number,
+    text: string,
     canvas: HTMLCanvasElement,
     ctx: CanvasRenderingContext2D
   ) {
     super(x, y, ctx, canvas);
-    this.height = 100;
-    this.width = 100;
-    this.dx = 0;
-    this.dy = 0;
-  }
-
-  public update() {
-    this.x += this.dx;
-    this.y += this.dy;
+    this.height = height;
+    this.width = width;
+    this.x = x;
+    this.y = y;
+    this.text = text;
   }
 
   public draw() {
-    this.ctx.beginPath();
     this.ctx.fillStyle = 'black';
-    this.ctx.fill();
-    this.ctx.closePath();
+    this.ctx.fillRect(this.x, this.y, this.width, this.height);
+    this.ctx.fillStyle = 'white';
+    this.ctx.fillText(this.text, this.x, this.y + 20);
   }
 }
