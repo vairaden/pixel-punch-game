@@ -157,6 +157,10 @@ export class GameEngine {
         case 'в':
           this.hero.moveRight();
           break;
+        case 'q':
+        case 'й':
+          this.toggleShop();
+          break;
       }
     });
 
@@ -173,15 +177,6 @@ export class GameEngine {
         case 'в':
         case 'd':
           this.hero.stopX();
-          break;
-      }
-    });
-
-    document.addEventListener('keydown', (e: KeyboardEvent) => {
-      switch (e.key) {
-        case 'q':
-        case 'й':
-          this.toggleShop();
           break;
       }
     });
