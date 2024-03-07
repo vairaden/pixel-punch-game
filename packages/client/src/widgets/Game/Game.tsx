@@ -28,20 +28,26 @@ export const Game: FC<IProps> = ({ gameOverCallback }) => {
 
     let isGameEnd = false;
 
-    const gameEngine = new GameEngine(canvas, ctx, () => {
+    const gameEngine = new GameEngine(canvas, ctx, res => {
       isGameEnd = true;
-      gameOverCallback();
+      gameOverCallback(res);
     });
 
     const gameLoop = () => {
-      if (!isGameEnd) {
-        gameEngine.update(); // Обновляем состояние игры
-        gameEngine.draw(); // Отрисовываем игру
-        requestAnimationFrame(gameLoop);
+      if (isGameEnd) {
+        gameEngine.cleanUp();
+        return;
       }
+      gameEngine.update(); // Обновляем состояние игры
+      gameEngine.draw(); // Отрисовываем игру
+      requestAnimationFrame(gameLoop);
     };
 
     gameLoop();
+
+    return () => {
+      isGameEnd = true;
+    };
   }, []);
 
   const toggleFullScreen = () => {

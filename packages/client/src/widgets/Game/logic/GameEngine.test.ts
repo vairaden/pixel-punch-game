@@ -1,8 +1,10 @@
-import { Bullet, Enemy, GameEngine, Sprite } from './index';
+import { GameEngine } from './index';
+import { Sprite } from '../utils';
+import { Enemy } from '../entities';
 import * as isCollisionModule from '../lib/isCollision';
 
 // Создаем заглушки для внешних зависимостей
-jest.mock('./Hero', () => ({
+jest.mock('../entities/Hero', () => ({
   Hero: jest.fn().mockImplementation(() => ({
     update: jest.fn(),
     draw: jest.fn(),
@@ -22,7 +24,7 @@ jest.mock('./Hero', () => ({
   })),
 }));
 
-jest.mock('./Base', () => ({
+jest.mock('../entities/Base', () => ({
   Base: jest.fn().mockImplementation(() => ({
     update: jest.fn(),
     draw: jest.fn(),
@@ -33,7 +35,7 @@ jest.mock('./Base', () => ({
   })),
 }));
 
-jest.mock('./Enemy', () => ({
+jest.mock('../entities/Enemy', () => ({
   Enemy: jest.fn().mockImplementation(() => ({
     update: jest.fn(),
     draw: jest.fn(),
@@ -48,7 +50,7 @@ jest.mock('./Enemy', () => ({
   })),
 }));
 
-jest.mock('./Bullet', () => ({
+jest.mock('../entities/Bullet', () => ({
   Bullet: jest.fn().mockImplementation(() => ({
     update: jest.fn(),
     draw: jest.fn(),
@@ -58,7 +60,7 @@ jest.mock('./Bullet', () => ({
   })),
 }));
 
-jest.mock('./Ziel', () => ({
+jest.mock('../entities/Ziel', () => ({
   Ziel: jest.fn().mockImplementation(() => ({
     updateCoordinates: jest.fn(),
     draw: jest.fn(),
@@ -67,7 +69,7 @@ jest.mock('./Ziel', () => ({
   })),
 }));
 
-jest.mock('./Sprite', () => ({
+jest.mock('../utils/Sprite', () => ({
   Sprite: jest.fn().mockImplementation(() => ({
     update: jest.fn(),
     setAnimationParams: jest.fn(),

@@ -1,8 +1,9 @@
-import { Hero, Sprite } from './index';
+import { Hero } from '../entities';
+import { Sprite } from '../utils';
 import { config } from '../config';
 
 const { HERO } = config;
-jest.mock('./Sprite', () => {
+jest.mock('../utils/Sprite', () => {
   return {
     Sprite: jest.fn().mockImplementation(() => {
       return {

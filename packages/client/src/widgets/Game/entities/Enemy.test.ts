@@ -1,8 +1,9 @@
-import { Enemy, Sprite } from './index';
+import { Enemy } from '../entities';
+import { Sprite } from '../utils';
 import { config } from '../config';
 
 const { ENEMY } = config;
-jest.mock('./Sprite', () => {
+jest.mock('../utils/Sprite', () => {
   return {
     Sprite: jest.fn().mockImplementation(() => {
       return {

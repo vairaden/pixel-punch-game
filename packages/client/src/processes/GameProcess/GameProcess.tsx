@@ -5,15 +5,18 @@ import { GameStatus } from '@/shared/constants';
 import { EndPage } from '@/pages/EndPage';
 import { assertUnreachable } from '@/shared/utils';
 import { withAuthGuard } from '@/app/providers/router/withAuthGuard';
+import { IGameResults } from '@/shared/types';
 
 export const GameProcess = withAuthGuard(() => {
   const [gameStatus, setGameStatus] = useState(GameStatus.START);
+  const [gameResults, setGameResults] = useState<IGameResults | null>(null);
 
   const countDownCallback = useCallback(() => {
     setGameStatus(GameStatus.PLAYING);
   }, []);
 
-  const gameOverCallback = useCallback(() => {
+  const gameOverCallback = useCallback((results: IGameResults) => {
+    setGameResults(results);
     setGameStatus(GameStatus.END);
   }, []);
 
@@ -27,7 +30,12 @@ export const GameProcess = withAuthGuard(() => {
     case GameStatus.PLAYING:
       return <GamePage gameOverCallback={gameOverCallback} />;
     case GameStatus.END:
-      return <EndPage resetCallback={resetCallback} />;
+      if (!gameResults) {
+        throw new Error('gameResults is falsy');
+      }
+      return (
+        <EndPage resetCallback={resetCallback} gameResults={gameResults} />
+      );
     default:
       assertUnreachable(gameStatus);
   }

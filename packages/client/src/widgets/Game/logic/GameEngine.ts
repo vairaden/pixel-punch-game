@@ -1,28 +1,44 @@
-import {
-  Hero,
-  Base,
-  Ziel,
-  Bullet,
-  Enemy,
-  Sprite,
-  ResourceManager,
-} from './index';
+import { ResourceManager } from './index';
 import { config, sprites } from '../config';
 import { isCollision } from '../lib/isCollision';
-import { GameOverCallback } from '@/shared/types';
+import { GameOverCallback, IGameResults } from '@/shared/types';
+import { Base, Bullet, Coin, Enemy, Hero, Ziel } from '@/widgets/Game/entities';
+import { Button, ButtonParams, GameItem, Sprite } from '@/widgets/Game/utils';
+
+const enum ResourceNames {
+  HeroImage = 'hero',
+  BaseImage = 'base',
+  EnemyImage = 'enemy',
+  BackgroundImage = 'background',
+  CoinImage = 'coin',
+}
+
+const enum GameStates {
+  Playing = 'playing',
+  ShopOpen = 'shopOpen',
+}
 
 export class GameEngine {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
+  private clickCallbacks: Array<(e: MouseEvent, gameState: GameStates) => void>;
   private hero: Hero;
   private base: Base;
   private ziel: Ziel;
   private bullets: Bullet[];
   private enemies: Enemy[];
+  private items: GameItem[];
+  private money: number;
+
+  private gameState: GameStates;
+  private results: IGameResults;
+
+  private buttons: Record<string, Button[]>;
 
   // Коллекция для хранения интервалов атаки для противников
   private activeAttackIntervals: Set<number> = new Set<number>();
   private resourceManager: ResourceManager;
+  private intervalsToCleanup: NodeJS.Timer[];
 
   private gameOverCallback: GameOverCallback;
 
@@ -35,10 +51,25 @@ export class GameEngine {
 
     this.canvas = canvas;
     this.ctx = ctx;
+    this.clickCallbacks = [];
+    this.intervalsToCleanup = [];
+
+    this.gameState = GameStates.Playing;
+
+    this.results = {
+      score: 0,
+      coinsCollected: 0,
+      enemiesKilled: 0,
+      timeSurvived: 0,
+    };
+
     this.resourceManager = new ResourceManager();
     this.loadResources();
 
-    const heroSprite = new Sprite(this.ctx, this.resourceManager.get('hero'));
+    const heroSprite = new Sprite(
+      this.ctx,
+      this.resourceManager.get(ResourceNames.HeroImage)
+    );
 
     this.hero = new Hero(
       this.canvas.width / 2 - config.HERO.startX,
@@ -48,7 +79,10 @@ export class GameEngine {
       heroSprite
     );
 
-    const baseSprite = new Sprite(this.ctx, this.resourceManager.get('base'));
+    const baseSprite = new Sprite(
+      this.ctx,
+      this.resourceManager.get(ResourceNames.BaseImage)
+    );
 
     this.base = new Base(
       (this.canvas.width - config.BASE.width) / 2,
@@ -63,44 +97,73 @@ export class GameEngine {
     this.ziel = new Ziel(0, 0, canvas, ctx);
     this.bullets = [];
     this.enemies = [];
+    this.items = [];
+    this.money = 0;
+
+    // Лэйауты кнопок
+    this.buttons = {
+      [GameStates.Playing]: [],
+      [GameStates.ShopOpen]: [],
+    };
 
     this.init();
   }
 
   private loadResources(): void {
+    const {
+      COIN_SPRITE,
+      ENEMY_SPRITE,
+      BACKGROUND_SPRITE,
+      HERO_SPRITE,
+      BASE_SPRITE,
+    } = sprites;
+
     this.resourceManager.load([
-      { name: 'hero', url: sprites.HERO_SPRITE.url },
-      { name: 'base', url: sprites.BASE_SPRITE.url },
-      { name: 'enemy', url: sprites.ENEMY_SPRITE.url },
-      { name: 'background', url: sprites.BACKGROUND_SPRITE.url },
+      { name: ResourceNames.HeroImage, url: HERO_SPRITE.url },
+      { name: ResourceNames.BaseImage, url: BASE_SPRITE.url },
+      { name: ResourceNames.EnemyImage, url: ENEMY_SPRITE.url },
+      {
+        name: ResourceNames.BackgroundImage,
+        url: BACKGROUND_SPRITE.url,
+      },
+      { name: ResourceNames.CoinImage, url: COIN_SPRITE.url },
     ]);
   }
 
-  private init(): void {
+  private init() {
     // Создание врагов и других игровых объектов
     let i = 0;
-    setInterval(() => {
-      let x = Math.random() * this.canvas.width;
-      let y = Math.random() * this.canvas.height;
-      // Распределение врагов равномерно со всех краев поля
-      if (i % 4 === 0) {
-        y = -30;
-      } else if (i % 3 === 0) {
-        x = -30;
-      } else if (i % 2 === 0) {
-        x = this.canvas.width + 30;
-      } else {
-        y = this.canvas.height + 30;
-      }
-      const enemySprite = new Sprite(
-        this.ctx,
-        this.resourceManager.get('enemy')
-      );
-      const enemy = new Enemy(x, y, this.canvas, this.ctx, enemySprite);
-      this.enemies.push(enemy);
-      i++;
-      // TODO изменить хардкод интервал на функцию, которая будет уменьшать время
-    }, 1000);
+
+    this.intervalsToCleanup.push(
+      setInterval(() => {
+        let x = Math.random() * this.canvas.width;
+        let y = Math.random() * this.canvas.height;
+        // Распределение врагов равномерно со всех краев поля
+        if (i % 4 === 0) {
+          y = -30;
+        } else if (i % 3 === 0) {
+          x = -30;
+        } else if (i % 2 === 0) {
+          x = this.canvas.width + 30;
+        } else {
+          y = this.canvas.height + 30;
+        }
+        const enemySprite = new Sprite(
+          this.ctx,
+          this.resourceManager.get(ResourceNames.EnemyImage)
+        );
+        const enemy = new Enemy(x, y, this.canvas, this.ctx, enemySprite);
+        this.enemies.push(enemy);
+        i++;
+        // TODO изменить хардкод интервал на функцию, которая будет уменьшать время
+      }, 1000)
+    );
+
+    this.intervalsToCleanup.push(
+      setInterval(() => {
+        this.results.timeSurvived += 1;
+      }, 1000)
+    );
 
     // Обработка пользовательского ввода
     document.addEventListener('keydown', (e: KeyboardEvent) => {
@@ -120,6 +183,10 @@ export class GameEngine {
         case 'd':
         case 'в':
           this.hero.moveRight();
+          break;
+        case 'q':
+        case 'й':
+          this.toggleShop();
           break;
       }
     });
@@ -142,15 +209,25 @@ export class GameEngine {
     });
 
     document.addEventListener('mousemove', (e: MouseEvent) => {
-      const relativeX = e.clientX - this.canvas.offsetLeft;
-      const relativeY = e.clientY - this.canvas.offsetTop;
+      const rect = this.canvas.getBoundingClientRect();
+      const relativeX = e.clientX - rect.left;
+      const relativeY = e.clientY - rect.top;
       this.ziel.updateCoordinates(relativeX, relativeY);
       this.hero.updateZiel(relativeX, relativeY);
     });
 
     document.addEventListener('mousedown', (e: MouseEvent) => {
-      const relativeX = e.clientX - this.canvas.offsetLeft;
-      const relativeY = e.clientY - this.canvas.offsetTop;
+      this.clickCallbacks.forEach(cb => cb(e, this.gameState));
+    });
+
+    this.clickCallbacks.push((e, gameState) => {
+      if (gameState !== GameStates.Playing) {
+        return;
+      }
+
+      const rect = this.canvas.getBoundingClientRect();
+      const relativeX = e.clientX - rect.left;
+      const relativeY = e.clientY - rect.top;
       const startX = this.hero.x + this.hero.width / 2;
       const startY = this.hero.y + this.hero.height / 2;
 
@@ -158,31 +235,127 @@ export class GameEngine {
       bullet.shoot({ x: startX, y: startY }, { x: relativeX, y: relativeY });
       this.bullets.push(bullet);
     });
+
+    this.registerButton(
+      {
+        x: this.canvas.width / 4 + 10,
+        y: this.canvas.height / 4 + 10,
+        width: 200,
+        height: 40,
+        text: 'Починить базу',
+      },
+      this.fixBase,
+      GameStates.ShopOpen
+    );
   }
 
-  private startEnemyAttackInterval(enemy: Enemy, index: number) {
-    // Проверяем, активен ли уже интервал атаки для данного врага
-    if (!this.activeAttackIntervals.has(index)) {
-      const intervalId = setInterval(() => {
-        const damage = enemy.getDamage(); // Получаем урон от врага
-        this.base.receiveDamage(damage); // Передаем урон базе
-      }, enemy.attackInterval);
+  public cleanUp = () => {
+    this.intervalsToCleanup.forEach(interval => {
+      clearInterval(interval as NodeJS.Timeout);
+    });
+  };
 
+  private fixBase = () => {
+    if (this.money < 10) {
+      return;
+    }
+    this.money -= 10;
+    this.base.health += 50;
+  };
+
+  private registerButton = (
+    buttonParams: ButtonParams,
+    callback: () => void,
+    gameStateLayout: GameStates
+  ) => {
+    const button = new Button({
+      ...buttonParams,
+      canvas: this.canvas,
+      ctx: this.ctx,
+    });
+
+    this.buttons[gameStateLayout].push(button);
+
+    this.clickCallbacks.push((e, gameState) => {
+      if (gameState !== gameStateLayout) {
+        return;
+      }
+
+      const rect = this.canvas.getBoundingClientRect();
+      const relativeX = e.clientX - rect.left;
+      const relativeY = e.clientY - rect.top;
+
+      if (
+        relativeX > button.x &&
+        relativeX < button.x + button.width &&
+        relativeY > button.y &&
+        relativeY < button.y + button.height
+      ) {
+        callback();
+      }
+    });
+  };
+
+  private startEnemyAttackInterval(enemy: Enemy, index: number) {
+    // Проверяем, атаковал ли враг
+    if (!this.activeAttackIntervals.has(index)) {
       // Добавляем идентификатор интервала в множество активных интервалов
       this.activeAttackIntervals.add(index);
 
-      // После завершения интервала удаляем его идентификатор из множества активных интервалов
+      const damage = enemy.getDamage(); // Получаем урон от врага
+      this.base.receiveDamage(damage); // Передаем урон базе
+
+      // После того, как атака перезарядится, даем возможноть атаковать снова
       setTimeout(() => {
-        clearInterval(intervalId);
         this.activeAttackIntervals.delete(index);
       }, enemy.attackInterval);
     }
   }
 
+  public toggleShop() {
+    if (this.gameState === GameStates.ShopOpen) {
+      this.gameState = GameStates.Playing;
+      return;
+    }
+    this.gameState = GameStates.ShopOpen;
+  }
+
+  public placeCoin(x: number, y: number) {
+    const sprite = new Sprite(
+      this.ctx,
+      this.resourceManager.get(ResourceNames.CoinImage)
+    );
+
+    const coin = new Coin(x, y, this.canvas, this.ctx, sprite, () => {
+      this.money += 10;
+      this.results.coinsCollected += 1;
+    });
+    this.items.push(coin);
+  }
+
+  private drawStats() {
+    this.ctx.font = '24px Arial';
+    this.ctx.fillStyle = 'white';
+    this.ctx.fillText('$: ' + this.money.toString(), 20, 40);
+
+    this.ctx.font = '16px Arial';
+    this.ctx.fillText('[Q] - открыть магазин', 20, 65);
+  }
+
   // Обновление состояние объектов
-  public update(): void {
+  public update() {
+    if (this.gameState !== GameStates.Playing) {
+      return;
+    }
+
     if (this.hero.health <= 0 || this.base.health <= 0) {
-      this.gameOverCallback();
+      this.gameOverCallback({
+        ...this.results,
+        score:
+          this.results.timeSurvived * 15 +
+          this.results.enemiesKilled * 10 +
+          this.results.coinsCollected * 10,
+      });
     }
     this.hero.update();
 
@@ -198,7 +371,9 @@ export class GameEngine {
           enemy.recieveDamage(damage);
 
           if (enemy.health <= 0) {
-            this.enemies.splice(enemyIndex, 1); // Удаляем врага
+            const { x, y } = this.enemies.splice(enemyIndex, 1)[0]; // Удаляем врага
+            this.results.enemiesKilled += 1;
+            this.placeCoin(x, y);
           }
         }
       });
@@ -224,7 +399,7 @@ export class GameEngine {
 
   private drawBackground() {
     const pattern = this.ctx.createPattern(
-      this.resourceManager.get('background'),
+      this.resourceManager.get(ResourceNames.BackgroundImage),
       'repeat'
     );
     if (pattern) {
@@ -233,12 +408,7 @@ export class GameEngine {
     }
   }
 
-  public draw(): void {
-    // Очистка canvas
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-    this.drawBackground();
-
+  private drawGameFrame() {
     // Отрисовка сущностей
     this.hero.draw();
     this.ziel.draw();
@@ -265,6 +435,48 @@ export class GameEngine {
         enemy.stop();
       }
     });
+
+    this.items = this.items.filter(item => {
+      if (isCollision(this.hero, item)) {
+        item.pickUp();
+        return false;
+      }
+      item.draw();
+      return true;
+    });
+
     this.base.draw();
+  }
+
+  private drawShop() {
+    this.ctx.fillStyle = 'white';
+    this.ctx.rect(
+      this.canvas.width / 4,
+      this.canvas.height / 4,
+      this.canvas.width / 2,
+      this.canvas.height / 2
+    );
+    this.ctx.fill();
+    this.buttons[GameStates.ShopOpen].forEach(button => {
+      button.draw();
+    });
+  }
+
+  public draw() {
+    // Очистка canvas
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.drawBackground();
+
+    switch (this.gameState) {
+      case GameStates.Playing:
+        this.drawGameFrame();
+        break;
+      case GameStates.ShopOpen:
+        this.drawShop();
+        break;
+    }
+
+    this.drawStats();
   }
 }
