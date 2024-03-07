@@ -1,8 +1,10 @@
 import { Box, Button, Container, Paper, Typography } from '@mui/material';
 import { FC } from 'react';
+import { IGameResults } from '@/shared/types';
 
 interface IProps {
   resetCallback: () => void;
+  gameResults: IGameResults;
 }
 
 export const EndPage: FC<IProps> = ({ resetCallback }) => {

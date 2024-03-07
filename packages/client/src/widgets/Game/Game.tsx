@@ -28,9 +28,9 @@ export const Game: FC<IProps> = ({ gameOverCallback }) => {
 
     let isGameEnd = false;
 
-    const gameEngine = new GameEngine(canvas, ctx, () => {
+    const gameEngine = new GameEngine(canvas, ctx, res => {
       isGameEnd = true;
-      gameOverCallback();
+      gameOverCallback(res);
     });
 
     const gameLoop = () => {
@@ -42,6 +42,10 @@ export const Game: FC<IProps> = ({ gameOverCallback }) => {
     };
 
     gameLoop();
+
+    return () => {
+      isGameEnd = true;
+    };
   }, []);
 
   const toggleFullScreen = () => {

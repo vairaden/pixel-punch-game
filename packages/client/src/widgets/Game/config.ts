@@ -2,6 +2,7 @@ import heroImg from '../../../public/heroSprites.png';
 import baseImg from '../../../public/base.png';
 import enemyImg from '../../../public/enemy.png';
 import backgroundImg from '../../../public/grass.png';
+import coinImg from '../../../public/coin.png';
 
 const HERO = {
   startX: 100,
@@ -26,6 +27,11 @@ const ENEMY = {
   health: 25,
   damage: 4,
   attackInterval: 500,
+};
+
+const COIN = {
+  width: 30,
+  height: 30,
 };
 
 const HERO_SPRITE = {
@@ -98,10 +104,20 @@ const BACKGROUND_SPRITE = {
   },
 };
 
+const COIN_SPRITE = {
+  url: coinImg,
+  size: {
+    width: 256,
+    height: 256,
+    offsetY: 0,
+  },
+};
+
 export const config = {
   HERO,
   BASE,
   ENEMY,
+  COIN,
 };
 
 export const sprites = {
@@ -109,4 +125,5 @@ export const sprites = {
   ENEMY_SPRITE,
   BASE_SPRITE,
   BACKGROUND_SPRITE,
+  COIN_SPRITE,
 };

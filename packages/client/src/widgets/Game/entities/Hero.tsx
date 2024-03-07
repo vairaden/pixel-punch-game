@@ -1,6 +1,5 @@
 import { config, sprites } from '../config';
-import { GameObject } from './GameObject';
-import { Sprite } from './Sprite';
+import { GameObject, Sprite } from '@/widgets/Game/utils';
 
 const { HERO } = config;
 const { HERO_SPRITE } = sprites;

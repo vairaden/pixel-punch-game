@@ -1,4 +1,4 @@
-import { GameObject } from './GameObject';
+import { GameObject } from '@/widgets/Game/utils/GameObject';
 
 export class Ziel extends GameObject {
   private radius: number;

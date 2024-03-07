@@ -1,4 +1,4 @@
-import { GameObject } from './GameObject';
+import { GameObject } from '@/widgets/Game/utils';
 import { Coordinate } from '../lib/types';
 
 export class Bullet extends GameObject {
