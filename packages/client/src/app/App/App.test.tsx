@@ -11,12 +11,12 @@ jest.mock('./App', () => {
   };
 });
 
-describe.skip('App component', () => {
-  test('renders without crashing', () => {
+describe.skip('App', () => {
+  test('рендер компонента', () => {
     render(<App />);
   });
 
-  test('renders the root element with data-testid="app"', () => {
+  test('рендер компонента с with data-testid="app"', () => {
     const { getByTestId } = render(<App />);
     const appElement = getByTestId('app');
     expect(appElement).toBeInTheDocument();
