@@ -208,15 +208,6 @@ export class GameEngine {
       }
     });
 
-    document.addEventListener('keydown', (e: KeyboardEvent) => {
-      switch (e.key) {
-        case 'q':
-        case 'й':
-          this.toggleShop();
-          break;
-      }
-    });
-
     document.addEventListener('mousemove', (e: MouseEvent) => {
       const rect = this.canvas.getBoundingClientRect();
       const relativeX = e.clientX - rect.left;
