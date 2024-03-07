@@ -251,7 +251,7 @@ export class GameEngine {
 
   public cleanUp = () => {
     this.intervalsToCleanup.forEach(interval => {
-      clearInterval(interval as NodeJS.Timeout);
+      clearInterval(interval);
     });
   };
 
