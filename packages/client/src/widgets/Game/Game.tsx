@@ -34,11 +34,13 @@ export const Game: FC<IProps> = ({ gameOverCallback }) => {
     });
 
     const gameLoop = () => {
-      if (!isGameEnd) {
-        gameEngine.update(); // Обновляем состояние игры
-        gameEngine.draw(); // Отрисовываем игру
-        requestAnimationFrame(gameLoop);
+      if (isGameEnd) {
+        gameEngine.cleanUp();
+        return;
       }
+      gameEngine.update(); // Обновляем состояние игры
+      gameEngine.draw(); // Отрисовываем игру
+      requestAnimationFrame(gameLoop);
     };
 
     gameLoop();

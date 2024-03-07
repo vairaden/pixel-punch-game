@@ -1,7 +1,7 @@
 import { ResourceManager } from './index';
 import { config, sprites } from '../config';
 import { isCollision } from '../lib/isCollision';
-import { GameOverCallback } from '@/shared/types';
+import { GameOverCallback, IGameResults } from '@/shared/types';
 import { Base, Bullet, Coin, Enemy, Hero, Ziel } from '@/widgets/Game/entities';
 import { Button, ButtonParams, GameItem, Sprite } from '@/widgets/Game/utils';
 
@@ -31,12 +31,14 @@ export class GameEngine {
   private money: number;
 
   private gameState: GameStates;
+  private results: IGameResults;
 
   private buttons: Record<string, Button[]>;
 
   // Коллекция для хранения интервалов атаки для противников
   private activeAttackIntervals: Set<number> = new Set<number>();
   private resourceManager: ResourceManager;
+  private intervalsToCleanup: NodeJS.Timer[];
 
   private gameOverCallback: GameOverCallback;
 
@@ -50,8 +52,16 @@ export class GameEngine {
     this.canvas = canvas;
     this.ctx = ctx;
     this.clickCallbacks = [];
+    this.intervalsToCleanup = [];
 
     this.gameState = GameStates.Playing;
+
+    this.results = {
+      score: 0,
+      coinsCollected: 0,
+      enemiesKilled: 0,
+      timeSurvived: 0,
+    };
 
     this.resourceManager = new ResourceManager();
     this.loadResources();
@@ -120,31 +130,40 @@ export class GameEngine {
     ]);
   }
 
-  private init(): void {
+  private init() {
     // Создание врагов и других игровых объектов
     let i = 0;
-    setInterval(() => {
-      let x = Math.random() * this.canvas.width;
-      let y = Math.random() * this.canvas.height;
-      // Распределение врагов равномерно со всех краев поля
-      if (i % 4 === 0) {
-        y = -30;
-      } else if (i % 3 === 0) {
-        x = -30;
-      } else if (i % 2 === 0) {
-        x = this.canvas.width + 30;
-      } else {
-        y = this.canvas.height + 30;
-      }
-      const enemySprite = new Sprite(
-        this.ctx,
-        this.resourceManager.get(ResourceNames.EnemyImage)
-      );
-      const enemy = new Enemy(x, y, this.canvas, this.ctx, enemySprite);
-      this.enemies.push(enemy);
-      i++;
-      // TODO изменить хардкод интервал на функцию, которая будет уменьшать время
-    }, 1000);
+
+    this.intervalsToCleanup.push(
+      setInterval(() => {
+        let x = Math.random() * this.canvas.width;
+        let y = Math.random() * this.canvas.height;
+        // Распределение врагов равномерно со всех краев поля
+        if (i % 4 === 0) {
+          y = -30;
+        } else if (i % 3 === 0) {
+          x = -30;
+        } else if (i % 2 === 0) {
+          x = this.canvas.width + 30;
+        } else {
+          y = this.canvas.height + 30;
+        }
+        const enemySprite = new Sprite(
+          this.ctx,
+          this.resourceManager.get(ResourceNames.EnemyImage)
+        );
+        const enemy = new Enemy(x, y, this.canvas, this.ctx, enemySprite);
+        this.enemies.push(enemy);
+        i++;
+        // TODO изменить хардкод интервал на функцию, которая будет уменьшать время
+      }, 1000)
+    );
+
+    this.intervalsToCleanup.push(
+      setInterval(() => {
+        this.results.timeSurvived += 1;
+      }, 1000)
+    );
 
     // Обработка пользовательского ввода
     document.addEventListener('keydown', (e: KeyboardEvent) => {
@@ -230,6 +249,12 @@ export class GameEngine {
     );
   }
 
+  public cleanUp = () => {
+    this.intervalsToCleanup.forEach(interval => {
+      clearInterval(interval);
+    });
+  };
+
   private fixBase = () => {
     if (this.money < 10) {
       return;
@@ -303,6 +328,7 @@ export class GameEngine {
 
     const coin = new Coin(x, y, this.canvas, this.ctx, sprite, () => {
       this.money += 10;
+      this.results.coinsCollected += 1;
     });
     this.items.push(coin);
   }
@@ -323,7 +349,13 @@ export class GameEngine {
     }
 
     if (this.hero.health <= 0 || this.base.health <= 0) {
-      this.gameOverCallback({ score: 100 });
+      this.gameOverCallback({
+        ...this.results,
+        score:
+          this.results.timeSurvived * 15 +
+          this.results.enemiesKilled * 10 +
+          this.results.coinsCollected * 10,
+      });
     }
     this.hero.update();
 
@@ -340,6 +372,7 @@ export class GameEngine {
 
           if (enemy.health <= 0) {
             const { x, y } = this.enemies.splice(enemyIndex, 1)[0]; // Удаляем врага
+            this.results.enemiesKilled += 1;
             this.placeCoin(x, y);
           }
         }
