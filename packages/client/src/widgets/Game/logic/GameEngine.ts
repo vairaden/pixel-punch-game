@@ -38,6 +38,7 @@ export class GameEngine {
   // Коллекция для хранения интервалов атаки для противников
   private activeAttackIntervals: Set<number> = new Set<number>();
   private resourceManager: ResourceManager;
+  private intervalsToCleanup: NodeJS.Timer[];
 
   private gameOverCallback: GameOverCallback;
 
@@ -51,6 +52,7 @@ export class GameEngine {
     this.canvas = canvas;
     this.ctx = ctx;
     this.clickCallbacks = [];
+    this.intervalsToCleanup = [];
 
     this.gameState = GameStates.Playing;
 
@@ -60,8 +62,6 @@ export class GameEngine {
       enemiesKilled: 0,
       timeSurvived: 0,
     };
-
-    this.gameState = GameStates.Playing;
 
     this.resourceManager = new ResourceManager();
     this.loadResources();
@@ -133,32 +133,37 @@ export class GameEngine {
   private init() {
     // Создание врагов и других игровых объектов
     let i = 0;
-    setInterval(() => {
-      let x = Math.random() * this.canvas.width;
-      let y = Math.random() * this.canvas.height;
-      // Распределение врагов равномерно со всех краев поля
-      if (i % 4 === 0) {
-        y = -30;
-      } else if (i % 3 === 0) {
-        x = -30;
-      } else if (i % 2 === 0) {
-        x = this.canvas.width + 30;
-      } else {
-        y = this.canvas.height + 30;
-      }
-      const enemySprite = new Sprite(
-        this.ctx,
-        this.resourceManager.get(ResourceNames.EnemyImage)
-      );
-      const enemy = new Enemy(x, y, this.canvas, this.ctx, enemySprite);
-      this.enemies.push(enemy);
-      i++;
-      // TODO изменить хардкод интервал на функцию, которая будет уменьшать время
-    }, 1000);
 
-    setInterval(() => {
-      this.results.timeSurvived += 1;
-    }, 1000);
+    this.intervalsToCleanup.push(
+      setInterval(() => {
+        let x = Math.random() * this.canvas.width;
+        let y = Math.random() * this.canvas.height;
+        // Распределение врагов равномерно со всех краев поля
+        if (i % 4 === 0) {
+          y = -30;
+        } else if (i % 3 === 0) {
+          x = -30;
+        } else if (i % 2 === 0) {
+          x = this.canvas.width + 30;
+        } else {
+          y = this.canvas.height + 30;
+        }
+        const enemySprite = new Sprite(
+          this.ctx,
+          this.resourceManager.get(ResourceNames.EnemyImage)
+        );
+        const enemy = new Enemy(x, y, this.canvas, this.ctx, enemySprite);
+        this.enemies.push(enemy);
+        i++;
+        // TODO изменить хардкод интервал на функцию, которая будет уменьшать время
+      }, 1000)
+    );
+
+    this.intervalsToCleanup.push(
+      setInterval(() => {
+        this.results.timeSurvived += 1;
+      }, 1000)
+    );
 
     // Обработка пользовательского ввода
     document.addEventListener('keydown', (e: KeyboardEvent) => {
@@ -252,6 +257,12 @@ export class GameEngine {
       GameStates.ShopOpen
     );
   }
+
+  public cleanUp = () => {
+    this.intervalsToCleanup.forEach(interval => {
+      clearInterval(interval);
+    });
+  };
 
   private fixBase = () => {
     if (this.money < 10) {
