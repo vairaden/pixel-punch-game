@@ -100,15 +100,23 @@ export class GameEngine {
   }
 
   private loadResources(): void {
+    const {
+      COIN_SPRITE,
+      ENEMY_SPRITE,
+      BACKGROUND_SPRITE,
+      HERO_SPRITE,
+      BASE_SPRITE,
+    } = sprites;
+
     this.resourceManager.load([
-      { name: ResourceNames.HeroImage, url: sprites.HERO_SPRITE.url },
-      { name: ResourceNames.BaseImage, url: sprites.BASE_SPRITE.url },
-      { name: ResourceNames.EnemyImage, url: sprites.ENEMY_SPRITE.url },
+      { name: ResourceNames.HeroImage, url: HERO_SPRITE.url },
+      { name: ResourceNames.BaseImage, url: BASE_SPRITE.url },
+      { name: ResourceNames.EnemyImage, url: ENEMY_SPRITE.url },
       {
         name: ResourceNames.BackgroundImage,
-        url: sprites.BACKGROUND_SPRITE.url,
+        url: BACKGROUND_SPRITE.url,
       },
-      { name: ResourceNames.CoinImage, url: sprites.COIN_SPRITE.url },
+      { name: ResourceNames.CoinImage, url: COIN_SPRITE.url },
     ]);
   }
 

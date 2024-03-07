@@ -40,12 +40,14 @@ export class Coin<CallbackCtx = undefined> extends GameItem<CallbackCtx> {
   }
 
   public draw() {
+    const { width, height, offsetY } = COIN_SPRITE.size;
+
     this.sprite.draw({
       x: this.x,
       y: this.y,
-      imgWidth: COIN_SPRITE.size.width,
-      imgHeight: COIN_SPRITE.size.height,
-      imgY: COIN_SPRITE.size.offsetY,
+      imgWidth: width,
+      imgHeight: height,
+      imgY: offsetY,
       drawWidth: this.width,
       drawHeight: this.height,
     });
