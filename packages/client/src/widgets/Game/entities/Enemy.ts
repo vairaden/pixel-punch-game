@@ -72,7 +72,7 @@ export class Enemy extends GameObject {
   public draw(): void {
     this.sprite.update();
 
-    // Определяем угол между героем и указателем мыши
+    // Определяем угол между противником и базой
     const angle = Math.atan2(
       this.canvas.height / 2 - this.y,
       this.canvas.width / 2 - this.x

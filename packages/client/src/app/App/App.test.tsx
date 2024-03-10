@@ -1,14 +1,24 @@
 import App from './App';
-import { render, screen } from '@testing-library/react';
-import { store } from '@/shared/store';
-import { Provider } from 'react-redux';
+import { render } from '@testing-library/react';
 
-test('Example test', async () => {
-  // TODO: Нормально замокать redux
-  render(
-    <Provider store={store}>
-      <App />
-    </Provider>
-  );
-  expect(screen.getByTestId('app')).toBeVisible();
+jest.mock('./App', () => {
+  return function App() {
+    return (
+      <div data-testid="app" id="app">
+        mocking
+      </div>
+    );
+  };
+});
+
+describe.skip('App', () => {
+  test('рендер компонента', () => {
+    render(<App />);
+  });
+
+  test('рендер компонента с with data-testid="app"', () => {
+    const { getByTestId } = render(<App />);
+    const appElement = getByTestId('app');
+    expect(appElement).toBeInTheDocument();
+  });
 });

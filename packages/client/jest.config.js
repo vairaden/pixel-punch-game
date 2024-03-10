@@ -6,8 +6,9 @@ export default {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   testMatch: ['<rootDir>/src/**/*.test.{ts,tsx}'],
+  verbose: true,
   globals: {
-    __SERVER_PORT__: process.env.SERVER_PORT,
+    __SERVER_PORT__: process.env.SERVER_PORT || 3000,
   },
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
