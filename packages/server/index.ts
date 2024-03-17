@@ -17,7 +17,7 @@ const startServer = async () => {
   app.use(cors());
   const port = Number(process.env.SERVER_PORT) || 3001;
 
-  let vite: ViteDevServer | undefined;
+  let vite: ViteDevServer;
   const distPath = path.dirname(require.resolve('client/dist/index.html'));
   const srcPath = path.dirname(require.resolve('client'));
   const ssrClientPath = require.resolve('client/dist-ssr/client.cjs');
@@ -57,7 +57,7 @@ const startServer = async () => {
           'utf-8'
         );
 
-        template = await vite!.transformIndexHtml(url, template);
+        template = await vite.transformIndexHtml(url, template);
       }
 
       let render: () => Promise<string>;
@@ -65,7 +65,7 @@ const startServer = async () => {
       if (!isDev()) {
         render = (await import(ssrClientPath)).render;
       } else {
-        render = (await vite!.ssrLoadModule(path.resolve(srcPath, 'ssr.tsx')))
+        render = (await vite.ssrLoadModule(path.resolve(srcPath, 'ssr.tsx')))
           .render;
       }
 
@@ -76,7 +76,7 @@ const startServer = async () => {
       res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
     } catch (e) {
       if (isDev()) {
-        vite!.ssrFixStacktrace(e as Error);
+        vite.ssrFixStacktrace(e as Error);
       }
       next(e);
     }

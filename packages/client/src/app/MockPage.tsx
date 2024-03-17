@@ -1,11 +1,18 @@
 // Удалить после перехода на App
-import { Box, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
 
 export const MockPage = () => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    console.log('useEffect at render');
+  }, []);
+
   return (
-    <Box>
-      <Typography>Hello there!</Typography>
-      <Typography>This page was rendered on server!</Typography>
-    </Box>
+    <section>
+      <h1>Hello there!</h1>
+      <p>This page was rendered on server!</p>
+      <button onClick={() => setCount(count + 1)}>{`Count: ${count}`}</button>
+    </section>
   );
 };
