@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && npm run build:ssr && vite build --config vite.config.ts",
+    "build": "tsc && yarn build:ssr && yarn build:spa",
+    "build:spa": "vite build --config vite.config.ts",
     "build:ssr": "vite build --config ssr.config.ts",
     "preview": "vite preview",
     "lint": "eslint .",
