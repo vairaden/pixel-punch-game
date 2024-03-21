@@ -1,0 +1,1 @@
+export { SocialAuthPage } from './SocialAuthPage';

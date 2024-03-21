@@ -10,4 +10,5 @@ export const paths = {
   forumTopicCreate: '/forum-topic-editor',
   forumTopicEdit: '/forum-topic-editor/:topic-id',
   error: '/500',
+  socialAuthPage: '/oauth',
 };

@@ -1,12 +1,23 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-
 import { paths } from '@/app/constants/paths';
-import { useLoginByLoginMutation } from '@/shared/api/authApi';
+import {
+  devRedirectUri,
+  useLoginByLoginMutation,
+  useLoginByYandexMutation,
+} from '@/shared/api/authApi';
 import { ILoginData } from '@/shared/types';
 import { loginValidator, passwordValidator } from '@/shared/utils';
-import { Box, Button, Paper, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Paper,
+  SvgIcon,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { YandexIcon } from '@/shared/ui/icons/YandexIcon';
 
 export const LoginPage: React.FC = () => {
   const {
@@ -18,6 +29,7 @@ export const LoginPage: React.FC = () => {
 
   const navigate = useNavigate();
   const [loginByLogin, { isError }] = useLoginByLoginMutation();
+  const [loginByYandex] = useLoginByYandexMutation();
 
   const onSubmit = handleSubmit(async data => {
     await loginByLogin(data)
@@ -32,6 +44,17 @@ export const LoginPage: React.FC = () => {
         }
       });
   });
+
+  const onLoginByYandex = () => {
+    loginByYandex()
+      .unwrap()
+      .then(res => {
+        window.open(
+          `https://oauth.yandex.ru/authorize?response_type=code&client_id=${res.service_id}&redirect_uri=${devRedirectUri}`,
+          '_blank'
+        );
+      });
+  };
 
   return (
     <Box
@@ -76,6 +99,14 @@ export const LoginPage: React.FC = () => {
           <Button variant="outlined" onClick={() => navigate(paths.signUp)}>
             Зарегистрироваться
           </Button>
+          <Typography>С помощью соц. сетей</Typography>
+          <Box>
+            <Button onClick={onLoginByYandex}>
+              <SvgIcon>
+                <YandexIcon />
+              </SvgIcon>
+            </Button>
+          </Box>
         </Paper>
       </Box>
     </Box>
