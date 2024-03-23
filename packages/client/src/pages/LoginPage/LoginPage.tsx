@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { paths } from '@/app/constants/paths';
 import {
-  devRedirectUri,
+  getYandexRedirectUrl,
   useLoginByLoginMutation,
   useLoginByYandexMutation,
 } from '@/shared/api/authApi';
@@ -49,10 +49,8 @@ export const LoginPage: React.FC = () => {
     loginByYandex()
       .unwrap()
       .then(res => {
-        window.open(
-          `https://oauth.yandex.ru/authorize?response_type=code&client_id=${res.service_id}&redirect_uri=${devRedirectUri}`,
-          '_blank'
-        );
+        window.open(getYandexRedirectUrl(res.service_id), '_blank');
+        window.close();
       });
   };
 

@@ -1,6 +1,6 @@
 import {
   devRedirectUri,
-  useCheckIsLoggedInByYandexMutation,
+  useIsLoginYandexMutation,
   useLazyGetUserInfoQuery,
 } from '@/shared/api/authApi';
 import { useActions } from '@/shared/hooks';
@@ -11,7 +11,7 @@ import { HomePage } from '../HomePage';
 export const SocialAuthPage = () => {
   const [getUserInfo] = useLazyGetUserInfoQuery();
   const [checkIsUserLoggedIn, { isLoading, isUninitialized }] =
-    useCheckIsLoggedInByYandexMutation();
+    useIsLoginYandexMutation();
   const { setUser } = useActions();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 

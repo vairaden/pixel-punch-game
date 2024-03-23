@@ -6,9 +6,11 @@ import {
 } from '../types/auth.interface';
 import { axiosBaseQuery } from './baseApi';
 
+export const devRedirectUri = 'http://localhost:3000/oauth';
+export const getYandexRedirectUrl = (serverId: string) =>
+  `https://oauth.yandex.ru/authorize?response_type=code&client_id=${serverId}&redirect_uri=${devRedirectUri}`;
 const baseAuthUrl = '/auth';
 const oAuthYrl = '/oauth/yandex';
-export const devRedirectUri = 'http://localhost:3000/oauth';
 
 export const authApi = createApi({
   reducerPath: 'authApi',
@@ -45,7 +47,7 @@ export const authApi = createApi({
         method: 'GET',
       }),
     }),
-    checkIsLoggedInByYandex: builder.mutation<void, IOAuthYandexLoginData>({
+    isLoginYandex: builder.mutation<void, IOAuthYandexLoginData>({
       query: data => ({
         url: oAuthYrl,
         withCredentials: true,
@@ -80,5 +82,5 @@ export const {
   useLazyGetUserInfoQuery,
   useLogoutMutation,
   useLoginByYandexMutation,
-  useCheckIsLoggedInByYandexMutation,
+  useIsLoginYandexMutation,
 } = authApi;
