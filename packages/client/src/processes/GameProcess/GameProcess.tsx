@@ -5,19 +5,30 @@ import { GameStatus } from '@/shared/constants';
 import { EndPage } from '@/pages/EndPage';
 import { assertUnreachable } from '@/shared/utils';
 import { withAuthGuard } from '@/app/providers/router/withAuthGuard';
-import { IGameResults } from '@/shared/types';
+import { IGameResult } from '@/shared/types';
+import { useSetLeaderboardInfoMutation } from '@/shared/api/leaderboardApi';
 
 export const GameProcess = withAuthGuard(() => {
   const [gameStatus, setGameStatus] = useState(GameStatus.START);
-  const [gameResults, setGameResults] = useState<IGameResults | null>(null);
+  const [gameResults, setGameResults] = useState<IGameResult | null>(null);
+
+  const [setLeaderboardInfo] = useSetLeaderboardInfoMutation();
 
   const countDownCallback = useCallback(() => {
     setGameStatus(GameStatus.PLAYING);
   }, []);
 
-  const gameOverCallback = useCallback((results: IGameResults) => {
+  const gameOverCallback = useCallback((results: IGameResult) => {
     setGameResults(results);
     setGameStatus(GameStatus.END);
+
+    setLeaderboardInfo({
+      data: results,
+      ratingFieldName: 'pixelPunchScore',
+      teamName: 'PixelPunch',
+    })
+      .unwrap()
+      .catch(console.error);
   }, []);
 
   const resetCallback = useCallback(() => {
