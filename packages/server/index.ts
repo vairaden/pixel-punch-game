@@ -6,11 +6,11 @@ import { createServer as createViteServer, ViteDevServer } from 'vite';
 
 dotenv.config();
 
-import express from 'express';
+import express, { Request } from 'express';
 // import { createClientAndConnect } from './db';
 // createClientAndConnect();
 
-const isDev = () => process.env.NODE_ENV === 'development';
+const IS_DEV = process.env.NODE_ENV === 'development';
 
 const startServer = async () => {
   const app = express();
@@ -22,7 +22,7 @@ const startServer = async () => {
   const srcPath = path.dirname(require.resolve('client/index.html'));
   const ssrClientPath = require.resolve('client/dist-ssr/client.cjs');
 
-  if (isDev()) {
+  if (IS_DEV) {
     vite = await createViteServer({
       server: { middlewareMode: true },
       root: srcPath,
@@ -36,17 +36,17 @@ const startServer = async () => {
     res.json('👋 Howdy from the server :)');
   });
 
-  if (!isDev()) {
+  if (!IS_DEV) {
     app.use('/assets', express.static(path.resolve(distPath, 'assets')));
   }
 
-  app.use('*', async (req, res, next) => {
+  app.get('*', async (req, res, next) => {
     const url = req.originalUrl;
 
     try {
       let template: string;
 
-      if (!isDev()) {
+      if (!IS_DEV) {
         template = fs.readFileSync(
           path.resolve(distPath, 'index.html'),
           'utf-8'
@@ -60,16 +60,18 @@ const startServer = async () => {
         template = await vite.transformIndexHtml(url, template);
       }
 
-      let render: () => Promise<{ html: string; initialState: unknown }>;
+      let render: (
+        req: Request
+      ) => Promise<{ html: string; initialState: unknown }>;
 
-      if (!isDev()) {
+      if (!IS_DEV) {
         render = (await import(ssrClientPath)).render;
       } else {
         render = (await vite.ssrLoadModule(path.resolve(srcPath, 'ssr.tsx')))
           .render;
       }
 
-      const { html, initialState } = await render();
+      const { html, initialState } = await render(req);
 
       const appHtml = template
         .replace(`<!--ssr-outlet-->`, html)
@@ -82,7 +84,7 @@ const startServer = async () => {
 
       res.status(200).set({ 'Content-Type': 'text/html' }).end(appHtml);
     } catch (e) {
-      if (isDev()) {
+      if (IS_DEV) {
         vite.ssrFixStacktrace(e as Error);
       }
       next(e);
