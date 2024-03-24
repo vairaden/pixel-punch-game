@@ -60,7 +60,7 @@ const startServer = async () => {
         template = await vite.transformIndexHtml(url, template);
       }
 
-      let render: () => Promise<string>;
+      let render: () => Promise<{ html: string; initialState: unknown }>;
 
       if (!isDev()) {
         render = (await import(ssrClientPath)).render;
@@ -69,11 +69,18 @@ const startServer = async () => {
           .render;
       }
 
-      const appHtml = await render();
+      const { html, initialState } = await render();
 
-      const html = template.replace(`<!--ssr-outlet-->`, appHtml);
+      const appHtml = template
+        .replace(`<!--ssr-outlet-->`, html)
+        .replace(
+          `<!--ssr-initial-state-->`,
+          `<script>window.APP_INITIAL_STATE = ${JSON.stringify(
+            initialState
+          )};</script>`
+        );
 
-      res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
+      res.status(200).set({ 'Content-Type': 'text/html' }).end(appHtml);
     } catch (e) {
       if (isDev()) {
         vite.ssrFixStacktrace(e as Error);

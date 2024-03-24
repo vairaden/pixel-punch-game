@@ -1,7 +1,11 @@
 import React from 'react';
 import { renderToString } from 'react-dom/server';
-import { MockPage } from '@/app/MockPage';
+import App from '@/app/App/App';
+import { store } from '@/shared/store';
 
 export function render() {
-  return renderToString(<MockPage />);
+  return {
+    html: renderToString(<App />),
+    initialState: store.getState(),
+  };
 }
