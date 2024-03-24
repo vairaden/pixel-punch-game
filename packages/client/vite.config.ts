@@ -19,6 +19,7 @@ export default defineConfig({
   },
   plugins: [react()],
   build: {
+    outDir: path.join(__dirname, 'dist/client'),
     rollupOptions: {
       input: {
         app: './index.html',

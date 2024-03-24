@@ -12,8 +12,9 @@ export const store = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     [profileApi.reducerPath]: profileApi.reducer,
   },
+
   preloadedState:
-    typeof window === 'undefined' ? null : window.APP_INITIAL_STATE,
+    typeof window === 'undefined' ? undefined : window.APP_INITIAL_STATE,
 
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware()

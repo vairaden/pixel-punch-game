@@ -5,16 +5,17 @@ import * as path from 'path';
 export default defineConfig({
   plugins: [react()],
   build: {
+    sourcemap: 'inline',
     lib: {
-      entry: path.resolve(__dirname, 'ssr.tsx'),
-      name: 'Client',
+      entry: path.resolve(__dirname, 'entry-server.tsx'),
+      name: 'EntryServer',
+      fileName: 'entry-server',
       formats: ['cjs'],
     },
-    rollupOptions: {
-      output: {
-        dir: 'dist-ssr',
-      },
-    },
+    outDir: 'dist/server',
+  },
+  define: {
+    __SERVER_PORT__: process.env.SERVER_PORT || 3001,
   },
   resolve: {
     alias: {
