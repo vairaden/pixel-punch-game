@@ -5,14 +5,11 @@ import * as path from 'path';
 export default defineConfig({
   plugins: [react()],
   build: {
-    sourcemap: 'inline',
-    lib: {
-      entry: path.resolve(__dirname, 'entry-server.tsx'),
-      name: 'EntryServer',
-      fileName: 'entry-server',
-      formats: ['cjs'],
-    },
     outDir: 'dist/server',
+    ssr: './entry-server.tsx',
+  },
+  ssr: {
+    noExternal: true,
   },
   define: {
     __SERVER_PORT__: process.env.SERVER_PORT || 3001,

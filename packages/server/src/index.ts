@@ -18,17 +18,18 @@ const startServer = async () => {
   const port = Number(process.env.SERVER_PORT) || 3001;
 
   let vite: ViteDevServer;
-  const clientPath = path.join('..', 'client');
-  const srcPath = path.resolve(clientPath, 'src');
+  const clientPath = IS_DEV
+    ? path.resolve('../client')
+    : path.resolve('packages/client');
 
   if (IS_DEV) {
     vite = await createViteServer({
       server: { middlewareMode: true },
-      root: srcPath,
+      root: clientPath,
       appType: 'custom',
       resolve: {
         alias: {
-          '@': srcPath,
+          '@': path.join(clientPath, 'src'),
         },
       },
       define: {
