@@ -10,7 +10,7 @@
     "test": "lerna run test",
     "lint": "lerna run lint",
     "format": "lerna run format",
-    "preview": "node ./packages/server/dist/index.js"
+    "preview": "node ./packages/server/dist/src/index.js"
   },
   "license": "MIT",
   "workspaces": [

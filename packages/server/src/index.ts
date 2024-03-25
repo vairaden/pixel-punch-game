@@ -39,7 +39,9 @@ const startServer = async () => {
 
     app.use(vite.middlewares);
   } else {
-    app.use('/assets', express.static(path.resolve(clientPath, 'dist/client')));
+    app.use(
+      express.static(path.resolve(clientPath, 'dist/client'), { index: false })
+    );
   }
 
   app.get('*', async (req, res, next) => {
@@ -49,7 +51,7 @@ const startServer = async () => {
       let template: string;
       let render: (
         req: Request
-      ) => Promise<{ html: string; initialState: unknown }>;
+      ) => Promise<{ html: string; initialState: unknown; css: string }>;
 
       if (IS_DEV) {
         template = fs.readFileSync(
@@ -71,10 +73,11 @@ const startServer = async () => {
         ).render;
       }
 
-      const { html, initialState } = await render(req);
+      const { html, initialState, css } = await render(req);
 
       const appHtml = template
         .replace(`<!--ssr-outlet-->`, html)
+        .replace(`<!--ssr-css-->`, css)
         .replace(
           `<!--ssr-initial-state-->`,
           `<script>window.APP_INITIAL_STATE = ${JSON.stringify(

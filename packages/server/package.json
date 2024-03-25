@@ -4,8 +4,8 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "build": "tsc --p ./tsconfig.prod.json",
-    "preview": "node ./dist/index.js",
+    "build": "rm -rf ./dist && tsc --p ./tsconfig.prod.json",
+    "preview": "node ./dist/src/index.js",
     "dev": "cross-env NODE_ENV=development nodemon src/index.ts",
     "lint": "eslint .",
     "format": "prettier --write .",

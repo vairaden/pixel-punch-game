@@ -3,17 +3,18 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "tsc --project tsconfig.server.json && cross-env NODE_ENV=development node server/index.js",
-    "build": "tsc && yarn build:ssr & yarn build:spa & wait",
+    "dev": "tsc --project tsconfig.server.json",
+    "build": "tsc --project tsconfig.server.json && yarn build:ssr & yarn build:spa & wait",
     "build:spa": "vite build --config vite.config.ts",
     "build:ssr": "vite build --config vite.config.server.ts",
-    "preview": "vite preview",
+    "preview": "node ../server/dist/src/index.js",
     "lint": "eslint .",
     "format": "prettier --write .",
     "test": "jest"
   },
   "dependencies": {
     "@emotion/react": "^11.11.3",
+    "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.10",
     "@mui/material": "^5.15.9",
