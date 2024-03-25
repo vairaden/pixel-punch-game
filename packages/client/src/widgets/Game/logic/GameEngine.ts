@@ -4,6 +4,7 @@ import { isCollision } from '../lib/isCollision';
 import { GameOverCallback, IGameResults } from '@/shared/types';
 import { Base, Bullet, Coin, Enemy, Hero, Ziel } from '@/widgets/Game/entities';
 import { Button, ButtonParams, GameItem, Sprite } from '@/widgets/Game/utils';
+import { clamp } from '../lib/clamp';
 
 const enum ResourceNames {
   HeroImage = 'hero',
@@ -140,14 +141,13 @@ export class GameEngine {
   }
   private initCursorMove() {
     const moveZiel = (e: MouseEvent) => {
-      const x = (this.ziel.x += e.movementX);
-      const y = (this.ziel.y += e.movementY);
+      const x = clamp((this.ziel.x += e.movementX), 0, this.canvas.width);
+      const y = clamp((this.ziel.y += e.movementY), 0, this.canvas.height);
       this.ziel.updateCoordinates(x, y);
       this.hero.updateZiel(x, y);
     };
 
     const lockStatusChange = () => {
-      console.log('yes');
       if (document.pointerLockElement === this.canvas) {
         document.addEventListener('mousemove', moveZiel, false);
       } else {
