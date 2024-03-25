@@ -1,11 +1,11 @@
 import { Box, Button, Container, Paper, Typography } from '@mui/material';
 import { FC } from 'react';
-import { IGameResults } from '@/shared/types';
+import { IGameResult } from '@/shared/types';
 import { getPrettyTime } from '@/shared/utils';
 
 interface IProps {
   resetCallback: () => void;
-  gameResults: IGameResults;
+  gameResults: IGameResult;
 }
 
 export const EndPage: FC<IProps> = ({ resetCallback, gameResults }) => {
@@ -17,7 +17,9 @@ export const EndPage: FC<IProps> = ({ resetCallback, gameResults }) => {
             Игра окончена
           </Typography>
           <Typography variant="h5">Результаты:</Typography>
-          <Typography variant="body1">Счет: {gameResults.score}</Typography>
+          <Typography variant="body1">
+            Счет: {gameResults.pixelPunchScore}
+          </Typography>
           <Typography variant="body1">
             Прожито времени: {getPrettyTime(gameResults.timeSurvived)}
           </Typography>

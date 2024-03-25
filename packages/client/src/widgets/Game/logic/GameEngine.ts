@@ -1,7 +1,7 @@
 import { ResourceManager } from './index';
 import { config, sprites } from '../config';
 import { isCollision } from '../lib/isCollision';
-import { GameOverCallback, IGameResults } from '@/shared/types';
+import { GameOverCallback, IGameResult } from '@/shared/types';
 import { Base, Bullet, Coin, Enemy, Hero, Ziel } from '@/widgets/Game/entities';
 import { Button, ButtonParams, GameItem, Sprite } from '@/widgets/Game/utils';
 
@@ -31,7 +31,7 @@ export class GameEngine {
   private money: number;
 
   private gameState: GameStates;
-  private results: IGameResults;
+  private results: IGameResult;
 
   private buttons: Record<string, Button[]>;
 
@@ -57,7 +57,7 @@ export class GameEngine {
     this.gameState = GameStates.Playing;
 
     this.results = {
-      score: 0,
+      pixelPunchScore: 0,
       coinsCollected: 0,
       enemiesKilled: 0,
       timeSurvived: 0,
@@ -351,7 +351,7 @@ export class GameEngine {
     if (this.hero.health <= 0 || this.base.health <= 0) {
       this.gameOverCallback({
         ...this.results,
-        score:
+        pixelPunchScore:
           this.results.timeSurvived * 15 +
           this.results.enemiesKilled * 10 +
           this.results.coinsCollected * 10,
