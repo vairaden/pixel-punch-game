@@ -28,7 +28,6 @@
   "include": [
     "src",
     "jest",
-    "entry-server.tsx"
   ],
   "references": [
     {

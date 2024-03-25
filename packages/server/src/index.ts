@@ -61,7 +61,9 @@ const startServer = async () => {
 
         template = await vite.transformIndexHtml(url, template);
         render = (
-          await vite.ssrLoadModule(path.resolve(clientPath, 'entry-server.tsx'))
+          await vite.ssrLoadModule(
+            path.resolve(clientPath, 'src/app/entry-server.tsx')
+          )
         ).render;
       } else {
         template = fs.readFileSync(
@@ -95,7 +97,7 @@ const startServer = async () => {
   });
 
   app.get('/api', (_, res) => {
-    res.json('👋 Howdy from the server :)');
+    res.json('👋 Howdy from the utils :)');
   });
 
   app.listen(port, () => {

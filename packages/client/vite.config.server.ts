@@ -7,10 +7,7 @@ export default defineConfig({
   build: {
     emptyOutDir: true,
     outDir: 'dist/server',
-    ssr: './entry-server.tsx',
-  },
-  ssr: {
-    noExternal: true,
+    ssr: './src/app/entry-server.tsx',
   },
   define: {
     __SERVER_PORT__: process.env.SERVER_PORT || 3001,

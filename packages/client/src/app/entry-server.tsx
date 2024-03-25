@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom/server';
 import { Provider } from 'react-redux';
 import { routes } from '@/app/providers/router/routes';
-import { createFetchRequest } from './server-utils';
+import { createFetchRequest } from './utils/server-utils';
 import { Request } from 'express';
 import createCache from '@emotion/cache';
 import { CacheProvider, ThemeProvider } from '@emotion/react';
