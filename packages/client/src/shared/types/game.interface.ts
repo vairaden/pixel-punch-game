@@ -1,8 +1,9 @@
-export interface IGameResults {
-  score: number;
+export interface IGameResult {
+  id?: string;
+  pixelPunchScore: number;
   enemiesKilled: number;
   coinsCollected: number;
   timeSurvived: number;
 }
 
-export type GameOverCallback = (res: IGameResults) => void;
+export type GameOverCallback = (res: IGameResult) => void;
