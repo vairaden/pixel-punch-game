@@ -13,3 +13,8 @@ export type ILoginData = {
   login: string;
   password: string;
 };
+
+export type IOAuthYandexLoginData = {
+  code: string;
+  redirect_uri: string;
+};

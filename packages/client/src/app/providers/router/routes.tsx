@@ -12,6 +12,7 @@ import { ForumTopicEditorPage } from '@/pages/ForumTopicEditorPage';
 import { ForumTopicPage } from '@/pages/ForumTopicPage';
 import { GameProcess } from '@/processes/GameProcess';
 import { ErrorBoundary } from '../errorBoundary';
+import { SocialAuthPage } from '@/pages/SocialAuthPage';
 
 export const routes: RouteObject[] = [
   {
@@ -97,6 +98,10 @@ export const routes: RouteObject[] = [
   {
     path: paths.error,
     element: <ErrorPage code={500} text="Произошла непредвиденная ошибка" />,
+  },
+  {
+    path: paths.socialAuthPage,
+    element: <SocialAuthPage />,
   },
   {
     path: '*',
