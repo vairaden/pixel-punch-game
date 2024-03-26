@@ -18,9 +18,7 @@ const startServer = async () => {
   const port = Number(process.env.SERVER_PORT) || 3001;
 
   let vite: ViteDevServer;
-  const clientPath = IS_DEV
-    ? path.resolve('../client')
-    : path.resolve('packages/client');
+  const clientPath = path.resolve('../client');
 
   if (IS_DEV) {
     vite = await createViteServer({
