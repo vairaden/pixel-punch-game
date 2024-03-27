@@ -36,6 +36,7 @@ export const Game: FC<IProps> = ({ gameOverCallback }) => {
     const gameLoop = () => {
       if (isGameEnd) {
         gameEngine.cleanUp();
+        document.exitPointerLock();
         return;
       }
       gameEngine.update(); // Обновляем состояние игры

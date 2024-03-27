@@ -4,6 +4,7 @@ import { isCollision } from '../lib/isCollision';
 import { GameOverCallback, IGameResult } from '@/shared/types';
 import { Base, Bullet, Coin, Enemy, Hero, Ziel } from '@/widgets/Game/entities';
 import { Button, ButtonParams, GameItem, Sprite } from '@/widgets/Game/utils';
+import { clamp } from '../lib/clamp';
 
 const enum ResourceNames {
   HeroImage = 'hero',
@@ -130,6 +131,33 @@ export class GameEngine {
     ]);
   }
 
+  private initCursorLock() {
+    this.canvas.addEventListener('click', (e: MouseEvent) => {
+      if (!document.pointerLockElement) {
+        this.canvas.requestPointerLock();
+        this.ziel.updateCoordinates(e.offsetX, e.offsetY);
+      }
+    });
+  }
+  private initCursorMove() {
+    const moveZiel = (e: MouseEvent) => {
+      const x = clamp((this.ziel.x += e.movementX), 0, this.canvas.width);
+      const y = clamp((this.ziel.y += e.movementY), 0, this.canvas.height);
+      this.ziel.updateCoordinates(x, y);
+      this.hero.updateZiel(x, y);
+    };
+
+    const lockStatusChange = () => {
+      if (document.pointerLockElement === this.canvas) {
+        document.addEventListener('mousemove', moveZiel, false);
+      } else {
+        document.removeEventListener('mousemove', moveZiel, false);
+      }
+    };
+
+    document.addEventListener('pointerlockchange', lockStatusChange, false);
+  }
+
   private init() {
     // Создание врагов и других игровых объектов
     let i = 0;
@@ -208,31 +236,27 @@ export class GameEngine {
       }
     });
 
-    document.addEventListener('mousemove', (e: MouseEvent) => {
-      const rect = this.canvas.getBoundingClientRect();
-      const relativeX = e.clientX - rect.left;
-      const relativeY = e.clientY - rect.top;
-      this.ziel.updateCoordinates(relativeX, relativeY);
-      this.hero.updateZiel(relativeX, relativeY);
-    });
+    this.initCursorLock();
+    this.initCursorMove();
 
-    document.addEventListener('mousedown', (e: MouseEvent) => {
+    this.canvas.addEventListener('mousedown', (e: MouseEvent) => {
       this.clickCallbacks.forEach(cb => cb(e, this.gameState));
     });
 
+    // Обработка выстрела
     this.clickCallbacks.push((e, gameState) => {
       if (gameState !== GameStates.Playing) {
         return;
       }
 
-      const rect = this.canvas.getBoundingClientRect();
-      const relativeX = e.clientX - rect.left;
-      const relativeY = e.clientY - rect.top;
       const startX = this.hero.x + this.hero.width / 2;
       const startY = this.hero.y + this.hero.height / 2;
 
       const bullet = new Bullet(0, 0, this.canvas, this.ctx);
-      bullet.shoot({ x: startX, y: startY }, { x: relativeX, y: relativeY });
+      bullet.shoot(
+        { x: startX, y: startY },
+        { x: this.ziel.x, y: this.ziel.y }
+      );
       this.bullets.push(bullet);
     });
 
@@ -357,6 +381,7 @@ export class GameEngine {
           this.results.coinsCollected * 10,
       });
     }
+
     this.hero.update();
 
     this.bullets.forEach((bullet, bulletIndex) => {
