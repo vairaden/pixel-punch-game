@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "composite": true,
-    "target": "es2019",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "NodeNext",
     "esModuleInterop": true,
     "sourceMap": true,
     "declaration": true,
@@ -19,7 +19,7 @@
     "forceConsistentCasingInFileNames": true,
     "lib": ["es2019", "esnext.asynciterable", "dom"],
     "types": ["node", "jest"],
-    "baseUrl": ".",
+    "baseUrl": "./server",
     "paths": {
       "*": ["types/*"]
     },

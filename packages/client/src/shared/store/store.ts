@@ -15,6 +15,9 @@ export const store = configureStore({
     [leaderboardApi.reducerPath]: leaderboardApi.reducer,
   },
 
+  preloadedState:
+    typeof window === 'undefined' ? undefined : window.APP_INITIAL_STATE,
+
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware()
       .concat(testApi.middleware)
