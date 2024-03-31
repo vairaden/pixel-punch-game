@@ -44,9 +44,6 @@ const startServer = async () => {
   }
 
   app.use(express.json());
-  app.get('/api', (_, res) => {
-    res.json('👋 Howdy from the utils :)');
-  });
 
   app.use('/api', router);
 
