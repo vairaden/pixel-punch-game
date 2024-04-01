@@ -12,9 +12,11 @@ export const getYandexRedirectUrl = (serverId: string) =>
 const baseAuthUrl = '/auth';
 const oAuthYrl = '/oauth/yandex';
 
+const BASE_URL = `http://localhost:${__SERVER_PORT__}/api`;
+
 export const authApi = createApi({
   reducerPath: 'authApi',
-  baseQuery: axiosBaseQuery(),
+  baseQuery: axiosBaseQuery({ baseUrl: BASE_URL }),
   endpoints: builder => ({
     createUser: builder.mutation<{ id: string }, Omit<IUser, 'id'>>({
       query: data => ({

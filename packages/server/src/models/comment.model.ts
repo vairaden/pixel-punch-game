@@ -15,11 +15,11 @@ class Comment
   extends Model<CommentAttributes, CommentCreationAttributes>
   implements CommentAttributes
 {
-  public id!: number;
-  public content!: string;
-  public author!: string;
-  public topic_id!: number;
-  public reply_id!: number;
+  declare id: number;
+  declare content: string;
+  declare author: string;
+  declare topic_id: number;
+  declare reply_id: number;
 }
 
 Comment.init(

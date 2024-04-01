@@ -1,9 +1,10 @@
 import express from 'express';
-import { topicController } from '../controllers/topic.controller';
+import { topicController } from '../controllers';
+import { auth } from '../middlewares/auth';
 
 export const router = express.Router();
 
-router.get('/', topicController.getAllTopics);
-router.post('/', topicController.createTopic);
-router.put('/:id', topicController.updateTopic);
-router.delete('/:id', topicController.deleteTopic);
+router.get('/', auth, topicController.getAllTopics);
+router.post('/', auth, topicController.createTopic);
+router.put('/:id', auth, topicController.updateTopic);
+router.delete('/:id', auth, topicController.deleteTopic);

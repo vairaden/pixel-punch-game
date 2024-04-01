@@ -14,12 +14,12 @@ class Topic
   extends Model<TopicAttributes, TopicCreationAttributes>
   implements TopicAttributes
 {
-  public id!: number;
-  public title!: string;
-  public content!: string;
-  public author!: string;
-  public topic_id!: number;
-  public reply_id!: number;
+  declare id: number;
+  declare title: string;
+  declare content: string;
+  declare author: string;
+  declare topic_id: number;
+  declare reply_id: number;
 }
 
 Topic.init(
