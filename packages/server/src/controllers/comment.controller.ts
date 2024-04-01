@@ -1,6 +1,7 @@
 import { Comment } from '../models';
 import { Topic } from '../models';
 import { Request, Response } from 'express';
+import { Author } from '../types';
 
 class CommentController {
   async getAllComments(_: Request, res: Response) {
@@ -23,7 +24,7 @@ class CommentController {
     interface CommentData {
       id: number;
       content: string;
-      author: string;
+      author: Author;
       replies: CommentData[];
     }
 

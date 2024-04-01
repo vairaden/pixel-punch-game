@@ -1,11 +1,12 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from './db';
+import { Author } from '../types';
 
 interface TopicAttributes {
   id: number;
   title: string;
   content: string;
-  author: string;
+  author: Author;
 }
 
 type TopicCreationAttributes = Optional<TopicAttributes, 'id'>;
@@ -17,7 +18,7 @@ class Topic
   declare id: number;
   declare title: string;
   declare content: string;
-  declare author: string;
+  declare author: Author;
   declare topic_id: number;
   declare reply_id: number;
 }
@@ -38,7 +39,7 @@ Topic.init(
       allowNull: false,
     },
     author: {
-      type: DataTypes.TEXT,
+      type: DataTypes.JSON,
       allowNull: false,
     },
   },

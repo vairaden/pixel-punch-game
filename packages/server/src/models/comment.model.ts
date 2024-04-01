@@ -1,10 +1,11 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from './db';
+import { Author } from '../types';
 
 interface CommentAttributes {
   id: number;
   content: string;
-  author: string;
+  author: Author;
   topic_id: number;
   reply_id: number | null | undefined;
 }
@@ -17,7 +18,7 @@ class Comment
 {
   declare id: number;
   declare content: string;
-  declare author: string;
+  declare author: Author;
   declare topic_id: number;
   declare reply_id: number;
 }
@@ -34,7 +35,7 @@ Comment.init(
       allowNull: false,
     },
     author: {
-      type: DataTypes.TEXT,
+      type: DataTypes.JSON,
       allowNull: false,
     },
     topic_id: {

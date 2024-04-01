@@ -2,13 +2,13 @@ import { NextFunction, Request, Response } from 'express';
 import proxy from 'express-http-proxy';
 
 const YANDEX_HOST_URL = 'https://ya-praktikum.tech';
+const ENDPOINT_URL = '/api/v2/auth/';
 
 const NODE_HOST_URL = (req: Request) => {
   return process.env.NODE_ENV === 'development'
     ? 'localhost'
     : req.headers.host;
 };
-const ENDPOINT_URL = '/api/v2/auth/';
 
 const handleProxy = (
   req: Request,
