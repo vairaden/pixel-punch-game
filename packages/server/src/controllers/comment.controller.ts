@@ -101,8 +101,13 @@ class CommentController {
         return;
       }
 
+      if (comment.author.id !== content.author.id) {
+        res.status(401).send('Do not have access');
+        return;
+      }
+
       const data = {
-        content,
+        ...content,
       };
 
       comment.update(data);

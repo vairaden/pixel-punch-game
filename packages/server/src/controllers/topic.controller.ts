@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { Topic } from '../models';
-// import { commentController } from "./comment.controller";
 
 class TopicController {
   async getAllTopics(_: Request, res: Response) {
@@ -71,6 +70,11 @@ class TopicController {
 
       if (!topic) {
         res.status(404).send('Not found');
+        return;
+      }
+
+      if (topic.author.id !== author.id) {
+        res.status(401).send('Do not have access');
         return;
       }
 
