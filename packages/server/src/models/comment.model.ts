@@ -8,6 +8,7 @@ interface CommentAttributes {
   author: Author;
   topic_id: number;
   reply_id: number | null | undefined;
+  isDeleted: boolean;
 }
 
 type CommentCreationAttributes = Optional<CommentAttributes, 'id'>;
@@ -21,6 +22,7 @@ class Comment
   declare author: Author;
   declare topic_id: number;
   declare reply_id: number;
+  declare isDeleted: boolean;
 }
 
 Comment.init(
@@ -45,6 +47,10 @@ Comment.init(
     reply_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
+    },
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
     },
   },
   {

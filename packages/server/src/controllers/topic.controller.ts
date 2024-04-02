@@ -35,9 +35,9 @@ class TopicController {
 
   async createTopic(req: Request, res: Response) {
     try {
-      const { title, content, author } = req.body;
+      const { title, content } = req.body;
 
-      if (!title || !content || !author) {
+      if (!title || !content) {
         res.status(400).send('Bad response');
         return;
       }
@@ -45,7 +45,7 @@ class TopicController {
       const data = {
         title,
         content,
-        author,
+        author: res.locals.user,
       };
 
       const topic = await Topic.create(data);
@@ -58,9 +58,9 @@ class TopicController {
 
   async updateTopic(req: Request, res: Response) {
     const { id } = req.params;
-    const { title, content, author } = req.body;
+    const { title, content } = req.body;
 
-    if (!title || !content || !author) {
+    if (!title || !content) {
       res.status(400).send('Bad response');
       return;
     }
@@ -73,15 +73,14 @@ class TopicController {
         return;
       }
 
-      if (topic.author.id !== author.id) {
-        res.status(401).send('Do not have access');
+      if (topic.author.id !== res.locals.user.id) {
+        res.status(403).send('Forbidden');
         return;
       }
 
       const data = {
         title,
         content,
-        author,
       };
 
       topic.update(data);
@@ -99,6 +98,11 @@ class TopicController {
 
       if (!topic) {
         res.status(404).send('Not found');
+        return;
+      }
+
+      if (topic.author.id !== res.locals.user.id) {
+        res.status(403).send('Forbidden');
         return;
       }
 

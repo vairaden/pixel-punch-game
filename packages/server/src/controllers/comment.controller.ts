@@ -60,10 +60,10 @@ class CommentController {
   }
 
   async createComment(req: Request, res: Response) {
-    const { author, content, topic_id, reply_id } = req.body;
+    const { content, topic_id, reply_id } = req.body;
 
     try {
-      const topic = await Topic.findOne({ where: { id: topic_id } });
+      const topic = await Topic.findByPk(topic_id);
 
       if (!topic) {
         res.status(400).send('Bad request');
@@ -71,10 +71,11 @@ class CommentController {
       }
 
       const data = {
-        author,
+        author: res.locals.user,
         content,
         topic_id,
         reply_id: null,
+        isDeleted: false,
       };
 
       if (reply_id) {
@@ -101,13 +102,13 @@ class CommentController {
         return;
       }
 
-      if (comment.author.id !== content.author.id) {
+      if (comment.author.id !== res.locals.user.id) {
         res.status(401).send('Do not have access');
         return;
       }
 
       const data = {
-        ...content,
+        content,
       };
 
       comment.update(data);
@@ -129,9 +130,14 @@ class CommentController {
         return;
       }
 
+      if (comment.author.id !== res.locals.user.id) {
+        res.status(403).send('Forbidden');
+        return;
+      }
       comment.update({
         ...comment,
         content: 'Этот комментарий был удален...',
+        isDeleted: true,
       });
 
       res.send('Deleted');
