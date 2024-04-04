@@ -4,21 +4,36 @@ import { useNavigate } from 'react-router-dom';
 
 // FIXME: Слой обращается к слою выше, что запрещено в FSD
 import { paths } from '@/app/constants/paths';
-import { IForumTopic } from '@/shared/types';
-
-type ForumTopicEditForm = Pick<IForumTopic, 'title' | 'body'>;
-
-type ForumTopicEditorProps = { id?: IForumTopic['id'] };
+import { ForumTopicEditForm, ForumTopicEditorProps } from '@/shared/types';
+import {
+  useSetTopicMutation,
+  useUpdateTopicByIdMutation,
+} from '@/shared/api/topicApi';
 
 export const ForumTopicEditor = ({
   id,
 }: ForumTopicEditorProps): JSX.Element => {
   const navigate = useNavigate();
+
   const { register, handleSubmit } = useForm<ForumTopicEditForm>();
 
-  const onSubmit: SubmitHandler<ForumTopicEditForm> = data => {
-    alert('Изменения сохранены');
+  const [createTopic] = useSetTopicMutation();
+  const [updateTopic] = useUpdateTopicByIdMutation();
+
+  const handleOnSuccess = () => {
+    alert('Успех');
     navigate(paths.forum);
+  };
+
+  const onSubmit: SubmitHandler<ForumTopicEditForm> = data => {
+    if (id) {
+      updateTopic({ id, body: data })
+        .unwrap()
+        .then(handleOnSuccess)
+        .catch(console.error);
+    } else {
+      createTopic(data).unwrap().then(handleOnSuccess).catch(console.error);
+    }
   };
 
   return (
@@ -45,7 +60,7 @@ export const ForumTopicEditor = ({
         label="Содержание"
         placeholder="Введите содержимое темы"
         minRows={4}
-        {...register('body')}
+        {...register('content')}
       />
       <Box sx={{ display: 'flex', justifyContent: 'right' }}>
         <Button variant="contained" type="submit">

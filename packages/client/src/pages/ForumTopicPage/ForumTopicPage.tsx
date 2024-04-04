@@ -1,53 +1,39 @@
-import { IForumTopicComment } from '@/shared/types';
 import { ForumTopicAddComment } from '@/features';
 import { ForumTopicCommentList } from '@/widgets';
 import { ForumTopicCard } from '@/entities';
 import { withAuthGuard } from '@/app/providers/router/withAuthGuard';
 
 import { Container } from '@mui/material';
-
-const mockForumComments: IForumTopicComment[] = [
-  {
-    id: 0,
-    author: {
-      first_name: 'Иван',
-      second_name: 'Иванов',
-      avatar:
-        'https://creazilla-store.fra1.digitaloceanspaces.com/icons/7912642/avatar-icon-md.png',
-    },
-    createAt: '1.01.2024',
-    text: 'Отлично!',
-  },
-  {
-    id: 1,
-    author: {
-      first_name: 'Петр',
-      second_name: 'Петров',
-      avatar:
-        'https://creazilla-store.fra1.digitaloceanspaces.com/icons/7912642/avatar-icon-md.png',
-    },
-    createAt: '1.01.2024',
-    text: 'Хорошая идея',
-  },
-];
+import { useGetTopicByIdQuery } from '@/shared/api/topicApi';
+import { useParams } from 'react-router-dom';
+import { IForumTopic } from '@/shared/types';
+import { useGetCommentsByIdQuery } from '@/shared/api/commentApi';
 
 export const ForumTopicPage = withAuthGuard((): JSX.Element => {
+  const param = useParams();
+  const id = param['topic-id'] as unknown as number;
+
+  const { data = {}, isLoading } = useGetTopicByIdQuery(id);
+  const { data: comments, isLoading: commentIsLoading } =
+    useGetCommentsByIdQuery(id);
+
+  const { author, createdAt, title, content } = data as IForumTopic;
+
+  if (isLoading || commentIsLoading) return <p>Loading...</p>;
+
   return (
     <Container maxWidth="xl" sx={{ my: '20px' }}>
       <ForumTopicCard
-        author={{
-          first_name: 'Иван',
-          second_name: 'Иванов',
-          avatar:
-            'https://creazilla-store.fra1.digitaloceanspaces.com/icons/7912642/avatar-icon-md.png',
-        }}
-        createAt="1.01.2024"
-        title="Тема форума"
-        body="Содержимое темы"
+        author={author}
+        createdAt={createdAt}
+        title={title}
+        content={content}
       />
 
-      <ForumTopicCommentList comments={mockForumComments} />
-      <ForumTopicAddComment />
+      {comments?.map(comment => (
+        <ForumTopicCommentList key={comment.id} {...comment} />
+      ))}
+      <ForumTopicAddComment reply_id={null} />
     </Container>
   );
 });

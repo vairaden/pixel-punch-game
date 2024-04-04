@@ -2,6 +2,7 @@ import { Button } from '@mui/material';
 
 import Delete from '@mui/icons-material/Delete';
 import { IForumTopic } from '@/shared/types';
+import { useDeleteTopicByIdMutation } from '@/shared/api/topicApi';
 
 type DeleteForumTopicProps = {
   id: IForumTopic['id'];
@@ -10,8 +11,10 @@ type DeleteForumTopicProps = {
 export const DeleteForumTopic = ({
   id,
 }: DeleteForumTopicProps): JSX.Element => {
+  const [deleteTopic] = useDeleteTopicByIdMutation();
+
   const handleDeleteButtonClick = () => {
-    console.log(`delete topic with id: ${id}`);
+    deleteTopic(id);
   };
 
   return (
