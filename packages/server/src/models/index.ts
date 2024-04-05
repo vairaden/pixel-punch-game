@@ -1,5 +1,7 @@
 import { Comment } from './comment.model';
 import { Topic } from './topic.model';
+import { UserReaction } from './userReaction.model';
+import { TopicReaction } from './topicReaction.model';
 
 Topic.hasMany(Comment, {
   foreignKey: 'topic_id',
@@ -19,5 +21,13 @@ Comment.belongsTo(Comment, {
   foreignKey: 'reply_id',
 });
 
-export { Comment, Topic };
+TopicReaction.belongsTo(UserReaction, {
+  foreignKey: 'reaction_name',
+});
+
+Topic.hasMany(TopicReaction, {
+  foreignKey: 'topic_id',
+});
+
+export { Comment, Topic, UserReaction, TopicReaction };
 export { sequelize } from './db';
