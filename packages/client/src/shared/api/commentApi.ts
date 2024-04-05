@@ -33,10 +33,6 @@ export const commentApi = createApi({
         withCredentials: true,
         method: 'POST',
         body,
-        prepareHeaders: (headers: Headers) => {
-          headers.set('Content-Type', 'application/json');
-          return headers;
-        },
       }),
       invalidatesTags: ['comment'],
     }),

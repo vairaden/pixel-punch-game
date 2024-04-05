@@ -14,10 +14,6 @@ export const topicApi = createApi({
         url: '/topic',
         withCredentials: true,
         method: 'GET',
-        prepareHeaders: (headers: Headers) => {
-          headers.set('Content-Type', 'application/json');
-          return headers;
-        },
       }),
       providesTags: () => ['topic'],
     }),
@@ -26,10 +22,6 @@ export const topicApi = createApi({
         url: `/topic/${id}`,
         withCredentials: true,
         method: 'GET',
-        prepareHeaders: (headers: Headers) => {
-          headers.set('Content-Type', 'application/json');
-          return headers;
-        },
       }),
     }),
     setTopic: builder.mutation<IForumTopic, ForumTopicEditForm>({
@@ -38,10 +30,6 @@ export const topicApi = createApi({
         withCredentials: true,
         method: 'POST',
         body,
-        prepareHeaders: (headers: Headers) => {
-          headers.set('Content-Type', 'application/json');
-          return headers;
-        },
       }),
       invalidatesTags: ['topic'],
     }),
