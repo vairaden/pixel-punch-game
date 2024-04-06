@@ -5,12 +5,16 @@ import { authApi } from '../api/authApi';
 import { profileApi } from '../api/profileApi';
 import { leaderboardApi } from '../api/leaderboardApi';
 import { userReducer } from './slices/user.slice';
+import { topicApi } from '../api/topicApi';
+import { commentApi } from '../api/commentApi';
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
     [testApi.reducerPath]: testApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
+    [topicApi.reducerPath]: topicApi.reducer,
+    [commentApi.reducerPath]: commentApi.reducer,
     [profileApi.reducerPath]: profileApi.reducer,
     [leaderboardApi.reducerPath]: leaderboardApi.reducer,
   },
@@ -21,6 +25,8 @@ export const store = configureStore({
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware()
       .concat(testApi.middleware)
+      .concat(topicApi.middleware)
+      .concat(commentApi.middleware)
       .concat(authApi.middleware)
       .concat(profileApi.middleware)
       .concat(leaderboardApi.middleware),

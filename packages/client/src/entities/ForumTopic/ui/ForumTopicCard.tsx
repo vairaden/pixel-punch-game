@@ -9,35 +9,38 @@ import {
 } from '@mui/material';
 
 import { IForumTopic } from '@/shared/types';
+import { BASE_URL } from '@/shared/api/baseApi';
 
 export type ForumTopicCardProps = {
   author: IForumTopic['author'];
-  createAt: IForumTopic['createAt'];
+  createdAt: IForumTopic['createdAt'];
   title: IForumTopic['title'];
   actions?: React.ReactNode;
-  body?: string;
+  content?: string;
 };
 
 export const ForumTopicCard = ({
   author,
-  createAt,
+  createdAt,
   title,
   actions,
-  body,
+  content,
 }: PropsWithChildren<ForumTopicCardProps>): JSX.Element => {
+  const AVATAR_URL = `${BASE_URL}/resources/${author?.avatar}`;
+
   return (
     <Card variant="outlined" sx={{ mb: 3 }}>
       <CardHeader
-        avatar={<Avatar src={author.avatar}></Avatar>}
-        title={author.first_name + ' ' + author.second_name}
-        subheader={createAt}
+        avatar={<Avatar src={AVATAR_URL} />}
+        title={author?.first_name + ' ' + author?.second_name}
+        subheader={createdAt}
       />
 
       <CardContent>
         <Typography variant="h4">{title}</Typography>
-        {body && (
+        {content && (
           <Typography variant="body1" color="text.secondary">
-            {body}
+            {content}
           </Typography>
         )}
       </CardContent>

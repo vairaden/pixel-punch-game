@@ -1,30 +1,30 @@
 import { Box, Pagination } from '@mui/material';
 import { ForumTopicCard } from '@/entities';
-import { IForumTopic } from '@/shared/types';
 import { DeleteForumTopic, EditForumTopic, OpenForumTopic } from '@/features';
+import { useGetTopicsQuery } from '@/shared/api/topicApi';
 
-type ForumTopicListProps = {
-  topics: IForumTopic[];
-};
+export const ForumTopicList = () => {
+  const { data, isLoading } = useGetTopicsQuery();
 
-export const ForumTopicList = ({
-  topics,
-}: ForumTopicListProps): JSX.Element => {
+  if (isLoading) return <div>Loading...</div>;
+
   return (
     <Box>
-      {topics.map(topic => (
+      {data?.map(({ id, title, content, createdAt, author }) => (
         <ForumTopicCard
-          title={topic.title}
-          key={topic.id}
-          createAt={topic.createAt}
-          author={topic.author}
+          title={title}
+          content={content}
+          key={id}
+          createdAt={createdAt}
+          author={author}
           actions={
             <>
-              <EditForumTopic id={topic.id} />
-              <DeleteForumTopic id={topic.id} />
-              <OpenForumTopic id={topic.id} />
+              <EditForumTopic id={id} />
+              <DeleteForumTopic id={id} />
+              <OpenForumTopic id={id} />
             </>
-          }></ForumTopicCard>
+          }
+        />
       ))}
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <Pagination />

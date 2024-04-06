@@ -8,15 +8,20 @@ export type IForumTopicAuthor = Pick<
 export type IForumTopic = {
   id: number;
   title: string;
-  body?: string;
-  createAt: string;
+  content?: string;
+  createdAt?: string;
+  updatedAt?: string;
   author: IForumTopicAuthor;
-  commentsCount: number;
 };
 
 export type IForumTopicComment = {
   id: number;
-  text: string;
-  createAt: string;
+  content: string;
+  createdAt: string;
   author: IForumTopicAuthor;
+  replies: IForumTopicComment[];
 };
+
+export type ForumTopicEditForm = Pick<IForumTopic, 'title' | 'content'>;
+
+export type ForumTopicEditorProps = { id?: IForumTopic['id'] };
