@@ -11,7 +11,7 @@ services:
       - postgres
     networks:
       - postgres
-    command: yarn preview
+    command: npm run dev:server
 
   postgres:
     container_name: postgres
