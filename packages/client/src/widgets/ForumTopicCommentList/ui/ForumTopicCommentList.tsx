@@ -1,4 +1,5 @@
 import { ForumTopicAddComment } from '@/features';
+import { BASE_URL } from '@/shared/api/baseApi';
 import { IForumTopicComment } from '@/shared/types';
 import {
   Box,
@@ -17,6 +18,8 @@ export const ForumTopicCommentList = ({
   content,
   replies,
 }: IForumTopicComment) => {
+  const AVATAR_URL = `${BASE_URL}/resources/${author?.avatar}`;
+
   return (
     <Box
       sx={{
@@ -27,7 +30,7 @@ export const ForumTopicCommentList = ({
       }}>
       <Card variant="outlined" key={id}>
         <CardHeader
-          avatar={<Avatar></Avatar>}
+          avatar={<Avatar src={AVATAR_URL} />}
           title={`${author?.first_name} ${author?.second_name}`}
           subheader={createdAt}
         />

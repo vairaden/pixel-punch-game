@@ -16,8 +16,9 @@ export const ForumTopicAddComment = ({ reply_id }: ITopicComment) => {
 
   const onSubmit = handleSubmit(data => {
     createComment({
-      id: topicId,
-      body: { content: data.content, topic_id: topicId, reply_id },
+      content: data.content,
+      topic_id: topicId,
+      reply_id,
     })
       .unwrap()
       .then(() => reset())

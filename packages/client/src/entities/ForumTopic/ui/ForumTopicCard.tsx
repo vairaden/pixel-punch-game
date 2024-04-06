@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 
 import { IForumTopic } from '@/shared/types';
+import { BASE_URL } from '@/shared/api/baseApi';
 
 export type ForumTopicCardProps = {
   author: IForumTopic['author'];
@@ -25,10 +26,12 @@ export const ForumTopicCard = ({
   actions,
   content,
 }: PropsWithChildren<ForumTopicCardProps>): JSX.Element => {
+  const AVATAR_URL = `${BASE_URL}/resources/${author?.avatar}`;
+
   return (
     <Card variant="outlined" sx={{ mb: 3 }}>
       <CardHeader
-        avatar={<Avatar></Avatar>}
+        avatar={<Avatar src={AVATAR_URL} />}
         title={author?.first_name + ' ' + author?.second_name}
         subheader={createdAt}
       />

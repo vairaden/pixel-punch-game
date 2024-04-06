@@ -29,10 +29,13 @@ export const ForumTopicEditor = ({
     if (id) {
       updateTopic({ id, body: data })
         .unwrap()
-        .then(handleOnSuccess)
+        .then(() => handleOnSuccess())
         .catch(console.error);
     } else {
-      createTopic(data).unwrap().then(handleOnSuccess).catch(console.error);
+      createTopic(data)
+        .unwrap()
+        .then(() => handleOnSuccess())
+        .catch(console.error);
     }
   };
 

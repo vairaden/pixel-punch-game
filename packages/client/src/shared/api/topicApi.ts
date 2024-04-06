@@ -30,6 +30,10 @@ export const topicApi = createApi({
         withCredentials: true,
         method: 'POST',
         body,
+        prepareHeaders: (headers: Headers) => {
+          headers.set('Content-Type', 'application/json');
+          return headers;
+        },
       }),
       invalidatesTags: ['topic'],
     }),

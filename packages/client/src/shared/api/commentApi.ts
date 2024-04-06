@@ -20,19 +20,20 @@ export const commentApi = createApi({
     setCommentById: builder.mutation<
       IForumTopicComment[],
       {
-        id: number;
-        body: {
-          content: string;
-          topic_id: number;
-          reply_id: number | null;
-        };
+        content: string;
+        topic_id: number;
+        reply_id: number | null;
       }
     >({
-      query: ({ id, body }) => ({
-        url: `/comment?id=${id}`,
+      query: body => ({
+        url: `/comment`,
         withCredentials: true,
         method: 'POST',
         body,
+        prepareHeaders: (headers: Headers) => {
+          headers.set('Content-Type', 'application/json');
+          return headers;
+        },
       }),
       invalidatesTags: ['comment'],
     }),
