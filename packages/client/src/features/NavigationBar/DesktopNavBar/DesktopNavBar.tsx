@@ -1,9 +1,9 @@
-import { Box, MenuItem } from '@mui/material';
+import { Box, MenuItem, useTheme } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { navTabs } from '../constants';
-import theme from '@/app/theme';
 
 export const DesktopNavBar: React.FC = () => {
+  const theme = useTheme();
   return (
     <Box
       sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, gap: 2 }}

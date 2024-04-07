@@ -3,6 +3,8 @@ version: '3'
 services:
   pixel-punch-app:
     container_name: pixel-punch-app
+    env_file:
+      - ./.env
     build:
       context: .
     ports:

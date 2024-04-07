@@ -2,7 +2,6 @@ version: '3'
 
 services:
   pixel-punch-app:
-    restart: unless-stopped
     env_file:
       - ./.env
     container_name: pixel-punch-app

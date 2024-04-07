@@ -7,6 +7,7 @@ import { leaderboardApi } from '../api/leaderboardApi';
 import { userReducer } from './slices/user.slice';
 import { topicApi } from '../api/topicApi';
 import { commentApi } from '../api/commentApi';
+import { themeApi } from '@/shared/api/themeApi';
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
     [commentApi.reducerPath]: commentApi.reducer,
     [profileApi.reducerPath]: profileApi.reducer,
     [leaderboardApi.reducerPath]: leaderboardApi.reducer,
+    [themeApi.reducerPath]: themeApi.reducer,
   },
 
   preloadedState:
@@ -29,7 +31,8 @@ export const store = configureStore({
       .concat(commentApi.middleware)
       .concat(authApi.middleware)
       .concat(profileApi.middleware)
-      .concat(leaderboardApi.middleware),
+      .concat(leaderboardApi.middleware)
+      .concat(themeApi.middleware),
 });
 
 setupListeners(store.dispatch);
