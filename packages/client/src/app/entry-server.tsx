@@ -12,9 +12,10 @@ import { createFetchRequest } from './utils/server-utils';
 import { Request } from 'express';
 import createCache from '@emotion/cache';
 import { CacheProvider, ThemeProvider } from '@emotion/react';
-import theme from '@/app/theme';
 import { CssBaseline } from '@mui/material';
 import createEmotionServer from '@emotion/server/create-instance';
+import { createTheme } from '@mui/material/styles';
+import { darkThemePalette, lightThemePalette } from '@/app/theme';
 
 export async function render(req: Request) {
   const { query, dataRoutes } = createStaticHandler(routes);
@@ -26,6 +27,13 @@ export async function render(req: Request) {
   }
 
   const router = createStaticRouter(dataRoutes, context);
+
+  const theme = createTheme({
+    palette: {
+      mode: 'light',
+      ...lightThemePalette,
+    },
+  });
 
   const cache = createCache({ key: 'css' });
   const { extractCriticalToChunks, constructStyleTagsFromChunks } =

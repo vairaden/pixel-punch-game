@@ -9,7 +9,6 @@ const {
 import { Sequelize, SequelizeOptions } from 'sequelize-typescript';
 
 const port = POSTGRES_PORT ? +POSTGRES_PORT : 5432;
-
 const sequelizeOptions: SequelizeOptions = {
   host: POSTGRES_HOST,
   port,

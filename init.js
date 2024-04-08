@@ -1,5 +1,5 @@
-const fs = require('fs');
+import fs from 'node:fs';
 
-fs.copyFileSync('.env.sample', '.env');
+fs.copyFileSync('.env', '.env');
 
 fs.mkdirSync('tmp/pgdata', { recursive: true });
