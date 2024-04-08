@@ -1,10 +1,16 @@
 import { Request, Response } from 'express';
-import { Topic } from '../models';
+import { Topic, TopicReaction } from '../models';
 
 class TopicController {
   async getAllTopics(_: Request, res: Response) {
     try {
-      const allTopics = await Topic.findAll();
+      const allTopics = await Topic.findAll({
+        include: [
+          {
+            model: TopicReaction,
+          },
+        ],
+      });
       res.send(allTopics);
     } catch (e) {
       res.status(500).send(e);

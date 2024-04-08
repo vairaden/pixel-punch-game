@@ -1,8 +1,3 @@
-export type Author = {
-  id: number;
-  first_name: string;
-  second_name: string;
-  login: string;
-  avatar: string;
-  email: string;
-};
+export * from './Author';
+export * from './TopicReaction';
+export * from './UserReaction';
