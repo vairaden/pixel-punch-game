@@ -4,7 +4,6 @@ import { ENDPOINT_URL, YANDEX_HOST_URL } from '../configs';
 
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
   const cookie = req.headers.cookie;
-  console.log(cookie);
   if (!cookie) {
     res.status(403).send('Forbiden');
     return;

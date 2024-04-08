@@ -1,6 +1,6 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from './db';
-import { Author } from '../types';
+import { Author, UserReaction } from '../types';
 
 interface TopicAttributes {
   id: number;
@@ -21,6 +21,7 @@ class Topic
   declare author: Author;
   declare topic_id: number;
   declare reply_id: number;
+  declare reactions: UserReaction[];
 }
 
 Topic.init(
