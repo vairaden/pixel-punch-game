@@ -1,21 +1,25 @@
 - [Документация](./docs/README.md)
 
 ### Видео с демонстрацией функционала
+1 демо: 
+
 https://drive.google.com/file/d/1tn6-jTn34Jd9lBrdMroVSr2vE88oy1VV/view?usp=sharing
+
+2 демо:
+
+https://drive.google.com/file/d/100Nd1LOR4mb6uNNLu6MvzKWXDHiDwhHI/view?usp=sharing
 
 ### Как запускать?
 
+**Зпаустк в dev режиме:**
 1. Убедитесь что у вас установлен `node` и `docker`
-2. Выполните команду `yarn bootstrap` - это обязательный шаг, без него ничего работать не будет :)
-3. Выполните команду `yarn dev`
-4. Выполните команду `yarn dev --scope=client` чтобы запустить только клиент
-5. Выполните команду `yarn dev --scope=server` чтобы запустить только server
+2. Выполните команду `docker compose -f docker-compose.dev.yml up`
+3. При первом запуск добавьте переменную окружения `INIT_DB` для правильной инициализации базы данных
 
 **Зпаустк в режиме preview:**
 1. Убедитесь что у вас установлен `node` и `docker`
-2. Выполните команду `yarn bootstrap` - это обязательный шаг, без него ничего работать не будет :)
-3. Выполните команду `yarn build`
-4. Выполните команду `yarn preview`
+2. Выполните команду `docker compose up`
+3. При первом запуск добавьте переменную окружения `INIT_DB` для правильной инициализации базы данных
 
 ### Как добавить зависимости?
 
@@ -60,28 +64,3 @@ https://drive.google.com/file/d/1tn6-jTn34Jd9lBrdMroVSr2vE88oy1VV/view?usp=shari
 
 В проекте используется [lefthook](https://github.com/evilmartians/lefthook)
 Если очень-очень нужно пропустить проверки, используйте `--no-verify` (но не злоупотребляйте :)
-
-## Ой, ничего не работает :(
-
-Откройте issue, я приду :)
-
-## Автодеплой статики на vercel
-
-Зарегистрируйте аккаунт на [vercel](https://vercel.com/)
-Следуйте [инструкции](https://vitejs.dev/guide/static-deploy.html#vercel-for-git)
-В качестве `root directory` укажите `packages/client`
-
-Все ваши PR будут автоматически деплоиться на vercel. URL вам предоставит деплоящий бот
-
-## Production окружение в докере
-
-Перед первым запуском выполните `node init.js`
-
-`docker compose up` - запустит три сервиса
-
-1. nginx, раздающий клиентскую статику (client)
-2. node, ваш сервер (server)
-3. postgres, вашу базу данных (postgres)
-
-Если вам понадобится только один сервис, просто уточните какой в команде
-`docker compose up {sevice_name}`, например `docker compose up server`

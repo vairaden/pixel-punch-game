@@ -25,11 +25,11 @@ export const topicApi = createApi({
       }),
     }),
     setTopic: builder.mutation<IForumTopic, ForumTopicEditForm>({
-      query: body => ({
+      query: data => ({
         url: '/topic',
         withCredentials: true,
         method: 'POST',
-        body,
+        data,
         prepareHeaders: (headers: Headers) => {
           headers.set('Content-Type', 'application/json');
           return headers;
@@ -45,7 +45,7 @@ export const topicApi = createApi({
         url: `/topic/${id}`,
         withCredentials: true,
         method: 'PUT',
-        body,
+        data: body,
       }),
       invalidatesTags: ['topic'],
     }),
