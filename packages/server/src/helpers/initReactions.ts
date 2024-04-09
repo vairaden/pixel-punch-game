@@ -1,6 +1,6 @@
 import { UserReaction } from '../models';
 
-export function intitReactions() {
+export function initReactions() {
   return UserReaction.bulkCreate([
     {
       name: 'Нравится',

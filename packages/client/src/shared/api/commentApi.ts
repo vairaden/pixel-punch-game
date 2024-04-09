@@ -25,11 +25,11 @@ export const commentApi = createApi({
         reply_id: number | null;
       }
     >({
-      query: body => ({
+      query: data => ({
         url: `/comment`,
         withCredentials: true,
         method: 'POST',
-        body,
+        data,
         prepareHeaders: (headers: Headers) => {
           headers.set('Content-Type', 'application/json');
           return headers;
@@ -42,7 +42,7 @@ export const commentApi = createApi({
         url: `/comment/${id}`,
         withCredentials: true,
         method: 'PUT',
-        body,
+        data: body,
       }),
       invalidatesTags: ['comment'],
     }),

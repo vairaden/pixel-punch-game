@@ -8,13 +8,17 @@ import { createServer as createViteServer, ViteDevServer } from 'vite';
 dotenv.config();
 import { router } from './routes';
 import { sequelize } from './models';
-import { intitReactions } from './helpers/initReactions';
+import { initReactions } from './helpers/initReactions';
 
 const IS_DEV = process.env.NODE_ENV === 'development';
 
 const startServer = async () => {
-  await sequelize.sync({ force: true });
-  await intitReactions();
+  await sequelize.sync({ force: !!process.env.DB_INIT });
+
+  if (process.env.DB_INIT) {
+    await initReactions();
+  }
+
   const app = express();
   app.use(cors());
   const port = Number(process.env.SERVER_PORT) || 3001;
