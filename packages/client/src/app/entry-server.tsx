@@ -15,7 +15,7 @@ import { CacheProvider, ThemeProvider } from '@emotion/react';
 import { CssBaseline } from '@mui/material';
 import createEmotionServer from '@emotion/server/create-instance';
 import { createTheme } from '@mui/material/styles';
-import { darkThemePalette, lightThemePalette } from '@/app/theme';
+import { lightTheme } from '@/app/theme';
 
 export async function render(req: Request) {
   const { query, dataRoutes } = createStaticHandler(routes);
@@ -31,7 +31,7 @@ export async function render(req: Request) {
   const theme = createTheme({
     palette: {
       mode: 'light',
-      ...lightThemePalette,
+      ...lightTheme,
     },
   });
 
