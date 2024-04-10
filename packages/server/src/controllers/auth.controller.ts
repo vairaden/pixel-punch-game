@@ -2,10 +2,13 @@ import { NextFunction, Request, Response } from 'express';
 import proxy from 'express-http-proxy';
 import { ENDPOINT_URL, YANDEX_HOST_URL } from '../configs';
 
-const NODE_HOST_URL = (req: Request) => {
+// const NODE_HOST_URL = (req: Request) => {
+const NODE_HOST_URL = (_: Request) => {
   return process.env.NODE_ENV === 'development'
     ? 'localhost'
-    : req.headers.host;
+    : // : req.headers.host;
+      // TOOD переделать, чтобы в случае передачи порта, отдавалась строка до :
+      'localhost';
 };
 
 const handleProxy = (

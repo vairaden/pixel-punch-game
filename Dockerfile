@@ -9,12 +9,9 @@ RUN apt-get update && apt-get install -y \
 	g++
 WORKDIR /pixel-punch/app
 
-COPY package.json yarn.lock ./
-RUN yarn install
-
 COPY . .
 
-RUN yarn lerna bootstrap
+RUN yarn bootstrap:prod
 RUN yarn build
 
 

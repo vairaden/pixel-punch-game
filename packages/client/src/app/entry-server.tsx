@@ -11,11 +11,11 @@ import { routes } from '@/app/providers/router/routes';
 import { createFetchRequest } from './utils/server-utils';
 import { Request } from 'express';
 import createCache from '@emotion/cache';
-import { CacheProvider, ThemeProvider } from '@emotion/react';
+import { CacheProvider } from '@emotion/react';
 import { CssBaseline } from '@mui/material';
 import createEmotionServer from '@emotion/server/create-instance';
-import { createTheme } from '@mui/material/styles';
-import { lightTheme } from '@/app/theme';
+// import { createTheme } from '@mui/material/styles';
+// import { lightTheme } from '@/app/theme';
 
 export async function render(req: Request) {
   const { query, dataRoutes } = createStaticHandler(routes);
@@ -28,12 +28,12 @@ export async function render(req: Request) {
 
   const router = createStaticRouter(dataRoutes, context);
 
-  const theme = createTheme({
-    palette: {
-      mode: 'light',
-      ...lightTheme,
-    },
-  });
+  // const theme = createTheme({
+  //   palette: {
+  //     mode: 'light',
+  //     ...lightTheme,
+  //   },
+  // });
 
   const cache = createCache({ key: 'css' });
   const { extractCriticalToChunks, constructStyleTagsFromChunks } =
@@ -42,12 +42,12 @@ export async function render(req: Request) {
   const html = renderToString(
     <Provider store={store}>
       <CacheProvider value={cache}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <div data-testid="app" id="app">
-            <StaticRouterProvider router={router} context={context} />
-          </div>
-        </ThemeProvider>
+        {/* <ThemeProvider theme={theme}> */}
+        <CssBaseline />
+        <div data-testid="app" id="app">
+          <StaticRouterProvider router={router} context={context} />
+        </div>
+        {/* </ThemeProvider> */}
       </CacheProvider>
     </Provider>
   );

@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "bootstrap": "yarn && node init.js && lerna clean && yarn && lerna bootstrap",
+    "bootstrap:prod": "yarn && node init.js && yarn && lerna bootstrap",
     "build": "lerna run build",
     "dev:client": "lerna run dev --scope=client",
     "dev:server": "lerna run dev --scope=server",
@@ -11,7 +12,8 @@
     "test": "lerna run test",
     "lint": "lerna run lint",
     "format": "lerna run format",
-    "preview": "lerna run preview --scope=server"
+    "preview": "lerna run preview --scope=server",
+    "start:prod": "docker compose up"
   },
   "license": "MIT",
   "workspaces": [
