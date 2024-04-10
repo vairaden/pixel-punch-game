@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import * as fs from 'fs';
 import * as path from 'path';
-import { createServer as createViteServer, ViteDevServer } from 'vite';
+import { ViteDevServer } from 'vite';
 
 dotenv.config();
 import { router } from './routes';
@@ -13,9 +13,9 @@ import { initReactions } from './helpers/initReactions';
 const IS_DEV = process.env.NODE_ENV === 'development';
 
 const startServer = async () => {
-  await sequelize.sync({ force: !!process.env.DB_INIT });
+  await sequelize.sync({ force: !!process.env.INIT_DB });
 
-  if (process.env.DB_INIT) {
+  if (process.env.INIT_DB) {
     await initReactions();
   }
 
@@ -24,10 +24,13 @@ const startServer = async () => {
   const port = Number(process.env.SERVER_PORT) || 3001;
 
   let vite: ViteDevServer;
-  const clientPath = path.resolve('../client');
+  let clientPath: string;
 
   if (IS_DEV) {
-    vite = await createViteServer({
+    clientPath = path.resolve('../client');
+    const { createServer } = await import('vite');
+
+    vite = await createServer({
       server: { middlewareMode: true },
       root: clientPath,
       appType: 'custom',
@@ -43,8 +46,10 @@ const startServer = async () => {
 
     app.use(vite.middlewares);
   } else {
+    clientPath = path.resolve('client');
+
     app.use(
-      express.static(path.resolve(clientPath, 'dist/client'), { index: false })
+      express.static(path.resolve(clientPath, 'client'), { index: false })
     );
   }
 
@@ -75,11 +80,11 @@ const startServer = async () => {
         ).render;
       } else {
         template = fs.readFileSync(
-          path.resolve(clientPath, 'dist/client/index.html'),
+          path.resolve(clientPath, 'client/index.html'),
           'utf-8'
         );
         render = (
-          await import(path.resolve(clientPath, 'dist/server/entry-server.js'))
+          await import(path.resolve(clientPath, 'server/entry-server.js'))
         ).render;
       }
 
