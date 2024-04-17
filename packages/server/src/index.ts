@@ -1,11 +1,10 @@
 import express, { Request } from 'express';
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import cors from 'cors';
 import * as fs from 'fs';
 import * as path from 'path';
 import { ViteDevServer } from 'vite';
 
-dotenv.config();
 import { router } from './routes';
 import { sequelize } from './models';
 import { initReactions } from './helpers/initReactions';
