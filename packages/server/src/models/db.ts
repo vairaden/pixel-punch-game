@@ -15,7 +15,7 @@ const sequelizeOptions: SequelizeOptions = {
   database: process.env.POSTGRES_DB,
   dialect: 'postgres',
 };
-console.log(sequelizeOptions);
+
 export const sequelize = new Sequelize(sequelizeOptions);
 
 export const dbConnect = async () => {
