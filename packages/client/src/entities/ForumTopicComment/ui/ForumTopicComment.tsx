@@ -11,8 +11,8 @@ import { IForumTopicComment } from '@/shared/types';
 type ForumTopicCommentProps = IForumTopicComment;
 
 export const ForumTopicComment = ({
-  text,
-  createAt,
+  content,
+  createdAt,
   author,
 }: ForumTopicCommentProps): JSX.Element => {
   return (
@@ -20,10 +20,10 @@ export const ForumTopicComment = ({
       <CardHeader
         avatar={<Avatar src={''}></Avatar>}
         title={`${author.first_name} ${author.second_name}`}
-        subheader={createAt}
+        subheader={createdAt}
       />
       <CardContent>
-        <Typography variant="body1">{text}</Typography>
+        <Typography variant="body1">{content}</Typography>
       </CardContent>
     </Card>
   );

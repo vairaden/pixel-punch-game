@@ -1,5 +1,4 @@
-import { createTheme } from '@mui/material/styles';
-import { red } from '@mui/material/colors';
+import { createTheme } from '@mui/material';
 
 // A custom theme for this app
 export const lightTheme = createTheme({
@@ -12,7 +11,7 @@ export const lightTheme = createTheme({
       main: '#19857b',
     },
     error: {
-      main: red.A400,
+      main: '#ff1744',
     },
   },
 });
@@ -27,7 +26,7 @@ export const darkTheme = createTheme({
       main: '#19857b',
     },
     error: {
-      main: red.A400,
+      main: '#ff1744',
     },
   },
 });

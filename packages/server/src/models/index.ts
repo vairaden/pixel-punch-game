@@ -30,4 +30,4 @@ Topic.hasMany(TopicReaction, {
 });
 
 export { Comment, Topic, UserReaction, TopicReaction };
-export { sequelize } from './db';
+export * from './db';

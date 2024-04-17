@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "tsc --project tsconfig.server.json",
-    "build": "tsc --project tsconfig.server.json && yarn build:ssr & yarn build:spa & wait",
+    "dev": "tsc --project tsconfig.json",
+    "build": "tsc --project tsconfig.json && yarn build:ssr && yarn build:spa && wait",
     "build:spa": "vite build --config vite.config.ts",
     "build:ssr": "vite build --config vite.config.server.ts",
     "preview": "node ../server/dist/src/index.js",
