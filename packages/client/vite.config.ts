@@ -16,7 +16,6 @@ export default defineConfig({
   },
   plugins: [react()],
   build: {
-    emptyOutDir: true,
     outDir: path.join(__dirname, 'dist/client'),
     rollupOptions: {
       input: {

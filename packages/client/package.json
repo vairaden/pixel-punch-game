@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsc --project tsconfig.server.json",
-    "build": "tsc --project tsconfig.server.json && yarn build:ssr & yarn build:spa & wait",
+    "build": "yarn build:ssr && yarn build:spa",
     "build:spa": "vite build --config vite.config.ts",
     "build:ssr": "vite build --config vite.config.server.ts",
     "preview": "node ../server/dist/src/index.js",
@@ -40,7 +40,6 @@
     "@typescript-eslint/eslint-plugin": "^5.35.1",
     "@typescript-eslint/parser": "^5.35.1",
     "@vitejs/plugin-react": "^2.0.1",
-    "canvas": "^2.11.2",
     "enzyme": "^3.11.0",
     "eslint": "^8.23.0",
     "eslint-config-prettier": "^8.5.0",
