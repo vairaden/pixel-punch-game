@@ -13,11 +13,11 @@ WORKDIR /pixel-punch/app
 
 COPY package.json yarn.lock lerna.json ./
 
+COPY . .
+
 RUN yarn
 
 RUN yarn lerna bootstrap
-
-COPY . .
 
 RUN yarn build
 

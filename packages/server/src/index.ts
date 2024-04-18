@@ -1,11 +1,9 @@
 import express, { Request } from 'express';
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import cors from 'cors';
 import * as fs from 'fs';
 import * as path from 'path';
 import { createServer as createViteServer, ViteDevServer } from 'vite';
-
-dotenv.config({ path: path.resolve(process.cwd(), '../../.env') });
 
 import { router } from './routes';
 import { dbConnect } from './models';
