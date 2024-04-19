@@ -1,19 +1,18 @@
 import express, { Request } from 'express';
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import cors from 'cors';
 import * as fs from 'fs';
 import * as path from 'path';
 import { createServer as createViteServer, ViteDevServer } from 'vite';
 
-dotenv.config();
 import { router } from './routes';
-import { sequelize } from './models';
+import { dbConnect } from './models';
 import { initReactions } from './helpers/initReactions';
 
 const IS_DEV = process.env.NODE_ENV === 'development';
 
 const startServer = async () => {
-  await sequelize.sync({ force: !!process.env.DB_INIT });
+  await dbConnect();
 
   if (process.env.DB_INIT) {
     await initReactions();

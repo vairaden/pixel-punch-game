@@ -33,4 +33,7 @@ export default defineConfig({
       },
     },
   },
+  optimizeDeps: {
+    include: ['@mui/material', '@mui/material/colors/red'],
+  },
 });
