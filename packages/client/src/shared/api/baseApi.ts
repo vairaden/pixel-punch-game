@@ -1,7 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { BaseQueryFn } from '@reduxjs/toolkit/query';
 
-// export const BASE_URL = 'https://ya-praktikum.tech/api/v2';
 export const BASE_URL = `http://localhost:${__SERVER_PORT__}/api/v2`;
 
 export const axiosInstance = axios.create({
