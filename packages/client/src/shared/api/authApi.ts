@@ -1,18 +1,15 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import {
-  ILoginData,
-  IOAuthYandexLoginData,
-  IUser,
-} from '../types/auth.interface';
+import { ILoginData, IOAuthYandexLoginData, IUser } from '@/shared/types';
 import { axiosBaseQuery } from './baseApi';
+import { getHostName } from '@/shared/utils';
 
-export const devRedirectUri = 'http://localhost:3000/oauth';
+export const devRedirectUri = `http://${getHostName()}:${__SERVER_PORT__}/oauth`;
 export const getYandexRedirectUrl = (serverId: string) =>
   `https://oauth.yandex.ru/authorize?response_type=code&client_id=${serverId}&redirect_uri=${devRedirectUri}`;
 const baseAuthUrl = '/auth';
 const oAuthYrl = '/oauth/yandex';
 
-const BASE_URL = `http://localhost:${__SERVER_PORT__}/api`;
+const BASE_URL = `http://${getHostName()}:${__SERVER_PORT__}/api`;
 
 export const authApi = createApi({
   reducerPath: 'authApi',

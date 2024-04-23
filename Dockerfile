@@ -17,8 +17,7 @@ COPY . .
 
 RUN yarn install --frozen-lockfile
 RUN yarn lerna bootstrap
-
-RUN rm -rf /app/packages/server/dist/ && rm -rf /app/packages/server/dist/ && yarn build
+RUN yarn build
 
 FROM node:$NODE_VERSION as production
 WORKDIR /app
