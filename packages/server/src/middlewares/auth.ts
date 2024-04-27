@@ -11,7 +11,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
 
   try {
     const getUserRes = await axios.get(
-      YANDEX_HOST_URL + ENDPOINT_URL + 'user',
+      YANDEX_HOST_URL + ENDPOINT_URL + '/auth/user',
       {
         headers: {
           cookie: req.headers.cookie,

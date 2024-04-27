@@ -1,4 +1,4 @@
-import express, { Request } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import 'dotenv/config';
 import cors from 'cors';
 import * as fs from 'fs';
@@ -7,7 +7,9 @@ import { ViteDevServer } from 'vite';
 
 import { router } from './routes';
 import { dbConnect } from './models';
-import { initReactions } from './helpers/initReactions';
+import { initReactions } from './utils/initReactions';
+import { proxyReq } from './utils/proxy';
+import { auth } from './middlewares/auth';
 
 const IS_DEV = process.env.NODE_ENV === 'development';
 
@@ -52,6 +54,11 @@ const startServer = async () => {
 
   app.use(express.json());
 
+  const handleProxy = (req: Request, res: Response, next: NextFunction) => {
+    proxyReq(req, res, next);
+  };
+
+  app.use('/api/v2', auth, handleProxy);
   app.use('/api', router);
 
   app.get('*', async (req, res, next) => {
