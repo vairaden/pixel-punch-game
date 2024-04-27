@@ -1,19 +1,21 @@
-version: '3.9'
+version: '3'
 
 services:
-  pixel-punch-app:
+  app:
+    platform: linux/amd64
+    container_name: pixel-punch-app
     env_file:
       - .env
-    container_name: pixel-punch-app
     build:
       context: .
-    ports:
-      - '3001:3001'
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
     depends_on:
       - pgadmin
-    networks:
       - postgres
-    command: yarn preview
+    ports:
+      - '3001:3001'
+    command: node --experimental-specifier-resolution=node /app/server/dist/src/index.js
 
   postgres:
     container_name: postgres
@@ -28,8 +30,6 @@ services:
     volumes:
       - ./tmp/pgdata:/var/lib/postgresql/data
     restart: always
-    networks:
-      - postgres
 
   pgadmin:
     container_name: pgadmin
@@ -45,9 +45,3 @@ services:
       - ./tmp/pgadmin:/var/lib/pgadmin
     depends_on:
       - postgres
-    networks:
-      - postgres
-
-networks:
-  postgres:
-    driver: bridge

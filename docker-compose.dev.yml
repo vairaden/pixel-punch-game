@@ -7,13 +7,17 @@ services:
       - ./.env
     build:
       context: .
+      dockerfile: ./Dockerfile.dev
     ports:
       - '3001:3001'
+      - '24678:24678'
     depends_on:
       - postgres
     networks:
-      - postgres
-    command: npm run dev:server
+      - awesome-network
+    volumes:
+      - ./packages:/app/packages
+    command: yarn dev
 
   postgres:
     container_name: postgres
@@ -28,9 +32,29 @@ services:
       - ./postgresdata:/var/lib/postgresql/data
     restart: always
     networks:
+      - awesome-network
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:4.18
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: secret
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    depends_on:
       - postgres
+    networks:
+      - awesome-network
+
 volumes:
   postgres:
+  pgadmin-data:
+
 networks:
-  postgres:
+  awesome-network:
     driver: bridge

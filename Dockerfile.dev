@@ -1,4 +1,8 @@
-FROM node:18
+ARG NODE_VERSION=18.18.2
+ARG SERVER_PORT=3001
+
+FROM node:$NODE_VERSION
+WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
 	libcairo2-dev \
@@ -8,8 +12,14 @@ RUN apt-get update && apt-get install -y \
 	libpng-dev \
 	build-essential \
 	g++
-WORKDIR /pixel-punch/app
-COPY package.json ./
-COPY packages ./packages
-RUN npm install --force
-EXPOSE 3001
+
+COPY . .
+
+RUN yarn install --frozen-lockfile
+RUN yarn lerna bootstrap
+
+ENV NODE_ENV development
+
+EXPOSE $SERVER_PORT
+
+CMD ['yarn', '&&', 'yarn', 'dev']
