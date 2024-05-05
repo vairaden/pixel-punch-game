@@ -4,7 +4,7 @@ import { axiosBaseQuery } from './baseApi';
 export const themeApi = createApi({
   reducerPath: 'themeApi',
   baseQuery: axiosBaseQuery({
-    baseUrl: `https://localhost:${__SERVER_PORT__}/api/user`,
+    baseUrl: `https://localhost/api/user`,
   }),
   tagTypes: ['theme'],
   endpoints: builder => ({
