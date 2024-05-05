@@ -1,24 +1,9 @@
 version: '3'
 
 services:
-  nginx:
-    depends_on:
-      - pixel-punch-app
-    restart: always
-    container_name: nginx
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    ports:
-      - '80:80'
-      - '443:443'
-    networks:
-      - postgres
   app:
     platform: linux/amd64
     container_name: pixel-punch-app
-
-  pixel-punch-app:
     env_file:
       - .env
     build:
@@ -31,6 +16,20 @@ services:
     ports:
       - '3001:3001'
     command: node --experimental-specifier-resolution=node /app/server/dist/src/index.js
+
+  nginx:
+    depends_on:
+      - app
+    restart: always
+    container_name: nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - '80:80'
+      - '443:443'
+    networks:
+      - postgres
 
   postgres:
     container_name: postgres
