@@ -1,9 +1,8 @@
 version: '3'
 
 services:
-  app:
+  pixel-punch-app:
     platform: linux/amd64
-    container_name: pixel-punch-app
     env_file:
       - .env
     build:
@@ -11,7 +10,6 @@ services:
       dockerfile: ./Dockerfile
     restart: unless-stopped
     depends_on:
-      - pgadmin
       - postgres
     ports:
       - '3001:3001'
@@ -19,17 +17,18 @@ services:
 
   nginx:
     depends_on:
-      - app
+      - pixel-punch-app
     restart: always
     container_name: nginx
     build:
       context: ./nginx
       dockerfile: Dockerfile
+    volumes:
+      - /etc/letsencrypt/live/pixelpunch.ya-praktikum.tech/fullchain.pem:/etc/letsencrypt/live/pixelpunch.ya-praktikum.tech/fullchain.pem
+      - /etc/letsencrypt/live/pixelpunch.ya-praktikum.tech/privkey.pem:/etc/letsencrypt/live/pixelpunch.ya-praktikum.tech/privkey.pem
     ports:
       - '80:80'
       - '443:443'
-    networks:
-      - postgres
 
   postgres:
     container_name: postgres
@@ -44,18 +43,3 @@ services:
     volumes:
       - ./tmp/pgdata:/var/lib/postgresql/data
     restart: always
-
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
-      PGADMIN_LISTEN_PORT: ${PGADMIN_PORT}
-    ports:
-      - '${PGADMIN_PORT}:${PGADMIN_PORT}'
-    volumes:
-      - ./tmp/pgadmin:/var/lib/pgadmin
-    depends_on:
-      - postgres

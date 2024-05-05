@@ -3,7 +3,7 @@ import { axiosBaseQuery } from './baseApi';
 import { IForumTopicComment } from '../types';
 import { getHostName } from '@/shared/utils';
 
-const BASE_URL = `http://${getHostName()}:${__SERVER_PORT__}/api`;
+const BASE_URL = `https://${getHostName()}:${__SERVER_PORT__}/api`;
 
 export const commentApi = createApi({
   reducerPath: 'commentApi',
