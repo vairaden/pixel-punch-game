@@ -7,3 +7,4 @@ router.post('/signin', authController.signin);
 router.post('/signup', authController.signup);
 router.get('/user', authController.getUserInfo);
 router.post('/logout', authController.logout);
+router.get('/oauth/yandex/service-id', authController.yandexOAuth);

@@ -17,6 +17,10 @@ class AuthController {
   async logout(req: Request, res: Response, next: NextFunction) {
     proxyReq(req, res, next, '/auth/logout');
   }
+
+  async yandexOAuth(req: Request, res: Response, next: NextFunction) {
+    proxyReq(req, res, next, '/oauth/yandex/service-id');
+  }
 }
 
 const authController = new AuthController();
