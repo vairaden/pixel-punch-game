@@ -1,10 +1,11 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { BaseQueryFn } from '@reduxjs/toolkit/query';
+import { getHostName } from '@/shared/utils';
 
-export const BASE_URL = `http://localhost:${__SERVER_PORT__}/api/v2`;
+export const BASE_URL = `https://${getHostName()}/api/v2`;
 
 export const axiosInstance = axios.create({
-  baseURL: `http://localhost:${__SERVER_PORT__}`,
+  baseURL: `https://${getHostName()}`,
   timeout: 5000,
 });
 

@@ -12,5 +12,6 @@ router.use('/topic', topicRouter);
 router.use('/comment', commentRouter);
 router.use('/user', userRouter);
 router.use('/topic-reaction', topicReactionRouter);
+router.use('/oauth', authRouter);
 
 export { router };

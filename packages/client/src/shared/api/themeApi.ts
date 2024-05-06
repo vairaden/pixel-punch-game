@@ -1,10 +1,11 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from './baseApi';
+import { getHostName } from '@/shared/utils';
 
 export const themeApi = createApi({
   reducerPath: 'themeApi',
   baseQuery: axiosBaseQuery({
-    baseUrl: `http://localhost:${__SERVER_PORT__}/api/user`,
+    baseUrl: `https://${getHostName()}/api/user`,
   }),
   tagTypes: ['theme'],
   endpoints: builder => ({

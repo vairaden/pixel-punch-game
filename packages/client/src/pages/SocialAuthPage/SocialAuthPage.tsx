@@ -1,5 +1,5 @@
 import {
-  devRedirectUri,
+  oAuthRedirectUri,
   useIsLoginYandexMutation,
   useLazyGetUserInfoQuery,
 } from '@/shared/api/authApi';
@@ -22,7 +22,7 @@ export const SocialAuthPage = () => {
     if (code) {
       checkIsUserLoggedIn({
         code,
-        redirect_uri: devRedirectUri,
+        redirect_uri: oAuthRedirectUri,
       }).then(() => {
         setIsLoggedIn(true);
         getUserInfo()

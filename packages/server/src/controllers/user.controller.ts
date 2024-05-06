@@ -29,14 +29,18 @@ class UserController {
     }
 
     try {
-      const themeRecord = await Theme.findOne({ where: { user_id: id } });
+      const [themeRecord, created] = await Theme.findOrCreate({
+        where: { user_id: id },
+        defaults: {
+          theme: theme,
+          user_id: id,
+        },
+      });
 
-      if (!themeRecord) {
-        res.status(404).send('Not found');
-        return;
+      if (!created) {
+        await themeRecord.update({ theme });
       }
 
-      await themeRecord.update({ theme });
       res.status(200).send(theme);
     } catch (e) {
       res.status(500).send(e);

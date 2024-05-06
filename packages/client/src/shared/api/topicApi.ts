@@ -1,8 +1,9 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from './baseApi';
 import { ForumTopicEditForm, IForumTopic } from '../types';
+import { getHostName } from '@/shared/utils';
 
-const BASE_URL = `http://localhost:${__SERVER_PORT__}/api`;
+const BASE_URL = `https://${getHostName()}/api`;
 
 export const topicApi = createApi({
   reducerPath: 'topicApi',
