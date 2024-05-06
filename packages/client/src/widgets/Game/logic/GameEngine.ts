@@ -133,7 +133,10 @@ export class GameEngine {
 
   private initCursorLock() {
     this.canvas.addEventListener('click', (e: MouseEvent) => {
-      if (!document.pointerLockElement) {
+      if (
+        !document.pointerLockElement &&
+        this.gameState === GameStates.Playing
+      ) {
         this.canvas.requestPointerLock();
         this.ziel.updateCoordinates(e.offsetX, e.offsetY);
       }
@@ -339,8 +342,10 @@ export class GameEngine {
   public toggleShop() {
     if (this.gameState === GameStates.ShopOpen) {
       this.gameState = GameStates.Playing;
+      this.canvas.requestPointerLock();
       return;
     }
+    document.exitPointerLock();
     this.gameState = GameStates.ShopOpen;
   }
 
