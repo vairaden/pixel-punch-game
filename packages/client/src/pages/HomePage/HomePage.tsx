@@ -1,14 +1,18 @@
 import { paths } from '@/app/constants/paths';
 import { withAuthGuard } from '@/app/providers/router/withAuthGuard';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Container, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import pixelPunchImg from '../../../public/PixelPunch.png';
 
 export const HomePage = withAuthGuard(() => {
   const navigate = useNavigate();
   const handleStartGame = () => navigate(paths.game);
 
   return (
-    <Box sx={{ mt: 2 }}>
+    <Container maxWidth="md" sx={{ mt: 2 }}>
+      <Box sx={{ textAlign: 'center', mb: 5 }}>
+        <img src={pixelPunchImg} />
+      </Box>
       <Typography variant="body1">
         Добро пожаловать в мир захватывающих приключений и невероятных сражений!
         <br />
@@ -24,9 +28,9 @@ export const HomePage = withAuthGuard(() => {
 
       <Box sx={{ display: 'flex', mt: 2, justifyContent: 'center' }}>
         <Button variant="contained" onClick={handleStartGame}>
-          Начать
+          Перейти к игре!
         </Button>
       </Box>
-    </Box>
+    </Container>
   );
 });
