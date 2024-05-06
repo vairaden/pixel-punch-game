@@ -22,7 +22,5 @@ export interface ILeaderboardGetReqBody {
 }
 
 export interface ILeaderboardRes {
-  data: {
-    data: IGameResult;
-  };
+  data: IGameResult;
 }

@@ -32,6 +32,14 @@ const columns: GridColDef<IGameResult>[] = [
       <ColumnHeader title={header.colDef.headerName || ''} />
     ),
   },
+  {
+    field: 'timeSurvived',
+    headerName: 'Прожито секунд',
+    width: 300,
+    renderHeader: header => (
+      <ColumnHeader title={header.colDef.headerName || ''} />
+    ),
+  },
 ];
 
 export const LeaderBoardPage = withAuthGuard(() => {
@@ -41,12 +49,15 @@ export const LeaderBoardPage = withAuthGuard(() => {
     limit: 10,
   });
 
-  const rows = !data
-    ? []
-    : data.map((item, index) => ({
-        ...item.data.data,
-        id: index.toString(),
-      }));
+  const rows = useMemo(() => {
+    if (!data) {
+      return [];
+    }
+    return data.map((item, index) => ({
+      ...item.data,
+      id: index.toString(),
+    }));
+  }, [data]);
 
   return (
     <Container maxWidth="xl">
