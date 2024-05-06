@@ -4,6 +4,7 @@ import cors from 'cors';
 import * as fs from 'fs';
 import * as path from 'path';
 import { ViteDevServer } from 'vite';
+import helmet from 'helmet';
 
 import { router } from './routes';
 import { dbConnect } from './models';
@@ -53,6 +54,7 @@ const startServer = async () => {
   }
 
   app.use(express.json());
+  app.use(helmet.xXssProtection());
 
   const handleProxy = (req: Request, res: Response, next: NextFunction) => {
     proxyReq(req, res, next);
