@@ -9,7 +9,7 @@ export const HomePage = withAuthGuard(() => {
   const handleStartGame = () => navigate(paths.game);
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 2 }}>
+    <Container maxWidth="md" sx={{ mt: 2 }}>
       <Box sx={{ textAlign: 'center', mb: 5 }}>
         <img src={pixelPunchImg} />
       </Box>
