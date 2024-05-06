@@ -84,7 +84,7 @@ jest.mock('./ResourceManager', () => ({
   })),
 }));
 
-describe.skip('GameEngine', () => {
+describe('GameEngine', () => {
   let gameEngine: GameEngine;
   let canvas: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D;

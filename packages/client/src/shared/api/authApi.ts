@@ -3,11 +3,11 @@ import { ILoginData, IOAuthYandexLoginData, IUser } from '@/shared/types';
 import { axiosBaseQuery } from './baseApi';
 import { getHostName } from '@/shared/utils';
 
-export const devRedirectUri = `https://${getHostName()}/oauth`;
+export const oAuthRedirectUri = `https://${getHostName()}/oauth`;
 export const getYandexRedirectUrl = (serverId: string) =>
-  `https://oauth.yandex.ru/authorize?response_type=code&client_id=${serverId}&redirect_uri=${devRedirectUri}`;
+  `https://oauth.yandex.ru/authorize?response_type=code&client_id=${serverId}&redirect_uri=${oAuthRedirectUri}`;
 const baseAuthUrl = '/auth';
-const oAuthYrl = '/oauth/yandex';
+const oAuthUrl = '/oauth/yandex';
 
 const BASE_URL = `https://${getHostName()}/api`;
 
@@ -41,14 +41,14 @@ export const authApi = createApi({
     }),
     loginByYandex: builder.mutation<{ service_id: string }, void>({
       query: () => ({
-        url: `${oAuthYrl}/service-id?redirect_uri=${devRedirectUri}`,
+        url: `${oAuthUrl}/service-id?redirect_uri=${oAuthRedirectUri}`,
         withCredentials: true,
         method: 'GET',
       }),
     }),
     isLoginYandex: builder.mutation<void, IOAuthYandexLoginData>({
       query: data => ({
-        url: oAuthYrl,
+        url: oAuthUrl,
         withCredentials: true,
         method: 'POST',
         data,

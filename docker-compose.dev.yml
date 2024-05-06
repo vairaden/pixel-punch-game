@@ -13,8 +13,6 @@ services:
       - '24678:24678'
     depends_on:
       - postgres
-    networks:
-      - awesome-network
     volumes:
       - ./packages:/app/packages
     command: yarn dev
@@ -31,8 +29,6 @@ services:
     volumes:
       - ./postgresdata:/var/lib/postgresql/data
     restart: always
-    networks:
-      - awesome-network
 
   pgadmin:
     container_name: pgadmin
@@ -48,13 +44,7 @@ services:
       - pgadmin-data:/var/lib/pgadmin
     depends_on:
       - postgres
-    networks:
-      - awesome-network
 
 volumes:
   postgres:
   pgadmin-data:
-
-networks:
-  awesome-network:
-    driver: bridge
