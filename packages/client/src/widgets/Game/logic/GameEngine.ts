@@ -342,6 +342,7 @@ export class GameEngine {
   public toggleShop() {
     if (this.gameState === GameStates.ShopOpen) {
       this.gameState = GameStates.Playing;
+      this.canvas.requestPointerLock();
       return;
     }
     document.exitPointerLock();
