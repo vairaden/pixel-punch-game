@@ -1,5 +1,6 @@
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { ColumnHeader } from '@/features/ColumnHeader';
+import { Container } from '@mui/material';
 
 import { withAuthGuard } from '@/app/providers/router/withAuthGuard';
 import { useGetLeaderboardInfoMutation } from '@/shared/api/leaderboardApi';
@@ -51,5 +52,9 @@ export const LeaderBoardPage = withAuthGuard(() => {
       .catch(console.error);
   }, [getLeaderboardInfo]);
 
-  return <DataGrid rows={rows} columns={columns} />;
+  return (
+    <Container maxWidth="xl">
+      <DataGrid rows={rows} columns={columns} />
+    </Container>
+  );
 });
