@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { paths } from '@/app/constants/paths';
 import {
-  yandexRedirectUrl,
+  getYandexRedirectUrl,
   useLoginByLoginMutation,
   useLoginByYandexMutation,
 } from '@/shared/api/authApi';
@@ -48,8 +48,8 @@ export const LoginPage: React.FC = () => {
   const onLoginByYandex = () => {
     loginByYandex()
       .unwrap()
-      .then(() => {
-        window.open(yandexRedirectUrl, '_blank');
+      .then(res => {
+        window.open(getYandexRedirectUrl(res.service_id), '_blank');
         window.close();
       });
   };
