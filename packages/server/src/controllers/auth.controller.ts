@@ -19,7 +19,7 @@ class AuthController {
   }
 
   async yandexOAuth(req: Request, res: Response, next: NextFunction) {
-    proxyReq(req, res, next, '/oauth/yandex/service-id');
+    proxyReq(req, res, next, '/api/v2/oauth/yandex/service-id');
   }
 }
 
