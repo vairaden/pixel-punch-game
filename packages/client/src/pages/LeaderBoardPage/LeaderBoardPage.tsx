@@ -3,9 +3,9 @@ import { ColumnHeader } from '@/features/ColumnHeader';
 import { Container } from '@mui/material';
 
 import { withAuthGuard } from '@/app/providers/router/withAuthGuard';
-import { useGetLeaderboardInfoMutation } from '@/shared/api/leaderboardApi';
-import { useEffect, useState } from 'react';
+import { useGetLeaderboardInfoQuery } from '@/shared/api/leaderboardApi';
 import type { IGameResult } from '@/shared/types';
+import { useMemo } from 'react';
 
 const columns: GridColDef<IGameResult>[] = [
   {
@@ -32,25 +32,32 @@ const columns: GridColDef<IGameResult>[] = [
       <ColumnHeader title={header.colDef.headerName || ''} />
     ),
   },
+  {
+    field: 'timeSurvived',
+    headerName: 'Прожито секунд',
+    width: 300,
+    renderHeader: header => (
+      <ColumnHeader title={header.colDef.headerName || ''} />
+    ),
+  },
 ];
 
 export const LeaderBoardPage = withAuthGuard(() => {
-  const [rows, setRows] = useState<IGameResult[]>([]);
-  const [getLeaderboardInfo] = useGetLeaderboardInfoMutation();
+  const { data } = useGetLeaderboardInfoQuery({
+    ratingFieldName: 'pixelPunchScore',
+    cursor: 0,
+    limit: 10,
+  });
 
-  useEffect(() => {
-    getLeaderboardInfo({
-      ratingFieldName: 'pixelPunchScore',
-      cursor: 0,
-      limit: 10,
-    })
-      .unwrap()
-      .then(data => {
-        const row = { ...data[0].data, id: '1' } as unknown as IGameResult;
-        setRows([row]);
-      })
-      .catch(console.error);
-  }, [getLeaderboardInfo]);
+  const rows = useMemo(() => {
+    if (!data) {
+      return [];
+    }
+    return data.map((item, index) => ({
+      ...item.data,
+      id: index.toString(),
+    }));
+  }, [data]);
 
   return (
     <Container maxWidth="xl">

@@ -18,7 +18,7 @@ export const leaderboardApi = createApi({
         data,
       }),
     }),
-    getLeaderboardInfo: builder.mutation<
+    getLeaderboardInfo: builder.query<
       ILeaderboardRes[],
       ILeaderboardGetReqBody
     >({
@@ -32,5 +32,5 @@ export const leaderboardApi = createApi({
   }),
 });
 
-export const { useSetLeaderboardInfoMutation, useGetLeaderboardInfoMutation } =
+export const { useSetLeaderboardInfoMutation, useGetLeaderboardInfoQuery } =
   leaderboardApi;
