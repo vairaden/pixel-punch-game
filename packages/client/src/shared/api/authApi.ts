@@ -41,7 +41,9 @@ export const authApi = createApi({
     }),
     loginByYandex: builder.mutation<{ service_id: string }, void>({
       query: () => ({
-        url: `${oAuthUrl}/service-id?redirect_uri=${oAuthRedirectUri}`,
+        url: encodeURIComponent(
+          `${oAuthUrl}/service-id?redirect_uri=${oAuthRedirectUri}`
+        ),
         withCredentials: true,
         method: 'GET',
       }),

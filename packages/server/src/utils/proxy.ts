@@ -11,9 +11,9 @@ export const proxyReq = (
   proxy(YANDEX_HOST_URL, {
     proxyReqPathResolver(req) {
       if (endpoint) {
-        return ENDPOINT_URL + endpoint; // Указываем полный путь к методу аутентификации
+        return encodeURIComponent(ENDPOINT_URL + endpoint); // Указываем полный путь к методу аутентификации
       } else {
-        return ENDPOINT_URL + req.url;
+        return encodeURIComponent(ENDPOINT_URL + req.url);
       }
     },
     userResHeaderDecorator(headers) {
