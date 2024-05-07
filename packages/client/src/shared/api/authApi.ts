@@ -4,7 +4,8 @@ import { axiosBaseQuery } from './baseApi';
 import { getHostName } from '@/shared/utils';
 
 export const oAuthRedirectUri = `https://${getHostName()}/oauth`;
-export const yandexRedirectUrl = `https://oauth.yandex.ru/authorize?response_type=code&redirect_uri=${oAuthRedirectUri}`;
+export const getYandexRedirectUrl = (serverId: string) =>
+  `https://oauth.yandex.ru/authorize?response_type=code&client_id=${serverId}&redirect_uri=${oAuthRedirectUri}`;
 const baseAuthUrl = '/auth';
 const oAuthUrl = '/oauth/yandex';
 
